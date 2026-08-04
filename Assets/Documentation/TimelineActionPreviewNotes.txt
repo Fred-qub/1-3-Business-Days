@@ -1,0 +1,10 @@
+change width with previewed action startup duration
+shift Pos X number of times for beat
+
+main timeline width per beat = 76.2
+main timeline Pos X offset per beat = 76.2
+
+overtimeline width per beat = 32
+overtimeline Pos X offset per beat = 72
+
+numbers ended up like this cus width is global methinks
