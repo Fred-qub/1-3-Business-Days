@@ -10,3 +10,4 @@ overtimeline Pos X offset per beat = 72
 numbers ended up like this cus width is global methinks
 
 for overtimeline you can just set the fill colour of the slider to match since it'll always be at the start
+but use the same technique for the recovery period
