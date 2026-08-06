@@ -62,12 +62,18 @@ public class UIManager : MonoBehaviour
 
     public void SetRoundTimer(int roundNumber) { roundCounter.text = ("ROUND " + roundNumber); }
     public void SetDialogueContent(string dialogue) { dialogueContent.text = dialogue; }
-    public void SetPlayerName(string name) { playerName.text = name; }
+    public void SetDialogueTitle(string title) { dialogueTitle.text = title; }
+    public void SetPlayerName(string pName) { playerName.text = pName; }
     public void SetPlayerHP(int hp) { playerHPBarSlider.value = hp; }
     public void PlayerStatusPanelActive(bool active) { playerstatusPanel.SetActive(active); }
+    public void SetPlayerStatusText(string status) { playerStatusText.text = status; }
+    public void SetPlayerStatusCounter(int counter) { playerStatusCounter.text = counter.ToString(); }
+    public void SetEnemyName(string eName) { enemyName.text = eName; }
+    public void SetEnemyHP(int hp) { enemyHPBarSlider.value = hp; }
+    public void EnemyStatusPanelActive(bool active) { enemystatusPanel.SetActive(active); }
+    public void SetEnemyStatusText(string status) { enemyStatusText.text = status; }
+    public void SetEnemyStatusCounter(int counter) { enemyStatusCounter.text = counter.ToString(); }
     
-    public void SetEnemyName(string name)
-    {
-        enemyName.text = name;
-    }
+    //To do for tomorrow: finish setting up UI functions
+    
 }
