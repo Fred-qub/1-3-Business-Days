@@ -37,12 +37,14 @@ public class UIManager : MonoBehaviour
     public Slider enemyBeatSlider;
     public GameObject actionPreviewBackground;
     public GameObject recoveryPreviewBackground;
+    public float timelinePreviewBackgroundIncrement = 76.2f;
     
     [Header("OverTimeLine")]
     public TextMeshProUGUI overTimeLineText;
     public Slider overTimeLineSlider;
     public GameObject overTimeLineRecoveryPreviewBackground;
-    
+    public float overTimeLineRecoveryPreviewBackgroundWidthIncrement = 32f;
+    public float overTimeLineRecoveryPreviewBackgroundXOffsetIncrement = 72f;
  
 
     
@@ -58,20 +60,11 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void SetRoundTimer(int roundNumber)
-    {
-        roundCounter.text = ("ROUND " + roundNumber);
-    }
-
-    public void SetDialogueContent(string dialogue)
-    {
-        dialogueContent.text = dialogue;
-    }
-
-    public void SetPlayerName(string name)
-    {
-        playerName.text = name;
-    }
+    public void SetRoundTimer(int roundNumber) { roundCounter.text = ("ROUND " + roundNumber); }
+    public void SetDialogueContent(string dialogue) { dialogueContent.text = dialogue; }
+    public void SetPlayerName(string name) { playerName.text = name; }
+    public void SetPlayerHP(int hp) { playerHPBarSlider.value = hp; }
+    public void PlayerStatusPanelActive(bool active) { playerstatusPanel.SetActive(active); }
     
     public void SetEnemyName(string name)
     {

@@ -1503,8 +1503,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 74.4, y: 0}
-  m_SizeDelta: {x: 72, y: -120}
+  m_AnchoredPosition: {x: 2.02, y: 0}
+  m_SizeDelta: {x: 32, y: -120}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &453345580
 MonoBehaviour:
@@ -2877,7 +2877,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 10
   m_WholeNumbers: 1
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5357,9 +5357,12 @@ MonoBehaviour:
   enemyBeatSlider: {fileID: 505515322}
   actionPreviewBackground: {fileID: 1494637149}
   recoveryPreviewBackground: {fileID: 2031574285}
+  timelinePreviewBackgroundIncrement: 76.2
   overTimeLineText: {fileID: 394352177}
   overTimeLineSlider: {fileID: 672029903}
   overTimeLineRecoveryPreviewBackground: {fileID: 453345578}
+  overTimeLineRecoveryPreviewBackgroundWidthIncrement: 32
+  overTimeLineRecoveryPreviewBackgroundXOffsetIncrement: 72
 --- !u!4 &1339604317
 Transform:
   m_ObjectHideFlags: 0
