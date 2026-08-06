@@ -3144,7 +3144,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 3
+  m_fontStyle: 19
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -3483,8 +3483,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1234905456}
-  - {fileID: 1095967385}
   - {fileID: 267102415}
+  - {fileID: 1095967385}
   - {fileID: 457339671}
   - {fileID: 2028560870}
   m_Father: {fileID: 0}
@@ -3563,6 +3563,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 8038170959428784934, guid: 38a9b871c6c56b8438adc67e0b4a5eaf, type: 3}
   playerBattleMarker: {fileID: 2064428389}
   enemyBattleMarker: {fileID: 1170193196}
+  UIManager: {fileID: 1339604316}
   battleState: 0
 --- !u!4 &883400650
 Transform:
@@ -4609,7 +4610,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 3
+  m_fontStyle: 19
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -5333,6 +5334,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce230885862853347be5938744c7dcd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  roundCounter: {fileID: 307580135}
+  playerName: {fileID: 1123868915}
+  playerHPBarSlider: {fileID: 1102257236}
+  playerstatusPanel: {fileID: 1145605313}
+  playerStatusText: {fileID: 1931554526}
+  playerStatusCounter: {fileID: 520492495}
+  enemyName: {fileID: 750242317}
+  enemyHPBarSlider: {fileID: 1055550563}
+  enemystatusPanel: {fileID: 1673628963}
+  enemyStatusText: {fileID: 649875103}
+  enemyStatusCounter: {fileID: 676797767}
+  dialogueTitle: {fileID: 464521184}
+  dialogueContent: {fileID: 256059976}
+  guardButton: {fileID: 1169800670}
+  jawButton: {fileID: 479328095}
+  hookButton: {fileID: 1141765181}
+  haymakerButton: {fileID: 833532252}
+  beatCounter: {fileID: 1767175415}
+  timelineSlider: {fileID: 1023206344}
+  playerBeatSlider: {fileID: 916537197}
+  enemyBeatSlider: {fileID: 505515322}
+  actionPreviewBackground: {fileID: 1494637149}
+  recoveryPreviewBackground: {fileID: 2031574285}
+  overTimeLineText: {fileID: 394352177}
+  overTimeLineSlider: {fileID: 672029903}
+  overTimeLineRecoveryPreviewBackground: {fileID: 453345578}
 --- !u!4 &1339604317
 Transform:
   m_ObjectHideFlags: 0
