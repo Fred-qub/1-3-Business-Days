@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     
     [Header("Action Buttons")]
     public Button guardButton;
-    public Button jawButton;
+    public Button jabButton;
     public Button hookButton;
     public Button haymakerButton;
 
@@ -61,18 +61,45 @@ public class UIManager : MonoBehaviour
     }
 
     public void SetRoundTimer(int roundNumber) { roundCounter.text = ("ROUND " + roundNumber); }
+    
     public void SetDialogueContent(string dialogue) { dialogueContent.text = dialogue; }
     public void SetDialogueTitle(string title) { dialogueTitle.text = title; }
+    public void ButtonsActive(bool active)
+    {
+        guardButton.gameObject.SetActive(active);
+        jabButton.gameObject.SetActive(active);
+        hookButton.gameObject.SetActive(active);
+        haymakerButton.gameObject.SetActive(active);
+    }
+
     public void SetPlayerName(string pName) { playerName.text = pName; }
     public void SetPlayerHP(int hp) { playerHPBarSlider.value = hp; }
     public void PlayerStatusPanelActive(bool active) { playerstatusPanel.SetActive(active); }
     public void SetPlayerStatusText(string status) { playerStatusText.text = status; }
     public void SetPlayerStatusCounter(int counter) { playerStatusCounter.text = counter.ToString(); }
+    
     public void SetEnemyName(string eName) { enemyName.text = eName; }
     public void SetEnemyHP(int hp) { enemyHPBarSlider.value = hp; }
     public void EnemyStatusPanelActive(bool active) { enemystatusPanel.SetActive(active); }
     public void SetEnemyStatusText(string status) { enemyStatusText.text = status; }
     public void SetEnemyStatusCounter(int counter) { enemyStatusCounter.text = counter.ToString(); }
+
+    public void SetBeat(int beat)
+    {
+        beatCounter.text = beat.ToString();
+        timelineSlider.value = beat;
+    }
+
+    public void SetPlayerBeatMarker(int beat) { playerBeatSlider.value = beat; }
+    public void SetEnemyBeatMarker(int beat) { enemyBeatSlider.value = beat; }
+    
+    public void ActionPreviewActive(bool active) { actionPreviewBackground.SetActive(active); }
+
+    public void SetActionPreview(int duration)
+    {
+        float width = duration * timelinePreviewBackgroundIncrement;
+        actionPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, -60);
+    }
     
     //To do for tomorrow: finish setting up UI functions
     

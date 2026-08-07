@@ -5348,7 +5348,7 @@ MonoBehaviour:
   dialogueTitle: {fileID: 464521184}
   dialogueContent: {fileID: 256059976}
   guardButton: {fileID: 1169800670}
-  jawButton: {fileID: 479328095}
+  jabButton: {fileID: 479328095}
   hookButton: {fileID: 1141765181}
   haymakerButton: {fileID: 833532252}
   beatCounter: {fileID: 1767175415}
