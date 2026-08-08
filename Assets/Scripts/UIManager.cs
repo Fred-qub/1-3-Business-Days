@@ -52,6 +52,7 @@ public class UIManager : MonoBehaviour
     public Color playerColour;
     public Color enemyColour;
     public Color stunColour;
+    public Color recoveryColour;
  
     private int initiative = 0;
     
@@ -59,7 +60,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         //just for testing, delete later
-        initiative = 3;
+        initiative = 5;
         SetActionPreview(2,6);
         
     }
@@ -166,31 +167,32 @@ public class UIManager : MonoBehaviour
         
         float width = duration * timelinePreviewBackgroundIncrement;
         float offset = startingBeat * timelinePreviewBackgroundIncrement;
-
-
         
         actionPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, -60);
         actionPreviewBackground.GetComponent<RectTransform>().anchoredPosition = new Vector2(offset, 0);
     }
 
-    public void SetRecoveryPreview(int duration, int actionPreviewOffset, int startingBeat)
+    public void SetRecoveryPreview(int recoveryDuration, int actionStartupDuration, int actionStartingBeat)
     {
-        if (startingBeat > 9)
+        if (actionStartingBeat > 9)
         {
             RecoveryPreviewActive(false);
         }
         
-        if (duration + startingBeat > 10)
+        if (recoveryDuration + actionStartingBeat + actionStartupDuration > 10)
         {
-            
-            int overTimeRecoveryDuration = duration + startingBeat - 10;
-            duration -= overTimeRecoveryDuration;
+            //NOTE FOR TOMORROW: THIS ISN'T WORKING PROPERLY YET
+            //STARTING BEAT IS FOR FIGURING OUT IF THE RECOVERY PREVIEW EXCEEDS THE TIMELINE
+            //ACTION PREVIEW OFFSET IS JUST FOR OFFSET BECAUSE IT'S ALREADY PARENTED
+            //CALCULATE HOW MANY BEATS OVER 10 THE RECOVERY PREVIEW GOES, THEN CALL THE OVERTIMELINE WITH A SIMILAR FUNCTION
+            int overTimeRecoveryDuration = recoveryDuration + actionStartingBeat + actionStartupDuration - 10;
+            recoveryDuration -= overTimeRecoveryDuration;
             SetOverTimeLineRecoveryPreviewDuration(overTimeRecoveryDuration);
      
         }
         
-        float width = duration * timelinePreviewBackgroundIncrement;
-        float offset = actionPreviewOffset * timelinePreviewBackgroundIncrement;
+        float width = recoveryDuration * timelinePreviewBackgroundIncrement;
+        float offset = actionStartupDuration * timelinePreviewBackgroundIncrement;
         
         recoveryPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, 0);
         recoveryPreviewBackground.GetComponent<RectTransform>().anchoredPosition = new Vector2(offset, 0);
