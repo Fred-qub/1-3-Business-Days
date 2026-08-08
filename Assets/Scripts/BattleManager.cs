@@ -40,5 +40,15 @@ public class BattleManager : MonoBehaviour
        Debug.Log("Spawned " + playerCombatant.combatantName);
        Debug.Log("Spawned " + enemyCombatant.combatantName);
     }
+    
+    // 08/08/2026 - action queue system should go in here under ROUNDSTART phase
+    // player can queue multiple actions within a round if their initiative is low enough and they pick a fast action
+    // make UI buttons call functions in here to queue actions
+    // pointer enter inserts it into the queue, button select confirms it
+    // action queue could be split off into another script but it'll probably be useful for resolution so idk
+    // queue factors in action startup + recovery
+    // once queue exceeds the round length stop accepting new entries
+    // update preview on timelines through UIManager every time an action is inserted
+    // uses code string from before
 
 }

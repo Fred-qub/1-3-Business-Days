@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Combatant : MonoBehaviour
@@ -8,6 +9,5 @@ public class Combatant : MonoBehaviour
     public int currentHP;
     
     public int initiative;
-    
     
 }
