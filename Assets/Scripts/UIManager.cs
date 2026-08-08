@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
+
 public class UIManager : MonoBehaviour
 {
     //References
@@ -45,7 +47,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI overTimeLineText;
     public Slider overTimeLineSlider;
     public GameObject overTimeLineRecoveryPreviewBackground;
-    public float overTimeLineRecoveryPreviewBackgroundWidthIncrement = 32f;
+    public float overTimeLineRecoveryPreviewBackgroundWidthIncrement = 36f;
     public float overTimeLineRecoveryPreviewBackgroundXOffsetIncrement = 72f;
 
     [Header("Colours")] 
@@ -61,7 +63,7 @@ public class UIManager : MonoBehaviour
     {
         //just for testing, delete later
         initiative = 5;
-        SetActionPreview(2,6);
+        SetActionPreview(7,9);
         
     }
 
@@ -146,24 +148,26 @@ public class UIManager : MonoBehaviour
     //Enables / disables the recovery preview on the timeline
     public void RecoveryPreviewActive(bool active) { recoveryPreviewBackground.SetActive(active); }
 
-    //Sets the action preview with a given duration and starting beat, using the increment defined above
-    //Due to this effecting the position of the following recovery preview, the functions to adjust it are called by this one
-    //It also checks if the length of the preview exceeds the timeline length and sends it to the overtimeline if it does
+    //Sets the action preview with a given duration and starting beat, using the increment defined above, on the timeline
     public void SetActionPreview(int duration, int startingBeat)
     {
+        ActionPreviewActive(true);
+        
+        //if the startup duration exceeds the remainder of the round, shortens the preview and sends the remainder to overtimeline
+        //also calls other functions to enable / disable the recovery preview and set the recovery preview
         if (duration + startingBeat > 10)
         {
            int overTimeDuration = duration + startingBeat - 10;
            duration -= overTimeDuration;
-           SetOverTimeLineActionPreview(overTimeDuration);
+           SetOverTimeLineActionPreview(initiative, overTimeDuration);
            RecoveryPreviewActive(false);
-           
         }
         else
         {
             RecoveryPreviewActive(true);
             SetRecoveryPreview(initiative, duration, startingBeat);
         }
+ 
         
         float width = duration * timelinePreviewBackgroundIncrement;
         float offset = startingBeat * timelinePreviewBackgroundIncrement;
@@ -172,59 +176,53 @@ public class UIManager : MonoBehaviour
         actionPreviewBackground.GetComponent<RectTransform>().anchoredPosition = new Vector2(offset, 0);
     }
 
+    //sets the recovery preview on the timeline
     public void SetRecoveryPreview(int recoveryDuration, int actionStartupDuration, int actionStartingBeat)
     {
+        //if the action is starting later than 9 it means there wouldn't be any room for the preview
         if (actionStartingBeat > 9)
         {
             RecoveryPreviewActive(false);
         }
         
+        //if the recovery preview exceeds the remainder of the round, shortens it and sends the remainder to overtimeline 
         if (recoveryDuration + actionStartingBeat + actionStartupDuration > 10)
         {
-            //NOTE FOR TOMORROW: THIS ISN'T WORKING PROPERLY YET
-            //STARTING BEAT IS FOR FIGURING OUT IF THE RECOVERY PREVIEW EXCEEDS THE TIMELINE
-            //ACTION PREVIEW OFFSET IS JUST FOR OFFSET BECAUSE IT'S ALREADY PARENTED
-            //CALCULATE HOW MANY BEATS OVER 10 THE RECOVERY PREVIEW GOES, THEN CALL THE OVERTIMELINE WITH A SIMILAR FUNCTION
             int overTimeRecoveryDuration = recoveryDuration + actionStartingBeat + actionStartupDuration - 10;
             recoveryDuration -= overTimeRecoveryDuration;
-            SetOverTimeLineRecoveryPreviewDuration(overTimeRecoveryDuration);
-     
+            SetOverTimeLineRecoveryPreview(0,overTimeRecoveryDuration);
         }
-        
+        //sets the width and offset of the preview
         float width = recoveryDuration * timelinePreviewBackgroundIncrement;
         float offset = actionStartupDuration * timelinePreviewBackgroundIncrement;
-        
         recoveryPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, 0);
         recoveryPreviewBackground.GetComponent<RectTransform>().anchoredPosition = new Vector2(offset, 0);
     }
-
+    //enables / disables the overtimeline
     public void OverTimeLineActive(bool active)
     {
         overTimeLineText.gameObject.SetActive(active);
         overTimeLineSlider.gameObject.SetActive(active);
     }
-
-    public void SetOverTimeLineActionPreview(int duration)
+    //sets the action preview on the overtimeline
+    public void SetOverTimeLineActionPreview(int recoveryDuration, int duration)
     {
+        OverTimeLineActive(true);
         overTimeLineSlider.value = duration;
-        SetOverTimeLineRecoveryPreviewOffset(duration);
+        SetOverTimeLineRecoveryPreview(duration, recoveryDuration);
     }
-
-    public void SetOverTimeLineRecoveryPreviewDuration(int duration)
+    //sets the recovery preview on the overtimeline
+    public void SetOverTimeLineRecoveryPreview(int startingBeat, int recoveryDuration)
     {
-        float width = duration * overTimeLineRecoveryPreviewBackgroundWidthIncrement;
-
+        OverTimeLineActive(true);
         
-        overTimeLineRecoveryPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, -60);
-    }
-    
-    public void SetOverTimeLineRecoveryPreviewOffset(int startingBeat)
-    {
-        float offset = startingBeat * overTimeLineRecoveryPreviewBackgroundXOffsetIncrement;
+        if (startingBeat + recoveryDuration > 10)
+        {
+            int recoverDurationExcess = startingBeat + recoveryDuration - 10;
+            recoveryDuration -= recoverDurationExcess;
+        }
         
-        overTimeLineRecoveryPreviewBackground.GetComponent<RectTransform>().anchoredPosition = new Vector2(offset, 0);
+        float width = recoveryDuration * overTimeLineRecoveryPreviewBackgroundWidthIncrement;
+        overTimeLineRecoveryPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, -120);
     }
-    
-    //To do for tomorrow: continue setting up UI functions
-    
 }
