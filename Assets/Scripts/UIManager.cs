@@ -142,6 +142,26 @@ public class UIManager : MonoBehaviour
     //Set's the enemy's starting position on the timeline
     public void SetEnemyBeatMarker(int beat) { enemyBeatSlider.value = beat; }
     
+   
+    
+    /*
+    
+    So as it turns out none of this stuff below here is an effective solution because the timeline needs to be able
+    to display information wayyyyyy more flexibly than what offsetting and increasing the width of a couple of boxes
+    will allow.
+    
+    I'm going to replace it with an array of 20 grid cells which can independently change colour to display startup
+    and recovery periods for this round and the next, including information left over from the previous round
+    
+    I'm leaving all this commented out code here so I can remember how my previous solution worked
+    
+    
+    
+    
+    
+    
+     
+    
     //Enables / disables the action startup preview on the timeline
     public void ActionPreviewActive(bool active) { actionPreviewBackground.SetActive(active); }
     
@@ -225,4 +245,6 @@ public class UIManager : MonoBehaviour
         float width = recoveryDuration * overTimeLineRecoveryPreviewBackgroundWidthIncrement;
         overTimeLineRecoveryPreviewBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(width, -120);
     }
+    
+    */
 }
