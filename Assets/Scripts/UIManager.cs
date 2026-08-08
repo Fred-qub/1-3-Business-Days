@@ -61,9 +61,9 @@ public class UIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        char[] testCode = {'A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A'};
+        string testString = "BgBBBhfdgdfgfgBBBBBBBBBBBBBBB";
              
-        updateRoundPreview(testCode);
+        updateRoundPreview(testString);
     }
 
     // Update is called once per frame
@@ -152,27 +152,20 @@ public class UIManager : MonoBehaviour
             OAPCells[cell - 10].GetComponent<Image>().color = colour;
         }
     }
-   
-    /*
-    public void SetOAPCell(int cell, Color colour)
-    {
-        OAPCells[cell].GetComponent<Image>().color = colour;
-    }
-*/
     
-    public void updateRoundPreview(char[] previewCodeArray)
+    public void updateRoundPreview(string previewCodeString)
     {
-        if (previewCodeArray.Length != 20)
+        if (previewCodeString.Length != 20)
         {
-            Debug.Log("Preview code array length is " + previewCodeArray.Length + "the array has to be length 19");
+            Debug.Log("Preview code array length is " + previewCodeString.Length + "the array has to be length 20");
             return;
         }
         
-        for (int i = 0; i < previewCodeArray.Length; i++)
+        for (int i = 0; i < previewCodeString.Length; i++)
         {
-            Debug.Log(previewCodeArray[i]);
+            Debug.Log(previewCodeString[i]);
             
-            switch (previewCodeArray[i])
+            switch (previewCodeString[i])
             {
                 case 'A':
                     SetAPCell(i, playerColour);
@@ -191,7 +184,7 @@ public class UIManager : MonoBehaviour
                     break;
                 
                 default:
-                    Debug.Log(previewCodeArray[i] + " is not a valid character");
+                    Debug.Log(previewCodeString[i] + " is not a valid character");
                     SetAPCell(i,enemyColour);
                     break;
             }
