@@ -61,7 +61,7 @@ public class UIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        string testString = "BgBBBhfdgdfgfgBBBBBBBBBBBBBBB";
+        string testString = "BBBBBBBBBBBBBBBBBBBB";
              
         updateRoundPreview(testString);
     }
@@ -141,6 +141,7 @@ public class UIManager : MonoBehaviour
     //Set's the enemy's starting position on the timeline
     public void SetEnemyBeatMarker(int beat) { enemyBeatSlider.value = beat; }
 
+    //Sets the colour of a single action preview cell in either the main timeline or overtimeline
     public void SetAPCell(int cell, Color colour)
     {
         if (cell < 10)
@@ -153,6 +154,9 @@ public class UIManager : MonoBehaviour
         }
     }
     
+    //updates the timeline preview using a code string
+    //different characters in the string correspond to different events
+    //see switch case block for explanations via colour names
     public void updateRoundPreview(string previewCodeString)
     {
         if (previewCodeString.Length != 20)
