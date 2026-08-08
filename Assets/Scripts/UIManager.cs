@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Debug = System.Diagnostics.Debug;
+//using Debug = System.Diagnostics.Debug;
 
 public class UIManager : MonoBehaviour
 {
@@ -54,13 +54,16 @@ public class UIManager : MonoBehaviour
     public Color enemyColour;
     public Color stunColour;
     public Color recoveryColour;
+    public Color blankColour;
  
     //private int initiative = 0;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        char[] testCode = {'A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A'};
+             
+        updateRoundPreview(testCode);
     }
 
     // Update is called once per frame
@@ -137,8 +140,63 @@ public class UIManager : MonoBehaviour
     
     //Set's the enemy's starting position on the timeline
     public void SetEnemyBeatMarker(int beat) { enemyBeatSlider.value = beat; }
-    
+
+    public void SetAPCell(int cell, Color colour)
+    {
+        if (cell < 10)
+        {
+            APCells[cell].GetComponent<Image>().color = colour;  
+        }
+        else
+        {
+            OAPCells[cell - 10].GetComponent<Image>().color = colour;
+        }
+    }
    
+    /*
+    public void SetOAPCell(int cell, Color colour)
+    {
+        OAPCells[cell].GetComponent<Image>().color = colour;
+    }
+*/
+    
+    public void updateRoundPreview(char[] previewCodeArray)
+    {
+        if (previewCodeArray.Length != 20)
+        {
+            Debug.Log("Preview code array length is " + previewCodeArray.Length + "the array has to be length 19");
+            return;
+        }
+        
+        for (int i = 0; i < previewCodeArray.Length; i++)
+        {
+            Debug.Log(previewCodeArray[i]);
+            
+            switch (previewCodeArray[i])
+            {
+                case 'A':
+                    SetAPCell(i, playerColour);
+                    break;
+                
+                case 'S':
+                    SetAPCell(i, stunColour);
+                    break;
+                
+                case 'R':
+                    SetAPCell(i,recoveryColour);
+                    break;
+                
+                case 'B':
+                    SetAPCell(i,blankColour);
+                    break;
+                
+                default:
+                    Debug.Log(previewCodeArray[i] + " is not a valid character");
+                    SetAPCell(i,enemyColour);
+                    break;
+            }
+        }
+    }
     
     /*
     
