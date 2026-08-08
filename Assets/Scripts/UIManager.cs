@@ -39,16 +39,15 @@ public class UIManager : MonoBehaviour
     public Slider timelineSlider;
     public Slider playerBeatSlider;
     public Slider enemyBeatSlider;
-    public GameObject actionPreviewBackground;
-    public GameObject recoveryPreviewBackground;
-    public float timelinePreviewBackgroundIncrement = 76.2f;
+    public GameObject[] APCells;
+    //public float timelinePreviewBackgroundIncrement = 76.2f;
     
     [Header("OverTimeLine")]
     public TextMeshProUGUI overTimeLineText;
-    public Slider overTimeLineSlider;
-    public GameObject overTimeLineRecoveryPreviewBackground;
-    public float overTimeLineRecoveryPreviewBackgroundWidthIncrement = 36f;
-    public float overTimeLineRecoveryPreviewBackgroundXOffsetIncrement = 72f;
+    public GameObject overTimeLine;
+    public GameObject[] OAPCells;
+    //public float overTimeLineRecoveryPreviewBackgroundWidthIncrement = 36f;
+    //public float overTimeLineRecoveryPreviewBackgroundXOffsetIncrement = 72f;
 
     [Header("Colours")] 
     public Color playerColour;
@@ -56,7 +55,7 @@ public class UIManager : MonoBehaviour
     public Color stunColour;
     public Color recoveryColour;
  
-    private int initiative = 0;
+    //private int initiative = 0;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
