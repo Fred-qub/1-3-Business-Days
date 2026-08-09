@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -155,7 +156,7 @@ public class UIManager : MonoBehaviour
     //updates the timeline preview using a code string
     //different characters in the string correspond to different events
     //see switch case block for explanations via colour names
-    public void updateRoundPreview(string previewCodeString)
+    public void updateRoundPreview(char[] previewCodeString)
     {
         if (previewCodeString.Length != 20)
         {

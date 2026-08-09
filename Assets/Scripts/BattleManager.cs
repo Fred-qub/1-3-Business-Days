@@ -18,6 +18,9 @@ public class BattleManager : MonoBehaviour
     
     public BattleState battleState;
     
+    public int currentRound = 1;
+    public int currentBeat = 0;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -73,8 +76,38 @@ public class BattleManager : MonoBehaviour
         
         UIManager.ButtonsActive(true);
         
-        string testString = "AEAEAEAEAERSRSRSRSRS";
-             
-        UIManager.updateRoundPreview(testString);
+        //string testString = "AEAEAEAEAERSRSRSRSRS";
+        char[] blankPreviewCode = {'A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A','A',};
+        
+        UIManager.updateRoundPreview(blankPreviewCode);
+    }
+
+    void updateActionQueue(char actionType, int actionStartupDuration, int actionStartBeat)
+    {
+        if(battleState != BattleState.ROUNDSTART) return;
+        
+        
+    }
+
+    void guardButtonPreview()
+    {
+       if(battleState != BattleState.ROUNDSTART) return; 
+       
+       
+    }
+
+    void jabButtonPreview()
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
+    }
+
+    void hookButtonPreview()
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
+    }
+
+    void haymakerButtonPreview()
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
     }
 }
