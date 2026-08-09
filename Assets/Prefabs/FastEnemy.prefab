@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 6248802089937853160}
   - component: {fileID: 3454731649308528346}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: FastEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fd8c3e24d1d564ba4947e006077e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combatant
-  combatantName: Bert
+  combatantName: Blingo
   maxHP: 100
   currentHP: 100
-  initiative: 4
+  initiative: 3

@@ -5,7 +5,7 @@ public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, PLAY
 public class BattleManager : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public GameObject enemyPrefab;
+    public GameObject[] enemyPrefabs;
 
     public Transform playerBattleMarker;
     public Transform enemyBattleMarker;
@@ -16,6 +16,7 @@ public class BattleManager : MonoBehaviour
     public UIManager UIManager;
     
     public BattleState battleState;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,14 +30,20 @@ public class BattleManager : MonoBehaviour
        GameObject playerGameObject = Instantiate(playerPrefab, playerBattleMarker);
        playerCombatant = playerGameObject.GetComponent<Combatant>();
        UIManager.SetPlayerName(playerCombatant.combatantName);
+       UIManager.SetPlayerBeatMarker(playerCombatant.initiative);
+     
+
        
-       GameObject enemyGameObject = Instantiate(enemyPrefab, enemyBattleMarker);
+       int randomEnemySelect =  Random.Range(0, enemyPrefabs.Length);
+       
+       GameObject enemyGameObject = Instantiate(enemyPrefabs[randomEnemySelect], enemyBattleMarker);
        enemyCombatant = enemyGameObject.GetComponent<Combatant>();
        UIManager.SetEnemyName(enemyCombatant.combatantName);
-       UIManager.SetDialogueContent("Holy fucking shit it's " + enemyCombatant.combatantName);
+       UIManager.SetEnemyBeatMarker(enemyCombatant.initiative);
        
        
-
+       
+       UIManager.SetDialogueContent(enemyCombatant.combatantName + " squares up!");
        Debug.Log("Spawned " + playerCombatant.combatantName);
        Debug.Log("Spawned " + enemyCombatant.combatantName);
     }

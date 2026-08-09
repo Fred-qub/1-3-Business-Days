@@ -4399,7 +4399,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
   playerPrefab: {fileID: 8301571357987585457, guid: 53d57c8c69bf5fb4883b976ef5d78fe8, type: 3}
-  enemyPrefab: {fileID: 8038170959428784934, guid: 38a9b871c6c56b8438adc67e0b4a5eaf, type: 3}
+  enemyPrefabs:
+  - {fileID: 8038170959428784934, guid: 38a9b871c6c56b8438adc67e0b4a5eaf, type: 3}
+  - {fileID: 8038170959428784934, guid: 284ca9b667b0cea4b9f78dfdfbbcc66e, type: 3}
+  - {fileID: 8038170959428784934, guid: 150906b7dd518bd41b0026c607c795b2, type: 3}
   playerBattleMarker: {fileID: 2064428389}
   enemyBattleMarker: {fileID: 1170193196}
   UIManager: {fileID: 1339604316}
