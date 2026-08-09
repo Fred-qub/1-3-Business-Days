@@ -166,7 +166,7 @@ public class UIManager : MonoBehaviour
         
         for (int i = 0; i < previewCodeString.Length; i++)
         {
-            Debug.Log(previewCodeString[i]);
+          
             
             switch (previewCodeString[i])
             {

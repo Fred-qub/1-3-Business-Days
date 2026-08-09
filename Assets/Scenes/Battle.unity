@@ -2404,6 +2404,18 @@ MonoBehaviour:
               damage, but comes out fast. Good for countering. '
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 883400649}
+          m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+          m_MethodName: jabButtonPreview
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &505515320
 GameObject:
   m_ObjectHideFlags: 0
@@ -4129,6 +4141,18 @@ MonoBehaviour:
               slow, but deals a lot of damage. Risky but rewarding. '
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 883400649}
+          m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+          m_MethodName: haymakerButtonPreview
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &853131739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4407,6 +4431,11 @@ MonoBehaviour:
   enemyBattleMarker: {fileID: 1170193196}
   UIManager: {fileID: 1339604316}
   battleState: 0
+  currentRound: 1
+  currentBeat: 0
+  playerActionQueueArray: 42004200420042004200420042004200420042004200420042004200420042004200420042004200
+  playerStartingBeat: 0
+  enemyStartingBeat: 0
 --- !u!4 &883400650
 Transform:
   m_ObjectHideFlags: 0
@@ -5874,6 +5903,18 @@ MonoBehaviour:
               medium delay. Perfectly average.'
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 883400649}
+          m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+          m_MethodName: hookButtonPreview
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1145605313
 GameObject:
   m_ObjectHideFlags: 0
@@ -6101,6 +6142,18 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 'Startup: 1 beat.                          Halves all
               incoming damage until your next turn. '
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 883400649}
+          m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+          m_MethodName: guardButtonPreview
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &1170193195
