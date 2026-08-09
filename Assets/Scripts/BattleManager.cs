@@ -94,15 +94,23 @@ public class BattleManager : MonoBehaviour
         int actionEndBeat = actionStartBeat + actionStartupDuration;
         int initiative = playerCombatant.initiative;
         int recoveryEndBeat = actionEndBeat + initiative;
-
+        
+        //Adds the startup beats to the queue
         for (int i = actionStartBeat; i < actionEndBeat; i++)
         {
             playerActionQueueArray[i] = 'A';
         }
-
+        
+        //Adds the recovery beats to the queue
         for (int i = actionEndBeat; i < recoveryEndBeat; i++)
         {
             playerActionQueueArray[i] = 'R';
+        }
+        
+        //Clears all beats after recovery
+        for (int i = recoveryEndBeat; i < playerActionQueueArray.Length; i++)
+        {
+            playerActionQueueArray[i] = 'B';
         }
         
         UIManager.updateRoundPreview(playerActionQueueArray);
