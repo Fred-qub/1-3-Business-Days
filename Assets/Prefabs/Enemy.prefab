@@ -140,4 +140,4 @@ MonoBehaviour:
   combatantName: Bert
   maxHP: 100
   currentHP: 100
-  initiative: 4
+  initiative: 3

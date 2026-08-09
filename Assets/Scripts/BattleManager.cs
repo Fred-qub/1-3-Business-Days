@@ -31,7 +31,7 @@ public class BattleManager : MonoBehaviour
        playerCombatant = playerGameObject.GetComponent<Combatant>();
        UIManager.SetPlayerName(playerCombatant.combatantName);
        UIManager.SetPlayerBeatMarker(playerCombatant.initiative);
-     
+       UIManager.PlayerBeatMarkerActive(true);
 
        
        int randomEnemySelect =  Random.Range(0, enemyPrefabs.Length);
@@ -39,6 +39,7 @@ public class BattleManager : MonoBehaviour
        GameObject enemyGameObject = Instantiate(enemyPrefabs[randomEnemySelect], enemyBattleMarker);
        enemyCombatant = enemyGameObject.GetComponent<Combatant>();
        UIManager.SetEnemyName(enemyCombatant.combatantName);
+       UIManager.EnemyBeatMarkerActive(true);
        UIManager.SetEnemyBeatMarker(enemyCombatant.initiative);
        
        
