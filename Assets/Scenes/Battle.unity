@@ -2418,8 +2418,8 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: JabButtonPreview
-          m_Mode: 1
+          m_MethodName: ActionPreview
+          m_Mode: 3
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4167,8 +4167,8 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: HaymakerButtonPreview
-          m_Mode: 1
+          m_MethodName: ActionPreview
+          m_Mode: 3
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5941,8 +5941,8 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: HookButtonPreview
-          m_Mode: 1
+          m_MethodName: ActionPreview
+          m_Mode: 3
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6194,8 +6194,8 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: GuardButtonPreview
-          m_Mode: 1
+          m_MethodName: ActionPreview
+          m_Mode: 3
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

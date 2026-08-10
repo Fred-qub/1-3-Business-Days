@@ -32,6 +32,7 @@ public class BattleManager : MonoBehaviour
     public static int jabStartupDuration = 3;
     public static int hookStartupDuration = 4;
     public static int haymakerStartupDuration = 6;
+    public static int roundLength = 10;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -159,33 +160,47 @@ public class BattleManager : MonoBehaviour
         }
         
         int i = playerStartingBeat + moveStartup + playerCombatant.initiative;
-        if (i < 9) { playerStartingBeat = i; }
-        UIManager.SetPlayerBeatMarker(playerStartingBeat);
+        if (i < roundLength - 1)
+        {
+            playerStartingBeat = i; 
+            UIManager.SetPlayerBeatMarker(playerStartingBeat);
+        }
+        else
+        {
+            battleState = BattleState.ENEMYACT;
+        }
+        
     }
 
-    public void GuardButtonPreview()
-    {
-       if(battleState != BattleState.ROUNDSTART) return; 
-       
-       UpdatePlayerActionQueue(guardStartupDuration, playerStartingBeat);
-    }
-    
-    public void JabButtonPreview()
-    {
-        if(battleState != BattleState.ROUNDSTART) return; 
-        UpdatePlayerActionQueue(jabStartupDuration, playerStartingBeat);
-    }
-    
-    public void HookButtonPreview()
-    {
-        if(battleState != BattleState.ROUNDSTART) return; 
-        
-        UpdatePlayerActionQueue(hookStartupDuration, playerStartingBeat);
-    }
-    
-    public void HaymakerButtonPreview()
+    public void ActionPreview(int actionNo)
     {
         if(battleState != BattleState.ROUNDSTART) return;
-        UpdatePlayerActionQueue(haymakerStartupDuration, playerStartingBeat);
+        
+        int moveStartup = 0;
+        
+        switch (actionNo)
+        {
+            case 0:
+                moveStartup = guardStartupDuration;
+                break;
+                
+            case 1:
+                moveStartup = jabStartupDuration;
+                break;
+                
+            case 2:
+                moveStartup = hookStartupDuration;
+                break;
+                
+            case 3:
+                moveStartup = haymakerStartupDuration;
+                break;
+                
+            default:
+                Debug.Log(actionNo + " is not a valid action number");
+                break;
+        }
+        
+        UpdatePlayerActionQueue(moveStartup, playerStartingBeat);
     }
 }
