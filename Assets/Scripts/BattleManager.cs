@@ -39,8 +39,14 @@ public class BattleManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        battleState = BattleState.INITIALIZATION;
+        ChangeBattleState(BattleState.INITIALIZATION);
         StartCoroutine(SpawnCombatants());
+    }
+
+    void ChangeBattleState(BattleState newState)
+    {
+        battleState = newState;
+        UIManager.SetPhaseStatus(battleState);
     }
 
     IEnumerator SpawnCombatants()
@@ -65,7 +71,7 @@ public class BattleManager : MonoBehaviour
        yield return new WaitForSeconds(3f);
        
        //Moves onto round start
-       battleState = BattleState.ROUNDSTART;
+       ChangeBattleState(BattleState.ROUNDSTART);
        StartPlayerActionQueue();
     }
     
@@ -88,6 +94,7 @@ public class BattleManager : MonoBehaviour
         UIManager.EnemyBeatMarkerActive(true);
         UIManager.SetEnemyBeatMarker(enemyStartingBeat);
         UIManager.ButtonsActive(true);
+        
         
         UIManager.UpdateRoundPreview(playerActionQueueArray);
         
@@ -165,15 +172,15 @@ public class BattleManager : MonoBehaviour
         if (i < roundLength)
         {
             playerStartingBeat = i;
-            playerActionQueueRollback = turnDuration;
+            playerActionQueueRollback += turnDuration;
             UIManager.SetPlayerBeatMarker(playerStartingBeat);
+            UIManager.ResetButtonActive(true);
         }
         else
         {
-            battleState = BattleState.ENEMYACT;
+            ChangeBattleState(BattleState.ENEMYACT);
             
         }
-        
     }
 
     public void ActionPreview(int actionNo)
@@ -210,6 +217,7 @@ public class BattleManager : MonoBehaviour
 
     public void ActionPreviewRollback()
     {
+        
         int oldStartingBeat = playerStartingBeat - playerActionQueueRollback;
         for (int i = oldStartingBeat; i < playerActionQueueArray.Length; i++)
         {
@@ -217,9 +225,10 @@ public class BattleManager : MonoBehaviour
         }
 
         playerStartingBeat = oldStartingBeat;
-        
+        playerActionQueueRollback = 0;
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
         UIManager.UpdateRoundPreview(playerActionQueueArray);
+        UIManager.ResetButtonActive(false);
     }
     
     

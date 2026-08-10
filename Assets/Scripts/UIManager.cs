@@ -11,6 +11,9 @@ public class UIManager : MonoBehaviour
     [Header("Round Counter")]
     public TextMeshProUGUI roundCounter;
     
+    [Header("Phase Status Panel")]
+    public TextMeshProUGUI phaseStatusPanel;
+    
     [Header("Player Battle UI")]
     public TextMeshProUGUI playerName;
     public Slider playerHPBarSlider;
@@ -34,6 +37,7 @@ public class UIManager : MonoBehaviour
     public Button jabButton;
     public Button hookButton;
     public Button haymakerButton;
+    public Button resetButton;
 
     [Header("Timeline")]
     public TextMeshProUGUI beatCounter;
@@ -74,6 +78,12 @@ public class UIManager : MonoBehaviour
     //Sets the round timer
     public void SetRoundTimer(int roundNumber) { roundCounter.text = ("ROUND " + roundNumber); }
     
+    //Sets the phase status
+    public void SetPhaseStatus(BattleState battleState)
+    {
+        phaseStatusPanel.text = ("PHASE: " + battleState);
+    }
+    
     //Sets the content of the dialogue box
     public void SetDialogueContent(string dialogue) { dialogueContent.text = dialogue; }
     
@@ -89,9 +99,9 @@ public class UIManager : MonoBehaviour
         haymakerButton.gameObject.SetActive(active);
     }
 
-    public void backButtonActive(bool active)
+    public void ResetButtonActive(bool active)
     {
-        
+        resetButton.gameObject.SetActive(active);
     }
 
     //Sets the player's name
