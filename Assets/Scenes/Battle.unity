@@ -2338,7 +2338,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 883400649}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: jabButtonSelect
+        m_MethodName: JabButtonSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2418,7 +2418,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: jabButtonPreview
+          m_MethodName: JabButtonPreview
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4087,7 +4087,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 883400649}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: haymakerButtonSelect
+        m_MethodName: HaymakerButtonSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4167,7 +4167,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: haymakerButtonPreview
+          m_MethodName: HaymakerButtonPreview
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5861,7 +5861,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 883400649}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: hookButtonSelect
+        m_MethodName: HookButtonSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5941,7 +5941,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: hookButtonPreview
+          m_MethodName: HookButtonPreview
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6114,7 +6114,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 883400649}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-        m_MethodName: guardButtonSelect
+        m_MethodName: GuardButtonSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6194,7 +6194,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 883400649}
           m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
-          m_MethodName: guardButtonPreview
+          m_MethodName: GuardButtonPreview
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

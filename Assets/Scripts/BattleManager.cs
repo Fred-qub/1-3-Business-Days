@@ -28,6 +28,11 @@ public class BattleManager : MonoBehaviour
     public int playerStartingBeat;
     public int enemyStartingBeat;
     
+    public static int guardStartupDuration = 1;
+    public static int jabStartupDuration = 3;
+    public static int hookStartupDuration = 4;
+    public static int haymakerStartupDuration = 6;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -59,7 +64,7 @@ public class BattleManager : MonoBehaviour
        
        //Moves onto round start
        battleState = BattleState.ROUNDSTART;
-       startPlayerActionQueue();
+       StartPlayerActionQueue();
     }
     
     // 08/08/2026 - action queue system should go in here under ROUNDSTART phase
@@ -71,7 +76,7 @@ public class BattleManager : MonoBehaviour
     // once queue exceeds the round length stop accepting new entries
     // update preview on timelines through UIManager every time an action is inserted
     // uses code string from before
-    void startPlayerActionQueue()
+    void StartPlayerActionQueue()
     {
         //Updates the UI
         UIManager.SetDialogueTitle("SELECT AN ACTION:");
@@ -82,11 +87,11 @@ public class BattleManager : MonoBehaviour
         UIManager.SetEnemyBeatMarker(enemyStartingBeat);
         UIManager.ButtonsActive(true);
         
-        UIManager.updateRoundPreview(playerActionQueueArray);
+        UIManager.UpdateRoundPreview(playerActionQueueArray);
         
     }
 
-    void updatePlayerActionQueue(int actionStartupDuration, int actionStartBeat)
+    void UpdatePlayerActionQueue(int actionStartupDuration, int actionStartBeat)
     {
         if(battleState != BattleState.ROUNDSTART) return;
         
@@ -113,62 +118,65 @@ public class BattleManager : MonoBehaviour
             playerActionQueueArray[i] = 'B';
         }
         
-        UIManager.updateRoundPreview(playerActionQueueArray);
+        UIManager.UpdateRoundPreview(playerActionQueueArray);
     }
 
-    public void clearPlayerActionQueueArray()
+    public void ClearPlayerActionQueueArray()
     {
         for (int i = 0; i < playerActionQueueArray.Length; i++)
         {
             playerActionQueueArray[i] = 'B';
         }
     }
+    
 
-    public void guardButtonPreview()
+    public void GuardButtonPreview()
     {
        if(battleState != BattleState.ROUNDSTART) return; 
        
-       updatePlayerActionQueue(1, playerStartingBeat);
+       UpdatePlayerActionQueue(guardStartupDuration, playerStartingBeat);
     }
 
-    public void guardButtonSelect()
+    public void GuardButtonSelect()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
         Debug.Log("guardButtonSelect");
+        
+        playerStartingBeat = playerCombatant.initiative;
     }
 
-    public void jabButtonPreview()
+    public void JabButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
-        updatePlayerActionQueue(3, playerStartingBeat);
+        UpdatePlayerActionQueue(jabStartupDuration, playerStartingBeat);
     }
     
-    public void jabButtonSelect()
+    public void JabButtonSelect()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
         Debug.Log("jabButtonSelect");
     }
 
-    public void hookButtonPreview()
+    public void HookButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
         
-        updatePlayerActionQueue(4, playerStartingBeat);
+        UpdatePlayerActionQueue(hookStartupDuration, playerStartingBeat);
     }
     
-    public void hookButtonSelect()
+    public void HookButtonSelect()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
         Debug.Log("hookButtonSelect");
     }
 
-    public void haymakerButtonPreview()
+    public void HaymakerButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return;
-        updatePlayerActionQueue(6, playerStartingBeat);
+        UpdatePlayerActionQueue(haymakerStartupDuration, playerStartingBeat);
     }
     
-    public void haymakerButtonSelect()
+    public void HaymakerButtonSelect()
     {
         if(battleState != BattleState.ROUNDSTART) return;
         Debug.Log("haymakerButtonSelect");

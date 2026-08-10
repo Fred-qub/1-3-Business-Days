@@ -156,7 +156,7 @@ public class UIManager : MonoBehaviour
     //updates the timeline preview using a code string
     //different characters in the string correspond to different events
     //see switch case block for explanations via colour names
-    public void updateRoundPreview(char[] previewCodeString)
+    public void UpdateRoundPreview(char[] previewCodeString)
     {
         if (previewCodeString.Length != 20)
         {
