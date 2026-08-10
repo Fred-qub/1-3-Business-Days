@@ -116,6 +116,14 @@ public class BattleManager : MonoBehaviour
         UIManager.updateRoundPreview(playerActionQueueArray);
     }
 
+    public void clearPlayerActionQueueArray()
+    {
+        for (int i = 0; i < playerActionQueueArray.Length; i++)
+        {
+            playerActionQueueArray[i] = 'B';
+        }
+    }
+
     public void guardButtonPreview()
     {
        if(battleState != BattleState.ROUNDSTART) return; 
@@ -123,10 +131,22 @@ public class BattleManager : MonoBehaviour
        updatePlayerActionQueue(1, playerStartingBeat);
     }
 
+    public void guardButtonSelect()
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
+        Debug.Log("guardButtonSelect");
+    }
+
     public void jabButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
         updatePlayerActionQueue(3, playerStartingBeat);
+    }
+    
+    public void jabButtonSelect()
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
+        Debug.Log("jabButtonSelect");
     }
 
     public void hookButtonPreview()
@@ -135,10 +155,22 @@ public class BattleManager : MonoBehaviour
         
         updatePlayerActionQueue(4, playerStartingBeat);
     }
+    
+    public void hookButtonSelect()
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
+        Debug.Log("hookButtonSelect");
+    }
 
     public void haymakerButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return;
         updatePlayerActionQueue(6, playerStartingBeat);
+    }
+    
+    public void haymakerButtonSelect()
+    {
+        if(battleState != BattleState.ROUNDSTART) return;
+        Debug.Log("haymakerButtonSelect");
     }
 }
