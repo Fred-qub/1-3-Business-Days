@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
     public Slider playerBeatSlider;
     public Slider enemyBeatSlider;
     public GameObject[] APCells;
+    public TextMeshProUGUI goText;
     //public float timelinePreviewBackgroundIncrement = 76.2f;
     
     [Header("OverTimeLine")]
@@ -168,7 +169,10 @@ public class UIManager : MonoBehaviour
         }
     }
     
-    //updates the timeline preview using a code string
+    //Enables / disables the go text
+    public void GoTextActive(bool active) { goText.gameObject.SetActive(active); }
+    
+    //updates the timeline preview using a char array
     //different characters in the string correspond to different events
     //see switch case block for explanations via colour names
     public void UpdateRoundPreview(char[] previewCodeString)

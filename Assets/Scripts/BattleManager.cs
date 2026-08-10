@@ -126,6 +126,8 @@ public class BattleManager : MonoBehaviour
         {
             playerActionQueueArray[i] = 'B';
         }
+
+        UIManager.GoTextActive(recoveryEndBeat > 9);
         
         UIManager.UpdateRoundPreview(playerActionQueueArray);
     }
@@ -213,6 +215,8 @@ public class BattleManager : MonoBehaviour
         }
         
         UpdatePlayerActionQueue(moveStartup, playerStartingBeat);
+        
+        
     }
 
     public void ActionPreviewRollback()
@@ -229,6 +233,7 @@ public class BattleManager : MonoBehaviour
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
         UIManager.UpdateRoundPreview(playerActionQueueArray);
         UIManager.ResetButtonActive(false);
+        UIManager.GoTextActive(false);
     }
     
     
