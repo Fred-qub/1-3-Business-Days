@@ -95,7 +95,6 @@ public class BattleManager : MonoBehaviour
         UIManager.SetEnemyBeatMarker(enemyStartingBeat);
         UIManager.ButtonsActive(true);
         
-        
         UIManager.UpdateRoundPreview(playerActionQueueArray);
         
     }
@@ -127,11 +126,12 @@ public class BattleManager : MonoBehaviour
             playerActionQueueArray[i] = 'B';
         }
 
+        //Updates the UI
         UIManager.GoTextActive(recoveryEndBeat > 9);
-        
         UIManager.UpdateRoundPreview(playerActionQueueArray);
     }
 
+    //Function to clear the whole array
     public void ClearPlayerActionQueueArray()
     {
         for (int i = 0; i < playerActionQueueArray.Length; i++)
@@ -140,6 +140,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    //Called when a button is clicked
+    //Moves the player marker forwards and enables the reset button
+    //If the end of the round is reached by the selected move, moves onto the next gamestate
     public void ActionSelect(int actionNo)
     {
         if(battleState != BattleState.ROUNDSTART) return; 
@@ -181,10 +184,12 @@ public class BattleManager : MonoBehaviour
         else
         {
             ChangeBattleState(BattleState.ENEMYACT);
-            
+            EnemyActStart();
         }
     }
 
+    //Updates the preview on the timeline when buttons are hovered over
+    //This is also what is queuing them for later which doesn't seem like a great idea but hey what could go wrong
     public void ActionPreview(int actionNo)
     {
         if(battleState != BattleState.ROUNDSTART) return;
@@ -219,6 +224,8 @@ public class BattleManager : MonoBehaviour
         
     }
 
+    //Undoes all the actions selected this round
+    //I wanted to make it so you could roll them back one at a time but that's actually complicated with how everything's set up
     public void ActionPreviewRollback()
     {
         
@@ -235,6 +242,17 @@ public class BattleManager : MonoBehaviour
         UIManager.ResetButtonActive(false);
         UIManager.GoTextActive(false);
     }
-    
-    
+
+    public void EnemyActStart()
+    {
+        UIManager.SetDialogueTitle("FEELING LUCKY?");
+        UIManager.SetDialogueContent(enemyCombatant.combatantName + " is thinking of the best way to thrash you. If the game is working properly, you shouldn't have time to read this though.");
+
+        UIManager.PlayerBeatMarkerActive(false);
+        UIManager.EnemyBeatMarkerActive(false);
+
+        UIManager.ButtonsActive(false);
+        UIManager.ResetButtonActive(false);
+        UIManager.GoTextActive(false);
+    }
 }
