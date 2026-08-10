@@ -128,7 +128,40 @@ public class BattleManager : MonoBehaviour
             playerActionQueueArray[i] = 'B';
         }
     }
-    
+
+    public void ActionSelect(int actionNo)
+    {
+        if(battleState != BattleState.ROUNDSTART) return; 
+        
+        int moveStartup = 0;
+        
+        switch (actionNo)
+        {
+            case 0:
+                moveStartup = guardStartupDuration;
+                break;
+                
+            case 1:
+                moveStartup = jabStartupDuration;
+                break;
+                
+            case 2:
+                moveStartup = hookStartupDuration;
+                break;
+                
+            case 3:
+                moveStartup = haymakerStartupDuration;
+                break;
+                
+            default:
+                Debug.Log(actionNo + " is not a valid action number");
+                break;
+        }
+        
+        int i = playerStartingBeat + moveStartup + playerCombatant.initiative;
+        if (i < 9) { playerStartingBeat = i; }
+        UIManager.SetPlayerBeatMarker(playerStartingBeat);
+    }
 
     public void GuardButtonPreview()
     {
@@ -136,27 +169,13 @@ public class BattleManager : MonoBehaviour
        
        UpdatePlayerActionQueue(guardStartupDuration, playerStartingBeat);
     }
-
-    public void GuardButtonSelect()
-    {
-        if(battleState != BattleState.ROUNDSTART) return; 
-        Debug.Log("guardButtonSelect");
-        
-        playerStartingBeat = playerCombatant.initiative;
-    }
-
+    
     public void JabButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
         UpdatePlayerActionQueue(jabStartupDuration, playerStartingBeat);
     }
     
-    public void JabButtonSelect()
-    {
-        if(battleState != BattleState.ROUNDSTART) return; 
-        Debug.Log("jabButtonSelect");
-    }
-
     public void HookButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return; 
@@ -164,21 +183,9 @@ public class BattleManager : MonoBehaviour
         UpdatePlayerActionQueue(hookStartupDuration, playerStartingBeat);
     }
     
-    public void HookButtonSelect()
-    {
-        if(battleState != BattleState.ROUNDSTART) return; 
-        Debug.Log("hookButtonSelect");
-    }
-
     public void HaymakerButtonPreview()
     {
         if(battleState != BattleState.ROUNDSTART) return;
         UpdatePlayerActionQueue(haymakerStartupDuration, playerStartingBeat);
-    }
-    
-    public void HaymakerButtonSelect()
-    {
-        if(battleState != BattleState.ROUNDSTART) return;
-        Debug.Log("haymakerButtonSelect");
     }
 }
