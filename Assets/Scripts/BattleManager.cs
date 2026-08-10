@@ -24,7 +24,8 @@ public class BattleManager : MonoBehaviour
     public int currentBeat = 0;
 
     public char[] playerActionQueueArray = new char[20] {'B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B',};
-
+    public int playerActionQueueRollback = 0;
+    
     public int playerStartingBeat;
     public int enemyStartingBeat;
     
@@ -159,15 +160,18 @@ public class BattleManager : MonoBehaviour
                 break;
         }
         
-        int i = playerStartingBeat + moveStartup + playerCombatant.initiative;
-        if (i < roundLength - 1)
+        int turnDuration = moveStartup + playerCombatant.initiative;
+        int i = playerStartingBeat + turnDuration;
+        if (i < roundLength)
         {
-            playerStartingBeat = i; 
+            playerStartingBeat = i;
+            playerActionQueueRollback = turnDuration;
             UIManager.SetPlayerBeatMarker(playerStartingBeat);
         }
         else
         {
             battleState = BattleState.ENEMYACT;
+            
         }
         
     }
@@ -203,4 +207,20 @@ public class BattleManager : MonoBehaviour
         
         UpdatePlayerActionQueue(moveStartup, playerStartingBeat);
     }
+
+    public void ActionPreviewRollback()
+    {
+        int oldStartingBeat = playerStartingBeat - playerActionQueueRollback;
+        for (int i = oldStartingBeat; i < playerActionQueueArray.Length; i++)
+        {
+            playerActionQueueArray[i] = 'B';
+        }
+
+        playerStartingBeat = oldStartingBeat;
+        
+        UIManager.SetPlayerBeatMarker(playerStartingBeat);
+        UIManager.UpdateRoundPreview(playerActionQueueArray);
+    }
+    
+    
 }

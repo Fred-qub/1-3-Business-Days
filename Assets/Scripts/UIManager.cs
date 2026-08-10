@@ -89,6 +89,11 @@ public class UIManager : MonoBehaviour
         haymakerButton.gameObject.SetActive(active);
     }
 
+    public void backButtonActive(bool active)
+    {
+        
+    }
+
     //Sets the player's name
     public void SetPlayerName(string pName) { playerName.text = pName; }
     
