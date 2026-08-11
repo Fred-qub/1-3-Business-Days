@@ -180,7 +180,10 @@ public class BattleManager : MonoBehaviour
         if (i < roundLength)
         {
             playerStartingBeat = i;
-            playerActionPreviewRollback += turnDuration;
+            
+            //IMPORTANT: REMEMBER TO RESET THIS TO 0 BEFORE THE NEXT ROUND
+            playerActionPreviewRollback = turnDuration;
+            
             UIManager.SetPlayerBeatMarker(playerStartingBeat);
             UIManager.ResetButtonActive(true);
         }
@@ -209,6 +212,8 @@ public class BattleManager : MonoBehaviour
     //I wanted to make it so you could roll them back one at a time but that's actually complicated with how everything's set up
     public void ActionPreviewRollback()
     {
+        ActionInstance actionInstance = actionQueueManager.DequeuePlayerActionInstanceQueue();
+        
         int oldStartingBeat = playerStartingBeat - playerActionPreviewRollback;
         for (int i = oldStartingBeat; i < playerActionPreviewArray.Length; i++)
         {
@@ -218,7 +223,9 @@ public class BattleManager : MonoBehaviour
         playerStartingBeat = oldStartingBeat;
         playerActionPreviewRollback = 0;
         
-        actionQueueManager.ClearPlayerActionInstanceQueue();
+        actionQueueManager.DequeuePlayerActionInstanceQueue();
+        
+        //actionQueueManager.ClearPlayerActionInstanceQueue();
         
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
         UIManager.UpdateRoundPreview(playerActionPreviewArray);

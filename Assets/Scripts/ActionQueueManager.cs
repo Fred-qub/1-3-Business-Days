@@ -33,20 +33,30 @@ public class ActionQueueManager : MonoBehaviour
         }
         playerActionInstanceQueue.Enqueue(new ActionInstance(actionID, actionInstanceStartBeat));
 
-        Debug.Log("Queue is now: ");
-        foreach (ActionInstance actionInstance in playerActionInstanceQueue)
-        {
-            Debug.Log(actionInstance.ID + " : " + actionInstance.StartBeat);
-        }
+       DebugLogPlayerActionInstanceQueue();
     }
 
     public void ClearPlayerActionInstanceQueue()
     {
         playerActionInstanceQueue.Clear();
+        DebugLogPlayerActionInstanceQueue();
+    }
+    
+    public ActionInstance DequeuePlayerActionInstanceQueue()
+    {
+        ActionInstance actionInstance = playerActionInstanceQueue.Dequeue();
+
+        DebugLogPlayerActionInstanceQueue();
+        
+        return actionInstance;
+    }
+
+    public void DebugLogPlayerActionInstanceQueue()
+    {
         Debug.Log("Queue is now: ");
         foreach (ActionInstance actionInstance in playerActionInstanceQueue)
         {
-            Debug.Log(actionInstance.ID + " : " + actionInstance.StartBeat);
+            Debug.Log("Action Instance ID: " + actionInstance.ID + " Action Instance Starting Beat: " + actionInstance.StartBeat);
         }
     }
 
