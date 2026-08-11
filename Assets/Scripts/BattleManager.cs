@@ -23,8 +23,8 @@ public class BattleManager : MonoBehaviour
     public int currentRound = 1;
     public int currentBeat = 0;
 
-    public char[] playerActionQueueArray = new char[20] {'B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B',};
-    public int playerActionQueueRollback = 0;
+    public char[] playerActionPreviewArray = new char[20] {'B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B',};
+    public int playerActionPreviewRollback = 0;
     
     public int playerStartingBeat;
     public int enemyStartingBeat;
@@ -35,12 +35,13 @@ public class BattleManager : MonoBehaviour
     public static int haymakerStartupDuration = 6;
     public static int roundLength = 10;
     
-    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ChangeBattleState(BattleState.INITIALIZATION);
         StartCoroutine(SpawnCombatants());
+        
+        
     }
 
     void ChangeBattleState(BattleState newState)
@@ -72,19 +73,11 @@ public class BattleManager : MonoBehaviour
        
        //Moves onto round start
        ChangeBattleState(BattleState.ROUNDSTART);
-       StartPlayerActionQueue();
+       StartPlayerActionPreview();
     }
     
-    // 08/08/2026 - action queue system should go in here under ROUNDSTART phase
-    // player can queue multiple actions within a round if their initiative is low enough and they pick a fast action
-    // make UI buttons call functions in here to queue actions
-    // pointer enter inserts it into the queue and updates preview, button select confirms it and moves onto the next action
-    // action queue could be split off into another script but it'll probably be useful for resolution so idk
-    // queue factors in action startup + recovery
-    // once queue exceeds the round length stop accepting new entries
-    // update preview on timelines through UIManager every time an action is inserted
-    // uses code string from before
-    void StartPlayerActionQueue()
+    //Starts the action preview
+    void StartPlayerActionPreview()
     {
         //Updates the UI
         UIManager.SetDialogueTitle("SELECT AN ACTION:");
@@ -95,7 +88,7 @@ public class BattleManager : MonoBehaviour
         UIManager.SetEnemyBeatMarker(enemyStartingBeat);
         UIManager.ButtonsActive(true);
         
-        UIManager.UpdateRoundPreview(playerActionQueueArray);
+        UIManager.UpdateRoundPreview(playerActionPreviewArray);
         
     }
 
@@ -111,32 +104,32 @@ public class BattleManager : MonoBehaviour
         //Adds the startup beats to the queue
         for (int i = actionStartBeat; i < actionEndBeat; i++)
         {
-            playerActionQueueArray[i] = 'A';
+            playerActionPreviewArray[i] = 'A';
         }
         
         //Adds the recovery beats to the queue
         for (int i = actionEndBeat; i < recoveryEndBeat; i++)
         {
-            playerActionQueueArray[i] = 'R';
+            playerActionPreviewArray[i] = 'R';
         }
         
         //Clears all beats after recovery
-        for (int i = recoveryEndBeat; i < playerActionQueueArray.Length; i++)
+        for (int i = recoveryEndBeat; i < playerActionPreviewArray.Length; i++)
         {
-            playerActionQueueArray[i] = 'B';
+            playerActionPreviewArray[i] = 'B';
         }
 
         //Updates the UI
         UIManager.GoTextActive(recoveryEndBeat > 9);
-        UIManager.UpdateRoundPreview(playerActionQueueArray);
+        UIManager.UpdateRoundPreview(playerActionPreviewArray);
     }
 
     //Function to clear the whole array
     public void ClearPlayerActionQueueArray()
     {
-        for (int i = 0; i < playerActionQueueArray.Length; i++)
+        for (int i = 0; i < playerActionPreviewArray.Length; i++)
         {
-            playerActionQueueArray[i] = 'B';
+            playerActionPreviewArray[i] = 'B';
         }
     }
 
@@ -177,7 +170,7 @@ public class BattleManager : MonoBehaviour
         if (i < roundLength)
         {
             playerStartingBeat = i;
-            playerActionQueueRollback += turnDuration;
+            playerActionPreviewRollback += turnDuration;
             UIManager.SetPlayerBeatMarker(playerStartingBeat);
             UIManager.ResetButtonActive(true);
         }
@@ -229,16 +222,16 @@ public class BattleManager : MonoBehaviour
     public void ActionPreviewRollback()
     {
         
-        int oldStartingBeat = playerStartingBeat - playerActionQueueRollback;
-        for (int i = oldStartingBeat; i < playerActionQueueArray.Length; i++)
+        int oldStartingBeat = playerStartingBeat - playerActionPreviewRollback;
+        for (int i = oldStartingBeat; i < playerActionPreviewArray.Length; i++)
         {
-            playerActionQueueArray[i] = 'B';
+            playerActionPreviewArray[i] = 'B';
         }
 
         playerStartingBeat = oldStartingBeat;
-        playerActionQueueRollback = 0;
+        playerActionPreviewRollback = 0;
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
-        UIManager.UpdateRoundPreview(playerActionQueueArray);
+        UIManager.UpdateRoundPreview(playerActionPreviewArray);
         UIManager.ResetButtonActive(false);
         UIManager.GoTextActive(false);
     }
@@ -254,5 +247,50 @@ public class BattleManager : MonoBehaviour
         UIManager.ButtonsActive(false);
         UIManager.ResetButtonActive(false);
         UIManager.GoTextActive(false);
+
+        StartCoroutine(AttackEvent(false, 100, "JARONA!"));
+    }
+
+    IEnumerator AttackEvent(bool playerAttacking, int damage, string actionName)
+    {
+        Combatant targetCombatant;
+        Combatant attackerCombatant;
+
+        if (playerAttacking)
+        {
+            targetCombatant = enemyCombatant; 
+            attackerCombatant = playerCombatant;
+            UIManager.SetDialogueContent("You throw a " + actionName + " at " + targetCombatant.combatantName + "!");
+        }
+        else
+        {
+            targetCombatant = playerCombatant; 
+            attackerCombatant = enemyCombatant;
+            UIManager.SetDialogueContent(attackerCombatant.combatantName + "throws a " + actionName + " at you!");
+        }
+        
+        bool targetIsDead = targetCombatant.TakeDamageOrDie(damage);
+        
+        yield return new WaitForSeconds(2f);
+        
+        UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + damage + " points of damage!");
+        UIManager.SetEnemyHP(enemyCombatant.currentHP);
+        UIManager.SetPlayerHP(playerCombatant.currentHP);
+        
+        yield return new WaitForSeconds(2f);
+
+        if (targetIsDead) 
+        {
+            if (playerAttacking)
+            {
+                UIManager.SetDialogueContent(targetCombatant.combatantName + " has been knocked out! You are the winner!");
+                ChangeBattleState(BattleState.WIN);
+            }
+            else
+            {
+                UIManager.SetDialogueContent("You were clobbered by " + attackerCombatant.combatantName + "!");
+                ChangeBattleState(BattleState.LOSE);
+            }
+        }
     }
 }
