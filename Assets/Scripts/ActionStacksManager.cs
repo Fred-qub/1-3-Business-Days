@@ -36,7 +36,7 @@ public class ActionStacksManager : MonoBehaviour
        DebugLogPlayerActionInstanceStack();
     }
 
-    public void ClearPlayerActionInstanceQueue()
+    public void ClearPlayerActionInstanceStack()
     {
         playerActionInstanceStack.Clear();
         DebugLogPlayerActionInstanceStack();

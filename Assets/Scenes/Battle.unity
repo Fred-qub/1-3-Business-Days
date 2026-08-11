@@ -6669,7 +6669,7 @@ GameObject:
   - component: {fileID: 1259450734}
   - component: {fileID: 1259450733}
   m_Layer: 5
-  m_Name: ResetButton
+  m_Name: UndoButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6721,7 +6721,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Resets all action selections.
+            m_StringArgument: Deselects the previous action.
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!114 &1259450734
@@ -6830,7 +6830,7 @@ GameObject:
   - component: {fileID: 1332037006}
   - component: {fileID: 1332037005}
   m_Layer: 5
-  m_Name: ResetText
+  m_Name: UndoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6875,7 +6875,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RESET
+  m_text: UNDO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7012,7 +7012,7 @@ MonoBehaviour:
   jabButton: {fileID: 479328095}
   hookButton: {fileID: 1141765181}
   haymakerButton: {fileID: 833532252}
-  resetButton: {fileID: 1259450734}
+  undoButton: {fileID: 1259450734}
   beatCounter: {fileID: 1767175415}
   timelineSlider: {fileID: 1023206344}
   playerBeatSlider: {fileID: 916537197}

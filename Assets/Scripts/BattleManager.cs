@@ -57,10 +57,6 @@ public class BattleManager : MonoBehaviour
     public int initialPlayerStartingBeatForAGivenRound;
     public int enemyStartingBeat;
     
-    public static int guardStartupDuration = 1;
-    public static int jabStartupDuration = 3;
-    public static int hookStartupDuration = 4;
-    public static int haymakerStartupDuration = 6;
     public static int roundLength = 10;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -68,16 +64,16 @@ public class BattleManager : MonoBehaviour
     {
         ChangeBattleState(BattleState.INITIALIZATION);
         StartCoroutine(SpawnCombatants());
-        
-        
     }
 
+    //Changes the battle state and updates the UI at the same time
     void ChangeBattleState(BattleState newState)
     {
         battleState = newState;
         UIManager.SetPhaseStatus(battleState);
     }
 
+    //Spawns in the combatants and other setup stuff
     IEnumerator SpawnCombatants()
     {
        //Uses a prefab to spawn the player, sends info to UI, sets starting beat to initiative  
@@ -121,6 +117,7 @@ public class BattleManager : MonoBehaviour
         
     }
 
+    //Updates the player action preview, called by ActionPreview
     void UpdatePlayerActionPreview(int actionStartupDuration, int actionStartBeat)
     {
         if(battleState != BattleState.ROUNDSTART) return;
@@ -163,17 +160,9 @@ public class BattleManager : MonoBehaviour
     }
 
     //Called when a button is clicked
-    //Moves the player marker forwards and enables the reset button
-    //Also properly queues an instance of the selected action into the player's action instance queue
-    //If the end of the round is reached by the selected move, moves onto the next gamestate
     public void ActionSelect(int actionID)
     {
-        if(battleState != BattleState.ROUNDSTART) return; 
-        if (actionID < 0 || actionID >= actionArray.Length)
-        {
-            Debug.Log(actionID + " is not a valid action ID"); return;
-        }        
-        
+        //Adds the given action to the player's action instance stack using their current starting beat
         actionStacksManager.AddActionInstanceToPlayerStack(actionID, playerStartingBeat);
         
         //Checks if the player can select another action this round
@@ -181,13 +170,11 @@ public class BattleManager : MonoBehaviour
         int i = playerStartingBeat + turnDuration;
         if (i < roundLength)
         {
+            //if the player has enough time to pick another action, updates the current starting beat
             playerStartingBeat = i;
-            
-            //IMPORTANT: REMEMBER TO RESET THIS TO 0 BEFORE THE NEXT ROUND
-            //playerActionPreviewRollback = turnDuration;
-            
+       
             UIManager.SetPlayerBeatMarker(playerStartingBeat);
-            UIManager.ResetButtonActive(true);
+            UIManager.UndoButtonActive(true);
         }
         else
         {
@@ -241,14 +228,22 @@ public class BattleManager : MonoBehaviour
         UIManager.EnemyBeatMarkerActive(false);
 
         UIManager.ButtonsActive(false);
-        UIManager.ResetButtonActive(false);
+        UIManager.UndoButtonActive(false);
         UIManager.GoTextActive(false);
         
-        int randomActionSelect =  Random.Range(0, 3);
+        int randomActionSelect =  Random.Range(1, 3);
+        
+        StartCoroutine(AttackEvent(false, actionArray[randomActionSelect]));
     }
 
-    IEnumerator AttackEvent(bool playerAttacking, int damage, string actionName)
+    IEnumerator AttackEvent(bool playerAttacking, Action action)
     {
+        string actionName = action.ActionName;
+
+        int damage = action.ActionDamage;
+        
+        damage += Random.Range(-action.ActionDamageVariance, action.ActionDamageVariance);
+        
         
         Combatant targetCombatant;
         Combatant attackerCombatant;

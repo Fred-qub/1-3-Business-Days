@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
     public Button jabButton;
     public Button hookButton;
     public Button haymakerButton;
-    public Button resetButton;
+    public Button undoButton;
 
     [Header("Timeline")]
     public TextMeshProUGUI beatCounter;
@@ -102,9 +102,9 @@ public class UIManager : MonoBehaviour
         haymakerButton.gameObject.SetActive(active);
     }
 
-    public void ResetButtonActive(bool active)
+    public void UndoButtonActive(bool active)
     {
-        resetButton.gameObject.SetActive(active);
+        undoButton.gameObject.SetActive(active);
     }
 
     //Sets the player's name
