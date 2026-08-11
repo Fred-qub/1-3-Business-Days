@@ -101,13 +101,13 @@ public class BattleManager : MonoBehaviour
         int initiative = playerCombatant.initiative;
         int recoveryEndBeat = actionEndBeat + initiative;
         
-        //Adds the startup beats to the queue
+        //Adds the startup beats to the preview
         for (int i = actionStartBeat; i < actionEndBeat; i++)
         {
             playerActionPreviewArray[i] = 'A';
         }
         
-        //Adds the recovery beats to the queue
+        //Adds the recovery beats to the preview
         for (int i = actionEndBeat; i < recoveryEndBeat; i++)
         {
             playerActionPreviewArray[i] = 'R';
@@ -120,12 +120,12 @@ public class BattleManager : MonoBehaviour
         }
 
         //Updates the UI
-        UIManager.GoTextActive(recoveryEndBeat > 9);
+        UIManager.GoTextActive(recoveryEndBeat > roundLength - 1);
         UIManager.UpdateRoundPreview(playerActionPreviewArray);
     }
 
     //Function to clear the whole array
-    public void ClearPlayerActionQueueArray()
+    public void ClearPlayerActionPreviewArray()
     {
         for (int i = 0; i < playerActionPreviewArray.Length; i++)
         {
@@ -142,6 +142,7 @@ public class BattleManager : MonoBehaviour
         
         int moveStartup = 0;
         
+        //Checks which move it is
         switch (actionNo)
         {
             case 0:
@@ -165,6 +166,7 @@ public class BattleManager : MonoBehaviour
                 break;
         }
         
+        //Checks if the player can select another action this round
         int turnDuration = moveStartup + playerCombatant.initiative;
         int i = playerStartingBeat + turnDuration;
         if (i < roundLength)
@@ -176,6 +178,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
+            //If not, moves onto the next battle state
             ChangeBattleState(BattleState.ENEMYACT);
             EnemyActStart();
         }

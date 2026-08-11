@@ -60,7 +60,9 @@ public class UIManager : MonoBehaviour
     public Color enemyColour;
     public Color stunColour;
     public Color recoveryColour;
+    public Color guardColour;
     public Color blankColour;
+    public Color errorColour;
  
     //private int initiative = 0;
     
@@ -205,9 +207,13 @@ public class UIManager : MonoBehaviour
                     SetAPCell(i,blankColour);
                     break;
                 
+                case 'G':
+                    SetAPCell(i, guardColour);
+                    break;
+                
                 default:
                     Debug.Log(previewCodeString[i] + " is not a valid character");
-                    SetAPCell(i,enemyColour);
+                    SetAPCell(i,errorColour);
                     break;
             }
         }
