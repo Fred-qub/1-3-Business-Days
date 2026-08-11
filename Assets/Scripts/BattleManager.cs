@@ -92,7 +92,7 @@ public class BattleManager : MonoBehaviour
         
     }
 
-    void UpdatePlayerActionQueue(int actionStartupDuration, int actionStartBeat)
+    void UpdatePlayerActionPreview(int actionStartupDuration, int actionStartBeat)
     {
         if(battleState != BattleState.ROUNDSTART) return;
         
@@ -212,7 +212,7 @@ public class BattleManager : MonoBehaviour
                 break;
         }
         
-        UpdatePlayerActionQueue(moveStartup, playerStartingBeat);
+        UpdatePlayerActionPreview(moveStartup, playerStartingBeat);
         
         
     }
@@ -247,12 +247,12 @@ public class BattleManager : MonoBehaviour
         UIManager.ButtonsActive(false);
         UIManager.ResetButtonActive(false);
         UIManager.GoTextActive(false);
-
-        StartCoroutine(AttackEvent(false, 100, "JARONA!"));
+        
     }
 
     IEnumerator AttackEvent(bool playerAttacking, int damage, string actionName)
     {
+        
         Combatant targetCombatant;
         Combatant attackerCombatant;
 
@@ -282,14 +282,26 @@ public class BattleManager : MonoBehaviour
         {
             if (playerAttacking)
             {
-                UIManager.SetDialogueContent(targetCombatant.combatantName + " has been knocked out! You are the winner!");
                 ChangeBattleState(BattleState.WIN);
+                WinEvent();
             }
             else
             {
-                UIManager.SetDialogueContent("You were clobbered by " + attackerCombatant.combatantName + "!");
                 ChangeBattleState(BattleState.LOSE);
+                LoseEvent();
             }
         }
+    }
+
+    public void WinEvent()
+    {
+        if(battleState != BattleState.WIN) return; 
+        UIManager.SetDialogueContent(enemyCombatant.combatantName + " has been knocked out! You are the winner!");
+    }
+
+    public void LoseEvent()
+    {
+        if(battleState != BattleState.LOSE) return; 
+        UIManager.SetDialogueContent("You were clobbered by " + enemyCombatant.combatantName + "!");
     }
 }

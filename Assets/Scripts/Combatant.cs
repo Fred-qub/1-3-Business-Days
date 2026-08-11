@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
 
+public enum Status  { NONE, ACTIONSTARTUP, RECOVERY, STUNNED, GUARDING }
+
 public class Combatant : MonoBehaviour
 {
-    //enum status { NONE, ACTIONSTARTUP, RECOVERY, STUNNED, GUARDING }
+    public Status combatantStatus = Status.NONE;
     public string combatantName;
     
     public int maxHP;
@@ -17,6 +19,11 @@ public class Combatant : MonoBehaviour
         
         return (currentHP <= 0);
 
+    }
+
+    public void SetStatus(Status status)
+    {
+        combatantStatus = status;
     }
     
     
