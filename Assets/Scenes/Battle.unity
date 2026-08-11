@@ -1403,7 +1403,7 @@ GameObject:
   - component: {fileID: 312672641}
   - component: {fileID: 312672642}
   m_Layer: 0
-  m_Name: ActionQueueManager
+  m_Name: ActionStacksManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4639,13 +4639,13 @@ MonoBehaviour:
   playerBattleMarker: {fileID: 2064428389}
   enemyBattleMarker: {fileID: 1170193196}
   UIManager: {fileID: 1339604316}
-  actionQueueManager: {fileID: 312672642}
+  actionStacksManager: {fileID: 312672642}
   battleState: 0
   currentRound: 1
   currentBeat: 0
   playerActionPreviewArray: 42004200420042004200420042004200420042004200420042004200420042004200420042004200
-  playerActionPreviewRollback: 0
   playerStartingBeat: 0
+  initialPlayerStartingBeatForAGivenRound: 0
   enemyStartingBeat: 0
 --- !u!4 &883400650
 Transform:

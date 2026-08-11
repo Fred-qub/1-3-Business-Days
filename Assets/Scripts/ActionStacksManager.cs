@@ -18,43 +18,45 @@ public class ActionInstance
     }
 }
 
-public class ActionQueueManager : MonoBehaviour
+public class ActionStacksManager : MonoBehaviour
 {
     public BattleManager battleManager;
     
-    Queue<ActionInstance> playerActionInstanceQueue = new Queue<ActionInstance>();
+    Stack<ActionInstance> playerActionInstanceStack = new Stack<ActionInstance>();
 
-    public void AddActionInstanceToPlayerQueue(int actionID, int actionInstanceStartBeat)
+    public void AddActionInstanceToPlayerStack(int actionID, int actionInstanceStartBeat)
     {
         if (actionID < 0 || actionID >= battleManager.actionArray.Length)
         {
-            Debug.Log("ActionQueueManager: AddActionInstanceToPlayerQueue: actionID is out of range");
+            Debug.Log("ActionStacksManager: AddActionInstanceToPlayerStack: actionID is out of range");
             return;
         }
-        playerActionInstanceQueue.Enqueue(new ActionInstance(actionID, actionInstanceStartBeat));
+        playerActionInstanceStack.Push(new ActionInstance(actionID, actionInstanceStartBeat));
 
-       DebugLogPlayerActionInstanceQueue();
+       DebugLogPlayerActionInstanceStack();
     }
 
     public void ClearPlayerActionInstanceQueue()
     {
-        playerActionInstanceQueue.Clear();
-        DebugLogPlayerActionInstanceQueue();
+        playerActionInstanceStack.Clear();
+        DebugLogPlayerActionInstanceStack();
     }
     
-    public ActionInstance DequeuePlayerActionInstanceQueue()
+    public ActionInstance PopPlayerActionInstanceStack()
     {
-        ActionInstance actionInstance = playerActionInstanceQueue.Dequeue();
+        if (playerActionInstanceStack.Count == 0) { return null; }
+        
+        ActionInstance actionInstance = playerActionInstanceStack.Pop();
 
-        DebugLogPlayerActionInstanceQueue();
+        DebugLogPlayerActionInstanceStack();
         
         return actionInstance;
     }
 
-    public void DebugLogPlayerActionInstanceQueue()
+    public void DebugLogPlayerActionInstanceStack()
     {
-        Debug.Log("Queue is now: ");
-        foreach (ActionInstance actionInstance in playerActionInstanceQueue)
+        Debug.Log("PAIS is now: ");
+        foreach (ActionInstance actionInstance in playerActionInstanceStack)
         {
             Debug.Log("Action Instance ID: " + actionInstance.ID + " Action Instance Starting Beat: " + actionInstance.StartBeat);
         }

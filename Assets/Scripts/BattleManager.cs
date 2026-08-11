@@ -35,7 +35,7 @@ public class BattleManager : MonoBehaviour
     private Combatant enemyCombatant;
     
     public UIManager UIManager;
-    public ActionQueueManager actionQueueManager;
+    public ActionStacksManager actionStacksManager;
     
     public BattleState battleState;
     
@@ -51,9 +51,10 @@ public class BattleManager : MonoBehaviour
     };
 
     public char[] playerActionPreviewArray = new char[20] {'B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B',};
-    public int playerActionPreviewRollback = 0;
+
     
     public int playerStartingBeat;
+    public int initialPlayerStartingBeatForAGivenRound;
     public int enemyStartingBeat;
     
     public static int guardStartupDuration = 1;
@@ -84,6 +85,7 @@ public class BattleManager : MonoBehaviour
        playerCombatant = playerGameObject.GetComponent<Combatant>();
        UIManager.SetPlayerName(playerCombatant.combatantName);
        playerStartingBeat = playerCombatant.initiative;
+       initialPlayerStartingBeatForAGivenRound = playerStartingBeat;
        
        //Uses a random prefab to spawn the enemy, sends info to UI, sets starting beat to initiative  
        int randomEnemySelect =  Random.Range(0, enemyPrefabs.Length);
@@ -172,7 +174,7 @@ public class BattleManager : MonoBehaviour
             Debug.Log(actionID + " is not a valid action ID"); return;
         }        
         
-        actionQueueManager.AddActionInstanceToPlayerQueue(actionID, playerStartingBeat);
+        actionStacksManager.AddActionInstanceToPlayerStack(actionID, playerStartingBeat);
         
         //Checks if the player can select another action this round
         int turnDuration = actionArray[actionID].ActionStartupDuration + playerCombatant.initiative;
@@ -182,7 +184,7 @@ public class BattleManager : MonoBehaviour
             playerStartingBeat = i;
             
             //IMPORTANT: REMEMBER TO RESET THIS TO 0 BEFORE THE NEXT ROUND
-            playerActionPreviewRollback = turnDuration;
+            //playerActionPreviewRollback = turnDuration;
             
             UIManager.SetPlayerBeatMarker(playerStartingBeat);
             UIManager.ResetButtonActive(true);
@@ -212,24 +214,21 @@ public class BattleManager : MonoBehaviour
     //I wanted to make it so you could roll them back one at a time but that's actually complicated with how everything's set up
     public void ActionPreviewRollback()
     {
-        ActionInstance actionInstance = actionQueueManager.DequeuePlayerActionInstanceQueue();
+        ActionInstance actionInstance = actionStacksManager.PopPlayerActionInstanceStack();
+        Action action = actionArray[actionInstance.ID];
         
-        int oldStartingBeat = playerStartingBeat - playerActionPreviewRollback;
-        for (int i = oldStartingBeat; i < playerActionPreviewArray.Length; i++)
+        for (int i = actionInstance.StartBeat; i < playerActionPreviewArray.Length; i++)
         {
-            playerActionPreviewArray[i] = 'B';
+            playerActionPreviewArray[i] = 'B'; 
         }
 
-        playerStartingBeat = oldStartingBeat;
-        playerActionPreviewRollback = 0;
+        playerStartingBeat = actionInstance.StartBeat;
         
-        actionQueueManager.DequeuePlayerActionInstanceQueue();
         
-        //actionQueueManager.ClearPlayerActionInstanceQueue();
         
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
         UIManager.UpdateRoundPreview(playerActionPreviewArray);
-        UIManager.ResetButtonActive(false);
+        
         UIManager.GoTextActive(false);
     }
 
