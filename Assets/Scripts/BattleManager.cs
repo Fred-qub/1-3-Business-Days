@@ -69,7 +69,7 @@ public class BattleManager : MonoBehaviour
        UIManager.SetDialogueTitle("NEW CHALLENGER:");
        UIManager.SetDialogueContent(enemyCombatant.combatantName + " squares up!");
        
-       yield return new WaitForSeconds(3f);
+       yield return new WaitForSeconds(2f);
        
        //Moves onto round start
        ChangeBattleState(BattleState.ROUNDSTART);
@@ -260,15 +260,14 @@ public class BattleManager : MonoBehaviour
         {
             targetCombatant = enemyCombatant; 
             attackerCombatant = playerCombatant;
-            UIManager.SetDialogueContent("You throw a " + actionName + " at " + targetCombatant.combatantName + "!");
         }
         else
         {
             targetCombatant = playerCombatant; 
             attackerCombatant = enemyCombatant;
-            UIManager.SetDialogueContent(attackerCombatant.combatantName + "throws a " + actionName + " at you!");
         }
         
+        UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
         bool targetIsDead = targetCombatant.TakeDamageOrDie(damage);
         
         yield return new WaitForSeconds(2f);

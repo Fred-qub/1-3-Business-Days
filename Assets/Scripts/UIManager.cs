@@ -82,7 +82,7 @@ public class UIManager : MonoBehaviour
     //Sets the phase status
     public void SetPhaseStatus(BattleState battleState)
     {
-        phaseStatusPanel.text = ("PHASE: " + battleState);
+        phaseStatusPanel.text = ("BATTLE STATE: " + battleState);
     }
     
     //Sets the content of the dialogue box
