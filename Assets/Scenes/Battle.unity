@@ -1436,6 +1436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 517590ea2164da44cbba6ea1cc1e4fc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  battleManager: {fileID: 883400649}
 --- !u!1 &318384965
 GameObject:
   m_ObjectHideFlags: 0
@@ -4638,6 +4639,7 @@ MonoBehaviour:
   playerBattleMarker: {fileID: 2064428389}
   enemyBattleMarker: {fileID: 1170193196}
   UIManager: {fileID: 1339604316}
+  actionQueueManager: {fileID: 312672642}
   battleState: 0
   currentRound: 1
   currentBeat: 0

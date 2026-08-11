@@ -4,6 +4,24 @@ using UnityEngine;
 //Enumerator for game states
 public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, PLAYBACK, ROUNDSETUP, WIN, LOSE }
 
+public class Action
+{
+    public string ActionName;
+    public bool DoesActionDealDamage;
+    public int ActionDamage;
+    public int ActionDamageVariance;
+    public int ActionStartupDuration;
+
+    public Action(string name, bool dealDamage, int damage, int damageVariance, int startupDuration)
+    {
+        ActionName = name;
+        DoesActionDealDamage = dealDamage;
+        ActionDamage = damage;
+        ActionDamageVariance = damageVariance;
+        ActionStartupDuration = startupDuration;
+    }
+}
+
 public class BattleManager : MonoBehaviour
 {
     //References
@@ -17,11 +35,20 @@ public class BattleManager : MonoBehaviour
     private Combatant enemyCombatant;
     
     public UIManager UIManager;
+    public ActionQueueManager actionQueueManager;
     
     public BattleState battleState;
     
     public int currentRound = 1;
     public int currentBeat = 0;
+    
+    public Action[] actionArray = 
+    {
+        new Action( "Guard", false, 0, 0,1),
+        new Action( "Jab", true, 10, 2,3),
+        new Action( "Hook", true, 25, 5,4),
+        new Action( "Haymaker", true, 65, 5,6)
+    };
 
     public char[] playerActionPreviewArray = new char[20] {'B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B',};
     public int playerActionPreviewRollback = 0;
@@ -135,39 +162,20 @@ public class BattleManager : MonoBehaviour
 
     //Called when a button is clicked
     //Moves the player marker forwards and enables the reset button
+    //Also properly queues an instance of the selected action into the player's action instance queue
     //If the end of the round is reached by the selected move, moves onto the next gamestate
-    public void ActionSelect(int actionNo)
+    public void ActionSelect(int actionID)
     {
         if(battleState != BattleState.ROUNDSTART) return; 
-        
-        int moveStartup = 0;
-        
-        //Checks which move it is
-        switch (actionNo)
+        if (actionID < 0 || actionID >= actionArray.Length)
         {
-            case 0:
-                moveStartup = guardStartupDuration;
-                break;
-                
-            case 1:
-                moveStartup = jabStartupDuration;
-                break;
-                
-            case 2:
-                moveStartup = hookStartupDuration;
-                break;
-                
-            case 3:
-                moveStartup = haymakerStartupDuration;
-                break;
-                
-            default:
-                Debug.Log(actionNo + " is not a valid action number");
-                break;
-        }
+            Debug.Log(actionID + " is not a valid action ID"); return;
+        }        
+        
+        actionQueueManager.AddActionInstanceToPlayerQueue(actionID, playerStartingBeat);
         
         //Checks if the player can select another action this round
-        int turnDuration = moveStartup + playerCombatant.initiative;
+        int turnDuration = actionArray[actionID].ActionStartupDuration + playerCombatant.initiative;
         int i = playerStartingBeat + turnDuration;
         if (i < roundLength)
         {
@@ -186,45 +194,21 @@ public class BattleManager : MonoBehaviour
 
     //Updates the preview on the timeline when buttons are hovered over
     //This is also what is queuing them for later which doesn't seem like a great idea but hey what could go wrong
-    public void ActionPreview(int actionNo)
+    public void ActionPreview(int actionID)
     {
         if(battleState != BattleState.ROUNDSTART) return;
-        
-        int moveStartup = 0;
-        
-        switch (actionNo)
+        if (actionID < 0 || actionID >= actionArray.Length)
         {
-            case 0:
-                moveStartup = guardStartupDuration;
-                break;
-                
-            case 1:
-                moveStartup = jabStartupDuration;
-                break;
-                
-            case 2:
-                moveStartup = hookStartupDuration;
-                break;
-                
-            case 3:
-                moveStartup = haymakerStartupDuration;
-                break;
-                
-            default:
-                Debug.Log(actionNo + " is not a valid action number");
-                break;
+            Debug.Log(actionID + " is not a valid action ID"); return;
         }
         
-        UpdatePlayerActionPreview(moveStartup, playerStartingBeat);
-        
-        
+        UpdatePlayerActionPreview(actionArray[actionID].ActionStartupDuration, playerStartingBeat);
     }
 
     //Undoes all the actions selected this round
     //I wanted to make it so you could roll them back one at a time but that's actually complicated with how everything's set up
     public void ActionPreviewRollback()
     {
-        
         int oldStartingBeat = playerStartingBeat - playerActionPreviewRollback;
         for (int i = oldStartingBeat; i < playerActionPreviewArray.Length; i++)
         {
@@ -233,6 +217,9 @@ public class BattleManager : MonoBehaviour
 
         playerStartingBeat = oldStartingBeat;
         playerActionPreviewRollback = 0;
+        
+        actionQueueManager.ClearPlayerActionInstanceQueue();
+        
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
         UIManager.UpdateRoundPreview(playerActionPreviewArray);
         UIManager.ResetButtonActive(false);
@@ -251,6 +238,7 @@ public class BattleManager : MonoBehaviour
         UIManager.ResetButtonActive(false);
         UIManager.GoTextActive(false);
         
+        int randomActionSelect =  Random.Range(0, 3);
     }
 
     IEnumerator AttackEvent(bool playerAttacking, int damage, string actionName)
