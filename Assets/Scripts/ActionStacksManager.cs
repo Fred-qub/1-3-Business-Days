@@ -97,21 +97,42 @@ public class ActionStacksManager : MonoBehaviour
 
     public void StackResolution()
     {
-        //Compares the player's action instance stack to the enemy's
-        //Does this by going through the actions from beats 0 through 20
+        //Goes through beats 0 through 20
+        //On each beat, checks if a combatant starts an action on that beat
         //Creates a list of what events happen on what beat
         //If one combatant's action reaches the end of its startup, it causes either an attack or guard event
         //If it's an attack, and the other combatant is in startup, it causes a stun event targeting the other combatant
         //When stunned, a combatant's next attack won't resolve
         //If the two combatants attack each other at the same time, it causes a clash event
         
+        //On every beat on this turn and the next
         for (int i = 0; i < (battleManager.roundLength * 2); i++)
         {
+
+            //Check every action the player makes
             foreach (ActionInstance playerActionInstance in playerActionInstanceStack)
             {
+                //To see if it starts on the current beat
                 if (playerActionInstance.StartBeat == i)
                 {
-                    
+                    //If it does:
+                   
+                    // ACTION START EVENT
+                   
+                    //Figure out if it gets cancelled by the enemy
+                    bool playerActionResolves = true;
+
+                    int playerActionResolutionBeat = battleManager.actionArray[playerActionInstance.ID].ActionStartupDuration + playerActionInstance.StartBeat;
+
+                    foreach (ActionInstance enemyActionInstance in enemyActionInstanceStack)
+                    {
+                        int enemyActionResolutionBeat = battleManager.actionArray[enemyActionInstance.ID].ActionStartupDuration + enemyActionInstance.StartBeat;
+                        if (enemyActionResolutionBeat < playerActionResolutionBeat &&
+                            enemyActionResolutionBeat > playerActionInstance.StartBeat)
+                        {
+                            
+                        }
+                    }
                 }
             }
         }

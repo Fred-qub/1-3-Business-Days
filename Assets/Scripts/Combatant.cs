@@ -6,6 +6,7 @@ public enum Status  { NONE, ACTIONSTARTUP, RECOVERY, STUNNED, GUARDING }
 public class Combatant : MonoBehaviour
 {
     public Status combatantStatus = Status.NONE;
+    public int combatantStatusRemainingDuration = 0;
     public string combatantName;
     
     public int maxHP;
