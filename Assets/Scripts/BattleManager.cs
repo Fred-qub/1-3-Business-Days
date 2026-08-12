@@ -3,7 +3,7 @@ using UnityEngine;
 
 //Enumerator for game states
 public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, PLAYBACK, ROUNDSETUP, WIN, LOSE }
-
+//Class for what an action actually is
 public class Action
 {
     public string ActionName;
@@ -21,6 +21,9 @@ public class Action
         ActionStartupDuration = startupDuration;
     }
 }
+
+
+
 
 public class BattleManager : MonoBehaviour
 {
@@ -47,7 +50,8 @@ public class BattleManager : MonoBehaviour
         new Action( "Guard", false, 0, 0,1),
         new Action( "Jab", true, 10, 2,3),
         new Action( "Hook", true, 25, 5,4),
-        new Action( "Haymaker", true, 65, 5,6)
+        new Action( "Haymaker", true, 65, 5,6),
+        new Action( "Blank",false,0,0,0)
     };
 
     public char[] playerActionPreviewArray = new char[20] {'B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B',};
@@ -58,6 +62,9 @@ public class BattleManager : MonoBehaviour
     public int enemyStartingBeat;
     
     public static int roundLength = 10;
+    
+    
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -197,11 +204,17 @@ public class BattleManager : MonoBehaviour
         UpdatePlayerActionPreview(actionArray[actionID].ActionStartupDuration, playerStartingBeat);
     }
 
-    //Undoes all the actions selected this round
-    //I wanted to make it so you could roll them back one at a time but that's actually complicated with how everything's set up
+    //Undoes actions selected this round
     public void ActionPreviewRollback()
     {
         ActionInstance actionInstance = actionStacksManager.PopPlayerActionInstanceStack();
+
+        if (actionInstance.ID == 4)
+        {
+            Debug.Log("Blank action returned, aborting rollback");
+            return;
+        }
+        
         Action action = actionArray[actionInstance.ID];
         
         for (int i = actionInstance.StartBeat; i < playerActionPreviewArray.Length; i++)
@@ -210,7 +223,11 @@ public class BattleManager : MonoBehaviour
         }
 
         playerStartingBeat = actionInstance.StartBeat;
-        
+
+        if (playerStartingBeat == initialPlayerStartingBeatForAGivenRound)
+        {
+            UIManager.UndoButtonActive(false);
+        }
         
         
         UIManager.SetPlayerBeatMarker(playerStartingBeat);

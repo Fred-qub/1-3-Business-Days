@@ -23,6 +23,7 @@ public class ActionStacksManager : MonoBehaviour
     public BattleManager battleManager;
     
     Stack<ActionInstance> playerActionInstanceStack = new Stack<ActionInstance>();
+    Stack<ActionInstance> enemyActionInstanceStack  = new Stack<ActionInstance>();
 
     public void AddActionInstanceToPlayerStack(int actionID, int actionInstanceStartBeat)
     {
@@ -35,6 +36,18 @@ public class ActionStacksManager : MonoBehaviour
 
        DebugLogPlayerActionInstanceStack();
     }
+    
+    public void AddActionInstanceToEnemyStack(int actionID, int actionInstanceStartBeat)
+    {
+        if (actionID < 0 || actionID >= battleManager.actionArray.Length)
+        {
+            Debug.Log("ActionStacksManager: AddActionInstanceToEnemyStack: actionID is out of range");
+            return;
+        }
+        enemyActionInstanceStack.Push(new ActionInstance(actionID, actionInstanceStartBeat));
+
+        DebugLogEnemyActionInstanceStack();
+    }
 
     public void ClearPlayerActionInstanceStack()
     {
@@ -42,9 +55,16 @@ public class ActionStacksManager : MonoBehaviour
         DebugLogPlayerActionInstanceStack();
     }
     
+    public void ClearEnemyActionInstanceStack()
+    {
+        enemyActionInstanceStack.Clear();
+        DebugLogEnemyActionInstanceStack();
+    }
+    
     public ActionInstance PopPlayerActionInstanceStack()
     {
-        if (playerActionInstanceStack.Count == 0) { return null; }
+        //Returns a blank action instance set to begin on the player's initial starting beat for the round 
+        if (playerActionInstanceStack.Count == 0) { return new ActionInstance(4,battleManager.initialPlayerStartingBeatForAGivenRound); }
         
         ActionInstance actionInstance = playerActionInstanceStack.Pop();
 
@@ -61,6 +81,17 @@ public class ActionStacksManager : MonoBehaviour
             Debug.Log("Action Instance ID: " + actionInstance.ID + " Action Instance Starting Beat: " + actionInstance.StartBeat);
         }
     }
+    
+    public void DebugLogEnemyActionInstanceStack()
+    {
+        Debug.Log("EAIS is now: ");
+        foreach (ActionInstance actionInstance in enemyActionInstanceStack)
+        {
+            Debug.Log("Action Instance ID: " + actionInstance.ID + " Action Instance Starting Beat: " + actionInstance.StartBeat);
+        }
+    }
+    
+    //NOTE FOR TOMORROW: ADD ENEMY ACTION INSTANCE STACK THEN MOVE ONTO RESOLUTION AND PLAYBACK
 
     private void Start()
     {
