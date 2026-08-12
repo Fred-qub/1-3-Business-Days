@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
 //Enumerator for game states
 public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, PLAYBACK, ROUNDSETUP, WIN, LOSE }
@@ -62,13 +64,17 @@ public class BattleManager : MonoBehaviour
     public int enemyStartingBeat;
     
     public static int roundLength = 10;
-    
-    
-    
+
+    public uint seed;
+    private Unity.Mathematics.Random rng;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        seed = (uint)System.DateTime.Now.Ticks;
+        rng = new Unity.Mathematics.Random(seed);
+        
+        
         ChangeBattleState(BattleState.INITIALIZATION);
         StartCoroutine(SpawnCombatants());
     }
@@ -91,7 +97,7 @@ public class BattleManager : MonoBehaviour
        initialPlayerStartingBeatForAGivenRound = playerStartingBeat;
        
        //Uses a random prefab to spawn the enemy, sends info to UI, sets starting beat to initiative  
-       int randomEnemySelect =  Random.Range(0, enemyPrefabs.Length);
+       int randomEnemySelect =  rng.NextInt(0, enemyPrefabs.Length);
        GameObject enemyGameObject = Instantiate(enemyPrefabs[randomEnemySelect], enemyBattleMarker);
        enemyCombatant = enemyGameObject.GetComponent<Combatant>();
        UIManager.SetEnemyName(enemyCombatant.combatantName);
@@ -248,7 +254,7 @@ public class BattleManager : MonoBehaviour
         UIManager.UndoButtonActive(false);
         UIManager.GoTextActive(false);
         
-        int randomActionSelect =  Random.Range(1, 3);
+        int randomActionSelect =  rng.NextInt(1, 3);
         
         StartCoroutine(AttackEvent(false, actionArray[randomActionSelect]));
     }
@@ -259,7 +265,7 @@ public class BattleManager : MonoBehaviour
 
         int damage = action.ActionDamage;
         
-        damage += Random.Range(-action.ActionDamageVariance, action.ActionDamageVariance);
+        damage += rng.NextInt(-action.ActionDamageVariance, action.ActionDamageVariance);
         
         
         Combatant targetCombatant;
