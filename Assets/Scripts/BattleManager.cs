@@ -61,7 +61,9 @@ public class BattleManager : MonoBehaviour
     
     public int playerStartingBeat;
     public int initialPlayerStartingBeatForAGivenRound;
+    
     public int enemyStartingBeat;
+    public int initialEnemyStartingBeatForAGivenRound;
     
     public static int roundLength = 10;
 
@@ -102,6 +104,7 @@ public class BattleManager : MonoBehaviour
        enemyCombatant = enemyGameObject.GetComponent<Combatant>();
        UIManager.SetEnemyName(enemyCombatant.combatantName);
        enemyStartingBeat = enemyCombatant.initiative;
+       initialEnemyStartingBeatForAGivenRound = enemyStartingBeat;
        
        //Updates the dialogue box
        UIManager.SetDialogueTitle("NEW CHALLENGER:");
@@ -172,7 +175,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    //Called when a button is clicked
+
     public void ActionSelect(int actionID)
     {
         //Adds the given action to the player's action instance stack using their current starting beat
@@ -254,9 +257,42 @@ public class BattleManager : MonoBehaviour
         UIManager.UndoButtonActive(false);
         UIManager.GoTextActive(false);
         
-        int randomActionSelect =  rng.NextInt(1, 3);
+        int randomActionSelect =  rng.NextInt(0, 3);
+        bool enemyTurnFull = false;
+        while (!enemyTurnFull)
+        {
+            enemyTurnFull = EnemyActionSelect(randomActionSelect, enemyStartingBeat);
+        }
+
+        /*
+        foreach (ActionInstance actionInstance in actionStacksManager.enemyActionInstanceStack)
+        {
+            AttackEvent(false, actionArray[actionInstance.ID]));
+        }
+        */
         
-        StartCoroutine(AttackEvent(false, actionArray[randomActionSelect]));
+    }
+
+    public bool EnemyActionSelect(int actionID, int startingBeat)
+    {
+        actionStacksManager.AddActionInstanceToEnemyStack(actionID, startingBeat);
+        
+        //Checks if the enemy can select another action this round
+        int turnDuration = actionArray[actionID].ActionStartupDuration + enemyCombatant.initiative;
+        int i = enemyStartingBeat + turnDuration;
+        if (i < roundLength)
+        {
+            //if the enemy has enough time to pick another action, updates the current starting beat
+            enemyStartingBeat = i;
+            UIManager.SetEnemyBeatMarker(enemyStartingBeat);
+            Debug.Log("BattleManager: EnemyActionSelect: enemy has time to select another action");
+            return false;
+        }
+        else
+        {
+            Debug.Log("BattleManager: EnemyActionSelect: enemy turn full");
+            return true;
+        }
     }
 
     IEnumerator AttackEvent(bool playerAttacking, Action action)
@@ -305,6 +341,10 @@ public class BattleManager : MonoBehaviour
                 ChangeBattleState(BattleState.LOSE);
                 LoseEvent();
             }
+        }
+        else
+        {
+            yield break;
         }
     }
 

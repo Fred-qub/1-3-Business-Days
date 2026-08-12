@@ -22,8 +22,8 @@ public class ActionStacksManager : MonoBehaviour
 {
     public BattleManager battleManager;
     
-    Stack<ActionInstance> playerActionInstanceStack = new Stack<ActionInstance>();
-    Stack<ActionInstance> enemyActionInstanceStack  = new Stack<ActionInstance>();
+    public Stack<ActionInstance> playerActionInstanceStack = new Stack<ActionInstance>();
+    public Stack<ActionInstance> enemyActionInstanceStack  = new Stack<ActionInstance>();
 
     public void AddActionInstanceToPlayerStack(int actionID, int actionInstanceStartBeat)
     {
