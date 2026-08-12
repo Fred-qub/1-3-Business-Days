@@ -128,9 +128,7 @@ public class BattleManager : MonoBehaviour
         UIManager.EnemyBeatMarkerActive(true);
         UIManager.SetEnemyBeatMarker(enemyStartingBeat);
         UIManager.ButtonsActive(true);
-        
         UIManager.UpdateRoundPreview(playerActionPreviewArray);
-        
     }
 
     //Updates the player action preview, called by ActionPreview
@@ -263,7 +261,9 @@ public class BattleManager : MonoBehaviour
         {
             enemyTurnFull = EnemyActionSelect(randomActionSelect, enemyStartingBeat);
         }
-
+        
+        ChangeBattleState(BattleState.RESOLUTION);
+        StartResolution();
         /*
         foreach (ActionInstance actionInstance in actionStacksManager.enemyActionInstanceStack)
         {
@@ -294,6 +294,20 @@ public class BattleManager : MonoBehaviour
             return true;
         }
     }
+
+    public void StartResolution()
+    {
+        
+    }
+
+
+
+
+
+
+
+
+
 
     IEnumerator AttackEvent(bool playerAttacking, Action action)
     {
