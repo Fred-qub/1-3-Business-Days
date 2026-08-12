@@ -65,7 +65,7 @@ public class BattleManager : MonoBehaviour
     public int enemyStartingBeat;
     public int initialEnemyStartingBeatForAGivenRound;
     
-    public static int roundLength = 10;
+    public int roundLength = 10;
 
     public uint seed;
     private Unity.Mathematics.Random rng;
@@ -297,6 +297,8 @@ public class BattleManager : MonoBehaviour
 
     public void StartResolution()
     {
+      
+        
         
     }
 

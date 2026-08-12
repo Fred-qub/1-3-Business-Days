@@ -94,4 +94,26 @@ public class ActionStacksManager : MonoBehaviour
             Debug.Log("Action Instance ID: " + actionInstance.ID + " Action Instance Starting Beat: " + actionInstance.StartBeat);
         }
     }
+
+    public void StackResolution()
+    {
+        //Compares the player's action instance stack to the enemy's
+        //Does this by going through the actions from beats 0 through 20
+        //Creates a list of what events happen on what beat
+        //If one combatant's action reaches the end of its startup, it causes either an attack or guard event
+        //If it's an attack, and the other combatant is in startup, it causes a stun event targeting the other combatant
+        //When stunned, a combatant's next attack won't resolve
+        //If the two combatants attack each other at the same time, it causes a clash event
+        
+        for (int i = 0; i < (battleManager.roundLength * 2); i++)
+        {
+            foreach (ActionInstance playerActionInstance in playerActionInstanceStack)
+            {
+                if (playerActionInstance.StartBeat == i)
+                {
+                    
+                }
+            }
+        }
+    }
 }
