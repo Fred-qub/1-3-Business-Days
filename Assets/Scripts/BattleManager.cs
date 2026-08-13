@@ -297,9 +297,86 @@ public class BattleManager : MonoBehaviour
 
     public void StartResolution()
     {
-      
+        if (battleState != BattleState.RESOLUTION) { return; }
+        //Goes through beats 0 through 20
+        //On each beat, checks if a combatant starts an action on that beat
+        //Creates a list of what events happen on what beat
+        //If one combatant's action reaches the end of its startup, it causes either an attack or guard event
+        //If it's an attack, and the other combatant is in startup, it causes a stun event targeting the other combatant
+        //When stunned, a combatant's next attack won't resolve
+        //If the two combatants attack each other at the same time, it causes a clash event
         
         
+        
+        
+        //On every beat on this round and the next
+        for (int i = 0; i < (roundLength * 2); i++)
+        {
+            //Decrease whatever statuses the combatants have by 1
+            playerCombatant.DecreaseStatus();
+            enemyCombatant.DecreaseStatus();
+
+            //If a combatant's status hits 0 and isn't NONE, set it to NONE
+            if (playerCombatant.combatantStatusRemainingDuration == 0 && playerCombatant.combatantStatus != Status.NONE)
+            {
+                playerCombatant.SetStatus(Status.NONE, 0);
+            }
+
+            if (enemyCombatant.combatantStatusRemainingDuration == 0 && enemyCombatant.combatantStatus != Status.NONE)
+            {
+                enemyCombatant.SetStatus(Status.NONE, 0);
+            }
+            
+            //Disables the status panel if the combatant doesn't have a status effect
+            UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus == Status.NONE);
+            UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus == Status.NONE);
+            
+            
+            //Check if the player is starting an action
+            foreach (ActionInstance playerActionInstance in actionStacksManager.playerActionInstanceStack)
+            {
+                if (playerActionInstance.StartBeat == i)
+                {
+                    Status statusType;
+
+                    switch (playerActionInstance.ID)
+                    {
+                        case 0:
+                            statusType = Status.GUARDSTARTUP;
+                            break;
+                        case 1:
+                            statusType = Status.JABSTARTUP;
+                            break;
+                        case 2:
+                            statusType = Status.HOOKSTARTUP;
+                            break;
+                        case 3:
+                            statusType = Status.HAYMAKERSTARTUP;
+                            break;
+                        default:
+                            statusType = Status.NONE;
+                            Debug.Log("BattleManager: StartResolution: player action instance ID was invalid somehow, set to blank ");
+                            break;
+                    }
+                    
+                    //Call a start action event for the player
+                    playerCombatant.SetStatus(statusType, actionArray[playerActionInstance.ID].ActionStartupDuration);
+                    
+                }
+            }
+            
+            //Check if the enemy is starting an action
+            foreach (ActionInstance enemyActionInstance in actionStacksManager.enemyActionInstanceStack)
+            {
+                if (enemyActionInstance.StartBeat == i)
+                {
+                    //Call a start action event for the enemy
+                }
+            }
+            
+            
+            
+        }
     }
 
 

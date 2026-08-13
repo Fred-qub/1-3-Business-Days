@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public enum Status  { NONE, ACTIONSTARTUP, RECOVERY, STUNNED, GUARDING }
+public enum Status  { NONE, GUARDSTARTUP, JABSTARTUP, HOOKSTARTUP, HAYMAKERSTARTUP, RECOVERY, STUNNED, GUARDING }
 
 public class Combatant : MonoBehaviour
 {
@@ -22,9 +22,18 @@ public class Combatant : MonoBehaviour
 
     }
 
-    public void SetStatus(Status status)
+    public void SetStatus(Status status, int statusDuration)
     {
         combatantStatus = status;
+        combatantStatusRemainingDuration = statusDuration;
+    }
+
+    public void DecreaseStatus()
+    {
+        if (combatantStatusRemainingDuration > 0)
+        {
+            combatantStatusRemainingDuration -= 1;
+        }
     }
     
     
