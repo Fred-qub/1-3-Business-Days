@@ -16,16 +16,26 @@ public class Combatant : MonoBehaviour
 
     public bool TakeDamageOrDie(int damage)
     {
+        if (combatantStatus == Status.GUARDING) { damage /= 2; }
+        
+        
+        
+        
         currentHP -= damage;
         
         return (currentHP <= 0);
 
     }
 
-    public void SetStatus(Status status, int statusDuration)
+    public void SetStatusWithDuration(Status status, int statusDuration)
     {
         combatantStatus = status;
         combatantStatusRemainingDuration = statusDuration;
+    }
+    
+    public void ChangeStatus(Status status)
+    {
+        combatantStatus = status;
     }
 
     public void DecreaseStatus()

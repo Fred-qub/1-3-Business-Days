@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using Random = Unity.Mathematics.Random;
@@ -294,6 +295,7 @@ public class BattleManager : MonoBehaviour
             return true;
         }
     }
+    
 
     public void StartResolution()
     {
@@ -308,62 +310,26 @@ public class BattleManager : MonoBehaviour
         
         
         
-        
         //On every beat on this round and the next
-        for (int i = 0; i < (roundLength * 2); i++)
+        for (int i = 0; i < (roundLength); i++)
         {
             //Decrease whatever statuses the combatants have by 1
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
-
-            //If a combatant's status hits 0 and isn't NONE, set it to NONE
-            if (playerCombatant.combatantStatusRemainingDuration == 0 && playerCombatant.combatantStatus != Status.NONE)
-            {
-                playerCombatant.SetStatus(Status.NONE, 0);
-            }
-
-            if (enemyCombatant.combatantStatusRemainingDuration == 0 && enemyCombatant.combatantStatus != Status.NONE)
-            {
-                enemyCombatant.SetStatus(Status.NONE, 0);
-            }
+            
+            //Checks if either of the combatants status counter has hit zero
+            //then starts events or sets other statuses accordingly
+            resolveCombatantStatus(playerCombatant);
+            resolveCombatantStatus(enemyCombatant);
             
             //Disables the status panel if the combatant doesn't have a status effect
             UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus == Status.NONE);
             UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus == Status.NONE);
             
-            
-            //Check if the player is starting an action
-            foreach (ActionInstance playerActionInstance in actionStacksManager.playerActionInstanceStack)
-            {
-                if (playerActionInstance.StartBeat == i)
-                {
-                    Status statusType;
-
-                    switch (playerActionInstance.ID)
-                    {
-                        case 0:
-                            statusType = Status.GUARDSTARTUP;
-                            break;
-                        case 1:
-                            statusType = Status.JABSTARTUP;
-                            break;
-                        case 2:
-                            statusType = Status.HOOKSTARTUP;
-                            break;
-                        case 3:
-                            statusType = Status.HAYMAKERSTARTUP;
-                            break;
-                        default:
-                            statusType = Status.NONE;
-                            Debug.Log("BattleManager: StartResolution: player action instance ID was invalid somehow, set to blank ");
-                            break;
-                    }
-                    
-                    //Call a start action event for the player
-                    playerCombatant.SetStatus(statusType, actionArray[playerActionInstance.ID].ActionStartupDuration);
-                    
-                }
-            }
+            //Goes through each combatant's action instance stack
+            //If a combatant is starting an action this beat, sets their status accordingly
+            ResolveActionInstanceStack(i, actionStacksManager.playerActionInstanceStack);
+            ResolveActionInstanceStack(i, actionStacksManager.enemyActionInstanceStack);
             
             //Check if the enemy is starting an action
             foreach (ActionInstance enemyActionInstance in actionStacksManager.enemyActionInstanceStack)
@@ -373,9 +339,97 @@ public class BattleManager : MonoBehaviour
                     //Call a start action event for the enemy
                 }
             }
-            
-            
-            
+        }
+    }
+
+        public void resolveCombatantStatus(Combatant combatant)
+    {
+          //If a combatant's status hits 0, check what it was
+            if (combatant.combatantStatusRemainingDuration == 0)
+            {
+                switch (combatant.combatantStatus)
+                {
+                    //If it was NONE, do nothing
+                    case Status.NONE:
+                        break;
+                    
+                    //If it was the startup of a guard, set the status to guarding
+                    case Status.GUARDSTARTUP:
+                        //Guarding is the same as recovery, but it halves incoming damage
+                        combatant.SetStatusWithDuration(Status.GUARDING, combatant.initiative);
+                        break;
+                    
+                    //If it was the end of a guard, set the status to NONE
+                    case Status.GUARDING:
+                        combatant.SetStatusWithDuration(Status.NONE, 0);
+                        break;
+                    
+                    //If it was a jab, cause attack event with jab, then go into recovery
+                    case Status.JABSTARTUP:
+                        AttackEvent(true, actionArray[1]);
+                        combatant.SetStatusWithDuration(Status.RECOVERY, combatant.initiative);
+                        break;
+                    
+                    //If it was a hook, cause attack event with hook, then go into recovery
+                    case Status.HOOKSTARTUP:
+                        AttackEvent(true, actionArray[2]);
+                        combatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+                        break;
+                    
+                    //If it was a haymaker, cause attack event with haymaker, then go into recovery
+                    case Status.HAYMAKERSTARTUP:
+                        AttackEvent(true, actionArray[3]);
+                        combatant.SetStatusWithDuration(Status.RECOVERY, combatant.initiative);
+                        break;
+                    
+                    //If it was the end of a stun, go into recovery
+                    case Status.STUNNED:
+                        combatant.SetStatusWithDuration(Status.RECOVERY, combatant.initiative);
+                    break;
+                }
+                
+                combatant.SetStatusWithDuration(Status.NONE, 0);
+            }
+    }
+
+    public void ResolveActionInstanceStack(int beat, Stack<ActionInstance> actionInstanceStack)
+    {
+        foreach (ActionInstance actionInstance in actionInstanceStack)
+        {
+            if (actionInstance.StartBeat == beat)
+            {
+                Status statusType;
+
+                switch (actionInstance.ID)
+                {
+                    case 0:
+                        statusType = Status.GUARDSTARTUP;
+                        break;
+                        
+                    case 1:
+                        statusType = Status.JABSTARTUP;
+                        break;
+                        
+                    case 2:
+                        statusType = Status.HOOKSTARTUP;
+                        break;
+                        
+                    case 3:
+                        statusType = Status.HAYMAKERSTARTUP;
+                        break;
+                        
+                    default:
+                        statusType = Status.NONE;
+                        Debug.Log("BattleManager: ResolveActionInstanceStack: action instance ID was invalid somehow, set to blank ");
+                        break;
+                }
+                    
+                //Call a start action event for the player
+                if (statusType != Status.NONE)
+                {
+                    playerCombatant.SetStatusWithDuration(statusType, actionArray[actionInstance.ID].ActionStartupDuration);
+                }
+            }
         }
     }
 
@@ -383,11 +437,7 @@ public class BattleManager : MonoBehaviour
 
 
 
-
-
-
-
-
+    //this probably should have error handling for passing it guard or a blank action somehow
     IEnumerator AttackEvent(bool playerAttacking, Action action)
     {
         string actionName = action.ActionName;
