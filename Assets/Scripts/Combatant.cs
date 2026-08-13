@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum Status  { NONE, GUARDSTARTUP, JABSTARTUP, HOOKSTARTUP, HAYMAKERSTARTUP, RECOVERY, STUNNED, GUARDING }
@@ -14,10 +15,47 @@ public class Combatant : MonoBehaviour
     
     public int initiative;
 
-    public bool TakeDamageOrDie(int damage)
+    public bool OnTakeDamagePlusCheckIfDie(int damage)
     {
-        if (combatantStatus == Status.GUARDING) { damage /= 2; }
         
+        //Changes what happens when a combatant gets hit depending on what status they currently have
+        switch (combatantStatus)
+                {
+                    case Status.NONE:
+                        break;
+                    
+                    
+                    case Status.GUARDSTARTUP:
+                        ChangeStatus(Status.STUNNED);
+                        break;
+                    
+                    
+                    case Status.GUARDING:
+                        damage /= 2;
+                        break;
+                    
+                   
+                    case Status.JABSTARTUP:
+                        ChangeStatus(Status.STUNNED);
+                        break;
+                    
+                    
+                    case Status.HOOKSTARTUP:
+                        ChangeStatus(Status.STUNNED);
+                        break;
+                    
+                    
+                    case Status.HAYMAKERSTARTUP:
+                        ChangeStatus(Status.STUNNED);
+                        break;
+                    
+                    
+                    case Status.STUNNED:
+                        float tempDamageCalcFloat = 0f;
+                        tempDamageCalcFloat = damage * 1.25f;
+                        damage = Mathf.RoundToInt(tempDamageCalcFloat);
+                    break;
+                }
         
         
         

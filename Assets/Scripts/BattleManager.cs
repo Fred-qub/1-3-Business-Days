@@ -265,13 +265,6 @@ public class BattleManager : MonoBehaviour
         
         ChangeBattleState(BattleState.RESOLUTION);
         StartResolution();
-        /*
-        foreach (ActionInstance actionInstance in actionStacksManager.enemyActionInstanceStack)
-        {
-            AttackEvent(false, actionArray[actionInstance.ID]));
-        }
-        */
-        
     }
 
     public bool EnemyActionSelect(int actionID, int startingBeat)
@@ -319,8 +312,8 @@ public class BattleManager : MonoBehaviour
             
             //Checks if either of the combatants status counter has hit zero
             //then starts events or sets other statuses accordingly
-            resolveCombatantStatus(playerCombatant);
-            resolveCombatantStatus(enemyCombatant);
+            ResolveCombatantStatus(playerCombatant);
+            ResolveCombatantStatus(enemyCombatant);
             
             //Disables the status panel if the combatant doesn't have a status effect
             UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus == Status.NONE);
@@ -328,8 +321,8 @@ public class BattleManager : MonoBehaviour
             
             //Goes through each combatant's action instance stack
             //If a combatant is starting an action this beat, sets their status accordingly
-            ResolveActionInstanceStack(i, actionStacksManager.playerActionInstanceStack);
-            ResolveActionInstanceStack(i, actionStacksManager.enemyActionInstanceStack);
+            ResolveActionInstanceStack(i, actionStacksManager.playerActionInstanceStack, playerCombatant);
+            ResolveActionInstanceStack(i, actionStacksManager.enemyActionInstanceStack, enemyCombatant);
             
             //Check if the enemy is starting an action
             foreach (ActionInstance enemyActionInstance in actionStacksManager.enemyActionInstanceStack)
@@ -342,9 +335,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-        public void resolveCombatantStatus(Combatant combatant)
-    {
-          //If a combatant's status hits 0, check what it was
+        public void ResolveCombatantStatus(Combatant combatant)
+        {
+            bool isPlayer = combatant == playerCombatant;
+            
+            //If a combatant's status hits 0, check what it was
             if (combatant.combatantStatusRemainingDuration == 0)
             {
                 switch (combatant.combatantStatus)
@@ -366,19 +361,19 @@ public class BattleManager : MonoBehaviour
                     
                     //If it was a jab, cause attack event with jab, then go into recovery
                     case Status.JABSTARTUP:
-                        AttackEvent(true, actionArray[1]);
+                        AttackEvent(isPlayer, actionArray[1]);
                         combatant.SetStatusWithDuration(Status.RECOVERY, combatant.initiative);
                         break;
                     
                     //If it was a hook, cause attack event with hook, then go into recovery
                     case Status.HOOKSTARTUP:
-                        AttackEvent(true, actionArray[2]);
+                        AttackEvent(isPlayer, actionArray[2]);
                         combatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
                         break;
                     
                     //If it was a haymaker, cause attack event with haymaker, then go into recovery
                     case Status.HAYMAKERSTARTUP:
-                        AttackEvent(true, actionArray[3]);
+                        AttackEvent(isPlayer, actionArray[3]);
                         combatant.SetStatusWithDuration(Status.RECOVERY, combatant.initiative);
                         break;
                     
@@ -392,7 +387,7 @@ public class BattleManager : MonoBehaviour
             }
     }
 
-    public void ResolveActionInstanceStack(int beat, Stack<ActionInstance> actionInstanceStack)
+    public void ResolveActionInstanceStack(int beat, Stack<ActionInstance> actionInstanceStack, Combatant combatant)
     {
         foreach (ActionInstance actionInstance in actionInstanceStack)
         {
@@ -424,10 +419,10 @@ public class BattleManager : MonoBehaviour
                         break;
                 }
                     
-                //Call a start action event for the player
+                //Call a start action event for the combatant
                 if (statusType != Status.NONE)
                 {
-                    playerCombatant.SetStatusWithDuration(statusType, actionArray[actionInstance.ID].ActionStartupDuration);
+                    combatant.SetStatusWithDuration(statusType, actionArray[actionInstance.ID].ActionStartupDuration);
                 }
             }
         }
@@ -436,10 +431,12 @@ public class BattleManager : MonoBehaviour
 
 
 
-
-    //this probably should have error handling for passing it guard or a blank action somehow
+    
     IEnumerator AttackEvent(bool playerAttacking, Action action)
     {
+        //If the action isn't an attack somehow, stop coroutine
+        if (!action.DoesActionDealDamage){ yield break;}
+        
         string actionName = action.ActionName;
 
         int damage = action.ActionDamage;
@@ -462,7 +459,7 @@ public class BattleManager : MonoBehaviour
         }
         
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
-        bool targetIsDead = targetCombatant.TakeDamageOrDie(damage);
+        bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
         yield return new WaitForSeconds(2f);
         
@@ -484,10 +481,6 @@ public class BattleManager : MonoBehaviour
                 ChangeBattleState(BattleState.LOSE);
                 LoseEvent();
             }
-        }
-        else
-        {
-            yield break;
         }
     }
 
