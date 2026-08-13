@@ -312,6 +312,11 @@ public class BattleManager : MonoBehaviour
             
             //Checks if either of the combatants status counter has hit zero
             //then starts events or sets other statuses accordingly
+            //the order of these calls in this function dictates the order of sub-beat resolution
+            //in other words, the player will be prioritized
+            
+            //CONSIDER CHANGING HOW ResolveCombatantStatus WORK SO THAT CLASH EDGE CASE EVENT CAN BE DETECTED
+            
             ResolveCombatantStatus(playerCombatant);
             ResolveCombatantStatus(enemyCombatant);
             
