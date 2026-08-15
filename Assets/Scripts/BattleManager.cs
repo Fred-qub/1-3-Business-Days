@@ -25,9 +25,6 @@ public class Action
     }
 }
 
-
-
-
 public class BattleManager : MonoBehaviour
 {
     //References
@@ -173,8 +170,7 @@ public class BattleManager : MonoBehaviour
             playerActionPreviewArray[i] = 'B';
         }
     }
-
-
+    
     public void ActionSelect(int actionID)
     {
         //Adds the given action to the player's action instance stack using their current starting beat
@@ -289,47 +285,22 @@ public class BattleManager : MonoBehaviour
         }
     }
     
-
     public void StartResolution()
     {
         if (battleState != BattleState.RESOLUTION) { return; }
-        //Goes through beats 0 through 20
-        //On each beat, checks if a combatant starts an action on that beat
-        //Creates a list of what events happen on what beat
-        //If one combatant's action reaches the end of its startup, it causes either an attack or guard event
-        //If it's an attack, and the other combatant is in startup, it causes a stun event targeting the other combatant
-        //When stunned, a combatant's next attack won't resolve
-        //If the two combatants attack each other at the same time, it causes a clash event
-        
-        
         
         //On every beat on this round and the next
-        for (int currentBeat = 0; currentBeat < (roundLength); currentBeat++)
+        for (int beat = 0; beat < (roundLength); beat++)
         {
             //Decrease whatever statuses the combatants have by 1
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
             
-            //Checks if either of the combatants status counter has hit zero
-            //then starts events or sets other statuses accordingly
-            //the order of these calls dictates the order of sub-beat resolution
-            //in other words, the player will always be prioritized
-            //CONSIDER CHANGING HOW ResolveCombatantStatus WORKS SO THAT CLASH EDGE CASE EVENT CAN BE DETECTED
-            //maybe have it return something, then use that check if two events happened on the same beat
-            //then have another function resolve that accordingly and have THAT call the events
-            //that way you can define sub-beat action resolution on a case-by-case basis with respect to specific actions
-            //i.e. guarding should always have priority to preserve intended functionality, attacks have the same priority but are handled by clash event edge case
-
-            
-
+            //Does most of the resolution
             if (playerCombatant.combatantStatusRemainingDuration == 0 | enemyCombatant.combatantStatusRemainingDuration == 0)
             {
-                ResolveCombatantStatus(currentBeat);
+                ResolveCombatantStatus(beat);
             }
-
-         
-            
-            
 
             //Disables the status panel if the combatant doesn't have a status effect
             UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus == Status.NONE);
@@ -338,181 +309,160 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-        public void ResolveCombatantStatus(int currentBeat)
+    public void ResolveCombatantStatus(int beat)
+    {
+        Status playerAttemptedStatusChange = Status.NONE;
+        Status enemyAttemptedStatusChange = Status.NONE;
+        
+        switch (playerCombatant.combatantStatus)
         {
-            Status playerAttemptedStatusChange = Status.NONE;
-            Status enemyAttemptedStatusChange = Status.NONE;
-            
-            switch (playerCombatant.combatantStatus)
-            {
-                //If it was the startup of a guard, set the status to guarding
-                case Status.GUARDSTARTUP:
-                    playerAttemptedStatusChange = Status.GUARDING;
-                    
-                    //Guarding is the same as recovery, but it halves incoming damage
-                    //playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
-                    break;
-                
-                //If it was a jab, cause attack event with jab, then go into recovery
-                case Status.JABSTARTUP:
-                    playerAttemptedStatusChange = Status.RECOVERY;
-                    
-                    //AttackEvent(true, actionArray[1]);
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-                    break;
-                
-                //If it was a hook, cause attack event with hook, then go into recovery
-                case Status.HOOKSTARTUP:
-                    playerAttemptedStatusChange = Status.RECOVERY;
-                    
-                    //AttackEvent(true, actionArray[2]);
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-                    break;
-                
-                //If it was a haymaker, cause attack event with haymaker, then go into recovery
-                case Status.HAYMAKERSTARTUP:
-                    playerAttemptedStatusChange = Status.RECOVERY;
-                    
-                    //AttackEvent(true, actionArray[3]);
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-                    break;
-                
-                //If it was the end of a stun, go into recovery
-                case Status.STUNNED:
-                    playerAttemptedStatusChange = Status.RECOVERY;
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+            case Status.GUARDSTARTUP:
+                playerAttemptedStatusChange = Status.GUARDING;
                 break;
-                
-                
-                
-                //If it was the end of guarding, recovery or none, check if a new action is starting this beat
-                default:
-                    playerAttemptedStatusChange = ResolveActionInstanceStack(currentBeat, actionStacksManager.playerActionInstanceStack, playerCombatant);
-                    break;
-            }
             
-            switch (enemyCombatant.combatantStatus)
-            {
-                //If it was the startup of a guard, set the status to guarding
-                case Status.GUARDSTARTUP:
-                    enemyAttemptedStatusChange = Status.GUARDING;
-                    
-                    //Guarding is the same as recovery, but it halves incoming damage
-                    //playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
-                    break;
-                
-                //If it was a jab, cause attack event with jab, then go into recovery
-                case Status.JABSTARTUP:
-                   enemyAttemptedStatusChange = Status.RECOVERY;
-                    
-                    //AttackEvent(true, actionArray[1]);
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-                    break;
-                
-                //If it was a hook, cause attack event with hook, then go into recovery
-                case Status.HOOKSTARTUP:
-                    enemyAttemptedStatusChange = Status.RECOVERY;
-                    
-                    //AttackEvent(true, actionArray[2]);
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-                    break;
-                
-                //If it was a haymaker, cause attack event with haymaker, then go into recovery
-                case Status.HAYMAKERSTARTUP:
-                    enemyAttemptedStatusChange = Status.RECOVERY;
-                    
-                    //AttackEvent(true, actionArray[3]);
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-                    break;
-                
-                //If it was the end of a stun, go into recovery
-                case Status.STUNNED:
-                    enemyAttemptedStatusChange = Status.RECOVERY;
-                    //playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+            case Status.JABSTARTUP:
+                playerAttemptedStatusChange = Status.RECOVERY;
                 break;
-                
-                
-                
-                //If it was the end of guarding, recovery or none, check if a new action is starting this beat
-                default:
-                    enemyAttemptedStatusChange = ResolveActionInstanceStack(currentBeat, actionStacksManager.enemyActionInstanceStack, enemyCombatant);
-                    break;
-            }
             
+            case Status.HOOKSTARTUP:
+                playerAttemptedStatusChange = Status.RECOVERY;
+                break;
             
-            //The order of the next checks determines the priority of resolution
+            case Status.HAYMAKERSTARTUP:
+                playerAttemptedStatusChange = Status.RECOVERY;
+                break;
             
-
-            if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
-            {
-                //The player is beginning to prepare to guard, which should always be resolved before actions that can cause counters
-                playerCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
-            } 
+            case Status.STUNNED:
+                playerAttemptedStatusChange = Status.RECOVERY;
+                break;
             
-            if (playerAttemptedStatusChange == Status.GUARDING)
-            {
-                //The player is beginning to guard, which should always be resolved before actions that can cause counters
-                playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
-            }
+            default:
+                playerAttemptedStatusChange = ResolveActionInstanceStack(beat, actionStacksManager.playerActionInstanceStack, playerCombatant);
+                break;
+        }
+        
+        switch (enemyCombatant.combatantStatus)
+        {
+            case Status.GUARDSTARTUP:
+                enemyAttemptedStatusChange = Status.GUARDING;
+                break;
             
-            //It doesn't matter that the same checks for the opponent are done later here, because they can't counter and interrupt each other
-            if (enemyAttemptedStatusChange == Status.GUARDSTARTUP)
-            {
-                enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
-            } 
+            case Status.JABSTARTUP:
+               enemyAttemptedStatusChange = Status.RECOVERY;
+                break;
             
-            if (enemyAttemptedStatusChange == Status.GUARDING)
-            {
-                enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
-            }
-
+            case Status.HOOKSTARTUP:
+                enemyAttemptedStatusChange = Status.RECOVERY;
+                break;
             
+            case Status.HAYMAKERSTARTUP:
+                enemyAttemptedStatusChange = Status.RECOVERY;
+                break;
             
-            //If a combatant is attempting to change status to recovery and is not currently stunned, that means they are resolving an attack on this beat
+            case Status.STUNNED:
+                enemyAttemptedStatusChange = Status.RECOVERY;
+                break;
             
-            //If both combatants are attacking each other
-            if (playerAttemptedStatusChange == Status.RECOVERY && enemyAttemptedStatusChange ==  Status.RECOVERY
-                && playerCombatant.combatantStatus != Status.STUNNED && enemyCombatant.combatantStatus != Status.STUNNED)
-            {
-                //trigger clash
-            }
-
-            if (playerAttemptedStatusChange == Status.RECOVERY && enemyAttemptedStatusChange != Status.RECOVERY)
-            {
-                //player is attacking enemy without interruption
-
-                switch (playerCombatant.combatantStatus)
-                {
-                    case Status.JABSTARTUP:
-                        break;
-                    case Status.HOOKSTARTUP:
-                        break;
-                    case Status.HAYMAKERSTARTUP:
-                        break;
-                    case Status.STUNNED:
-                        break;
-                }
-            }
-            
-            if (playerAttemptedStatusChange != Status.RECOVERY && enemyAttemptedStatusChange == Status.RECOVERY)
-            {
-                //enemy is attacking enemy without interruption
-            }
-            
-            
-            
+            default:
+                enemyAttemptedStatusChange = ResolveActionInstanceStack(beat, actionStacksManager.enemyActionInstanceStack, enemyCombatant);
+                break;
         }
         
         
+        //The order of the next checks determines the priority of resolution
+        
+
+        if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
+        {
+            //The player is beginning to prepare to guard, which should always be resolved before actions that can cause counters
+            playerCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
+        } 
+        
+        if (playerAttemptedStatusChange == Status.GUARDING)
+        {
+            //The player is beginning to guard, which should always be resolved before actions that can cause counters
+            playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
+        }
+        
+        //It doesn't matter that the same checks for the opponent are done later here, because they can't counter and interrupt each other
+        if (enemyAttemptedStatusChange == Status.GUARDSTARTUP)
+        {
+            enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
+        } 
+        
+        if (enemyAttemptedStatusChange == Status.GUARDING)
+        {
+            enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
+        }
+
+        
+        
+        //If a combatant is attempting to change status to recovery and is not currently stunned, that means they are resolving an attack on this beat
+        
+        //If both combatants are attacking each other
+        if (playerAttemptedStatusChange == Status.RECOVERY && enemyAttemptedStatusChange ==  Status.RECOVERY
+            && playerCombatant.combatantStatus != Status.STUNNED && enemyCombatant.combatantStatus != Status.STUNNED)
+        {
+            //StartCoroutine(ClashEvent())
+        }
+
+        if (playerAttemptedStatusChange == Status.RECOVERY && enemyAttemptedStatusChange != Status.RECOVERY 
+            && playerCombatant.combatantStatus != Status.STUNNED)
+        {
+            //player is attacking enemy without interruption
+
+            switch (playerCombatant.combatantStatus)
+            {
+                case Status.JABSTARTUP:
+                    StartCoroutine(AttackEvent(true, actionArray[1]));
+                    playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+                    break;
+                case Status.HOOKSTARTUP:
+                    StartCoroutine(AttackEvent(true, actionArray[2]));
+                    playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+                    break;
+                case Status.HAYMAKERSTARTUP:
+                    StartCoroutine(AttackEvent(true, actionArray[3]));
+                    playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+                    break;
+            }
+        }
+        
+        if (playerAttemptedStatusChange != Status.RECOVERY && enemyAttemptedStatusChange == Status.RECOVERY 
+                                                           && enemyCombatant.combatantStatus != Status.STUNNED)
+        {
+            //enemy is attacking player without interruption
+            switch (enemyCombatant.combatantStatus)
+            {
+                case Status.JABSTARTUP:
+                    StartCoroutine(AttackEvent(false, actionArray[1]));
+                    enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+                    break;
+                case Status.HOOKSTARTUP:
+                    StartCoroutine(AttackEvent(false, actionArray[2]));
+                    enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+                    break;
+                case Status.HAYMAKERSTARTUP:
+                    StartCoroutine(AttackEvent(false, actionArray[3]));
+                    enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+                    break;
+            }
+        }
+        
+        
+        
+    }
+        
+        
     //Goes through each combatant's action instance stack
-    //If a combatant is starting an action this beat, sets their status accordingly
-    public Status ResolveActionInstanceStack(int currentBeat, Stack<ActionInstance> actionInstanceStack, Combatant combatant)
+    //If a combatant is starting an action this beat returns that status
+    public Status ResolveActionInstanceStack(int beat, Stack<ActionInstance> actionInstanceStack, Combatant combatant)
     {
         Status statusType = Status.NONE;
         
         foreach (ActionInstance actionInstance in actionInstanceStack)
         {
-            if (actionInstance.StartBeat == currentBeat)
+            if (actionInstance.StartBeat == beat)
             {
                 switch (actionInstance.ID)
                 {
@@ -540,7 +490,6 @@ public class BattleManager : MonoBehaviour
             }
         }
         return statusType;
-        //combatant.SetStatusWithDuration(statusType, actionArray[actionInstance.ID].ActionStartupDuration);
     }
 
 
