@@ -68,6 +68,10 @@ public class BattleManager : MonoBehaviour
     public uint seed;
     private Unity.Mathematics.Random rng;
     
+    private WaitForSeconds BeatWaitTime = new WaitForSeconds(1f);
+    private WaitForSeconds EventWaitTime = new WaitForSeconds(2f);
+    private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.1f);
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -298,7 +302,7 @@ public class BattleManager : MonoBehaviour
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
             
-            yield return new WaitForSeconds(0.1f);
+            yield return BeatWaitTime;
             
             //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
             UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
@@ -310,7 +314,7 @@ public class BattleManager : MonoBehaviour
             
             Debug.Log("BattleManager: Starting resolution for beat " + beat);
             //Does most of the resolution
-            ResolveCombatantStatus(beat);
+            StartCoroutine(ResolveCombatantStatus(beat));
             
             //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
             UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
@@ -320,11 +324,11 @@ public class BattleManager : MonoBehaviour
             UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus.ToString());
             UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
             
-            yield return new WaitForSeconds(1f);
+            yield return BeatWaitTime;
         }
     }
 
-    public void ResolveCombatantStatus(int beat)
+    IEnumerator ResolveCombatantStatus(int beat)
     {
         Status playerAttemptedStatusChange = Status.NONE;
         Status enemyAttemptedStatusChange = Status.NONE;
@@ -551,7 +555,7 @@ public class BattleManager : MonoBehaviour
         
        
         
-        
+        yield return null;
     }
         
         
@@ -622,13 +626,13 @@ public class BattleManager : MonoBehaviour
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
         bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
-        yield return new WaitForSeconds(2f);
+        yield return BeatWaitTime;
         
         UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + damage + " points of damage!");
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         
-        yield return new WaitForSeconds(2f);
+        yield return BeatWaitTime;
 
         if (targetIsDead) 
         {
@@ -663,7 +667,7 @@ public class BattleManager : MonoBehaviour
         
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
-        yield return new WaitForSeconds(2f);
+        yield return BeatWaitTime;
         
         UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants take " + finalRecoilDamage + " recoil damage!");
@@ -674,7 +678,7 @@ public class BattleManager : MonoBehaviour
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         
-        yield return new WaitForSeconds(2f);
+        yield return BeatWaitTime;
 
         if (playerIsDead) 
         {
