@@ -439,14 +439,7 @@ public class BattleManager : MonoBehaviour
         
         //The order of the following if statements dictates the priority of resolving different scenarios within a beat
         
-        //ADD WAIT TIMES BETWEEN EVENTS SO THE GAME PAUSES TO ALLOW THE PLAYER TO TAKE IN INFO
-        //HOOK UP ANY REMAINING UI STUFF FOR CLARITY
-        //IMPLEMENT ROUND RESETTING
-        //IMPLEMENT WIN / LOSE SCREEN
-        //IMPLEMENT MAIN MENU
-        //IMPLEMENT TUTORIAL PAGE
-        //IMPLEMENT SIMPLE SFX FOR UI ELEMENTS, EVENTS AND SUCH FOR MORE FEEDBACK
-        //IMPLEMENT SPRITE SWAPPING FOR ATTACKS
+        
 
         //If the player is attempting to start preparing to guard
         if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
@@ -828,6 +821,11 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator SetupNewRound()
     {
-        
+        //IMPLEMENT ROUND RESETTING
+        //IMPLEMENT WIN / LOSE SCREEN
+        //IMPLEMENT MAIN MENU
+        //IMPLEMENT TUTORIAL PAGE
+        //IMPLEMENT SIMPLE SFX FOR UI ELEMENTS, EVENTS AND SUCH FOR MORE FEEDBACK
+        //IMPLEMENT SPRITE SWAPPING FOR ATTACKS
     }
 }
