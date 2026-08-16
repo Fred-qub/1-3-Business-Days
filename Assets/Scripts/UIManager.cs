@@ -162,6 +162,29 @@ public class UIManager : MonoBehaviour
     
     //Sets the value of the enemy's status countdown
     public void SetEnemyStatusCounter(int counter) { enemyStatusCounter.text = counter.ToString(); }
+    
+    //Sets the color of the enemy's status countdown panel text
+    public void SetEnemyStatusTextColor(Status status)
+    {
+        switch (status)
+        {
+            case Status.NONE:
+                playerStatusText.color = blankColour;
+                break;
+            case Status.RECOVERY:
+                playerStatusText.color = recoveryColour;
+                break;
+            case Status.STUNNED:
+                playerStatusText.color = stunColour;
+                break;
+            case Status.GUARDING:
+                playerStatusText.color = guardColour;
+                break;
+            default:
+                playerStatusText.color = enemyColour;
+                break;
+        };
+    }
 
     //Sets the beat counter and beat slider
     public void SetBeat(int beat)

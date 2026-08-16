@@ -529,19 +529,25 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a jab.");
+                    UpdateCombatantStatusUI();
                     yield return EventWaitTime;
+                    
                     break;
                 case Status.HOOKSTARTUP:
                     enemyCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a hook.");
+                    UpdateCombatantStatusUI();
                     yield return EventWaitTime;
+                    
                     break;
                 case Status.HAYMAKERSTARTUP:
                     enemyCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a haymaker.");
+                    UpdateCombatantStatusUI();
                     yield return EventWaitTime;
+                    
                     break;
             }
         }
@@ -550,12 +556,18 @@ public class BattleManager : MonoBehaviour
         if (playerAttemptedStatusChange == Status.RECOVERY && playerCombatant.combatantStatus == Status.STUNNED)
         {
             playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " Shrugs off their stun.");
+            UpdateCombatantStatusUI();
         }
         
         //If the enemy is recovering from being stunned
         if (enemyAttemptedStatusChange == Status.RECOVERY && enemyCombatant.combatantStatus == Status.STUNNED)
         {
             enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " Shrugs off their stun.");
+            UpdateCombatantStatusUI();
         }
         
         //If a combatant is attempting to change status to recovery and is not currently stunned, that means they are resolving an attack on this beat
@@ -754,11 +766,11 @@ public class BattleManager : MonoBehaviour
 
         int finalRecoilDamage = Mathf.RoundToInt((playerDamage + enemyDamage) / 2f);
         
+        UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
         yield return BeatWaitTime;
         
-        UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants take " + finalRecoilDamage + " recoil damage!");
         
         bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(finalRecoilDamage);
