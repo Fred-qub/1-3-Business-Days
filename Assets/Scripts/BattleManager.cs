@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
     public uint seed;
     private Unity.Mathematics.Random rng;
     
-    private WaitForSeconds BeatWaitTime = new WaitForSeconds(0.5f);
+    private WaitForSeconds BeatWaitTime = new WaitForSeconds(1f);
     private WaitForSeconds EventWaitTime = new WaitForSeconds(2f);
     private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.1f);
     
@@ -350,6 +350,8 @@ public class BattleManager : MonoBehaviour
         for (int beat = 0; beat <= (roundLength); beat++)
         {
             UIManager.SetBeat(beat);
+            UIManager.SetDialogueTitle("WAITING...");
+            UIManager.SetDialogueContent("You could cut the tension in the air with a knife.");
 
             //Decrease whatever statuses the combatants have by 1
             playerCombatant.DecreaseStatus();
@@ -363,6 +365,7 @@ public class BattleManager : MonoBehaviour
             
             yield return BeatWaitTime;
         }
+        
     }
 
     IEnumerator ResolveCombatantStatus(int beat)
@@ -560,6 +563,7 @@ public class BattleManager : MonoBehaviour
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Shrugs off their stun.");
             UpdateCombatantStatusUI();
+            yield return EventWaitTime;
         }
         
         //If the enemy is recovering from being stunned
@@ -569,6 +573,7 @@ public class BattleManager : MonoBehaviour
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Shrugs off their stun.");
             UpdateCombatantStatusUI();
+            yield return EventWaitTime;
         }
         
         //If a combatant is attempting to change status to recovery and is not currently stunned, that means they are resolving an attack on this beat
@@ -652,10 +657,6 @@ public class BattleManager : MonoBehaviour
     }
     
     
-    
-    
-    
-        
     //Goes through each combatant's action instance stack
     //If a combatant is starting an action this beat returns that status
     public Status ResolveActionInstanceStack(int beat, Stack<ActionInstance> actionInstanceStack, Combatant combatant)
@@ -693,11 +694,7 @@ public class BattleManager : MonoBehaviour
         }
         return statusType;
     }
-
-    public void SetupNewRound()
-    {
-        
-    }
+    
     
     IEnumerator AttackEvent(bool playerAttacking, Action action)
     {
@@ -725,26 +722,42 @@ public class BattleManager : MonoBehaviour
             attackerCombatant = enemyCombatant;
         }
         
+        UIManager.SetDialogueTitle("BATTLE EVENT:");
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
         bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
-        yield return BeatWaitTime;
+        yield return EventWaitTime;
         
         UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + damage + " points of damage!");
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         
-        yield return BeatWaitTime;
+        yield return EventWaitTime;
+
+        if (targetCombatant.combatantStatus == Status.STUNNED)
+        {
+            UIManager.SetDialogueTitle("COUNTER!");
+            UIManager.SetDialogueContent(targetCombatant.combatantName + " was interrupted and stunned!");
+            yield return EventWaitTime;
+        }
 
         if (targetIsDead) 
         {
             if (playerAttacking)
             {
+                UIManager.SetDialogueTitle("VICTORY!");
+                UIManager.SetDialogueContent(enemyCombatant.combatantName + " has been knocked out!");
+                yield return EventWaitTime;
+                
                 ChangeBattleState(BattleState.WIN);
                 WinEvent();
             }
             else
             {
+                UIManager.SetDialogueTitle("DEFEAT!");
+                UIManager.SetDialogueContent(playerCombatant.combatantName + " has been knocked out!");
+                yield return EventWaitTime;
+                
                 ChangeBattleState(BattleState.LOSE);
                 LoseEvent();
             }
@@ -770,7 +783,7 @@ public class BattleManager : MonoBehaviour
         UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
-        yield return BeatWaitTime;
+        yield return EventWaitTime;
         
         UIManager.SetDialogueContent("Both combatants take " + finalRecoilDamage + " recoil damage!");
         
@@ -780,30 +793,41 @@ public class BattleManager : MonoBehaviour
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         
-        yield return BeatWaitTime;
+        yield return EventWaitTime;
 
         if (playerIsDead) 
         {
-                ChangeBattleState(BattleState.WIN);
-                WinEvent();
+            UIManager.SetDialogueTitle("VICTORY!");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " has been knocked out!");
+            yield return EventWaitTime;
+            ChangeBattleState(BattleState.WIN);
+            WinEvent();
         }
         
         if (enemyIsDead)
         {
-                ChangeBattleState(BattleState.LOSE);
-                LoseEvent();
+            UIManager.SetDialogueTitle("DEFEAT!");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " has been knocked out!");
+            yield return EventWaitTime;
+            ChangeBattleState(BattleState.LOSE);
+            LoseEvent();
         }
     }
     
     public void WinEvent()
     {
         if(battleState != BattleState.WIN) return; 
-        UIManager.SetDialogueContent(enemyCombatant.combatantName + " has been knocked out! You are the winner!");
+        
     }
 
     public void LoseEvent()
     {
         if(battleState != BattleState.LOSE) return; 
-        UIManager.SetDialogueContent("You were clobbered by " + enemyCombatant.combatantName + "!");
+        
+    }
+
+    IEnumerator SetupNewRound()
+    {
+        
     }
 }
