@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using Random = Unity.Mathematics.Random;
 
 //Enumerator for game states
-public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, PLAYBACK, ROUNDSETUP, WIN, LOSE }
+public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, ROUNDSETUP, WIN, LOSE }
 //Class for what an action actually is
 public class Action
 {
@@ -369,8 +369,7 @@ public class BattleManager : MonoBehaviour
         }
         
         
-        //The order of the next checks determines the priority of resolution
-        
+        //The order of the following if statements dictates the priority of resolving different scenarios within a beat
 
         if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
         {
@@ -384,14 +383,15 @@ public class BattleManager : MonoBehaviour
             playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
         }
         
-        //It doesn't matter that the same checks for the opponent are done later here, because they can't counter and interrupt each other
         if (enemyAttemptedStatusChange == Status.GUARDSTARTUP)
         {
+            //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
         } 
         
         if (enemyAttemptedStatusChange == Status.GUARDING)
         {
+            //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
         }
 
@@ -449,6 +449,7 @@ public class BattleManager : MonoBehaviour
             }
         }
         
+        //16/08/2026: FINISH SUB-BEAT CASE-BY-CASE DICTATED PRIORITY ACTION RESOLUTION HERE
         
         
     }
@@ -491,10 +492,6 @@ public class BattleManager : MonoBehaviour
         }
         return statusType;
     }
-
-
-
-
     
     IEnumerator AttackEvent(bool playerAttacking, Action action)
     {
@@ -548,6 +545,47 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    IEnumerator ClashEvent(Action playerAction, Action enemyAction)
+    {
+        int playerDamage = playerAction.ActionDamage;
+        int enemyDamage = enemyAction.ActionDamage;
+        
+        playerDamage += rng.NextInt(-playerAction.ActionDamageVariance, playerAction.ActionDamageVariance);
+        enemyDamage += rng.NextInt(-enemyAction.ActionDamageVariance, enemyAction.ActionDamageVariance);
+
+        int finalRecoilDamage = Mathf.RoundToInt((playerDamage + enemyDamage) / 2f);
+        
+        Combatant targetCombatant;
+        Combatant attackerCombatant;
+        
+        UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
+        
+        yield return new WaitForSeconds(2f);
+        
+        UIManager.SetDialogueTitle("CLASH!");
+        UIManager.SetDialogueContent("Both combatants take " + finalRecoilDamage + " recoil damage!");
+        
+        bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(finalRecoilDamage);
+        bool enemyIsDead = enemyCombatant.OnTakeDamagePlusCheckIfDie(finalRecoilDamage);
+
+        UIManager.SetEnemyHP(enemyCombatant.currentHP);
+        UIManager.SetPlayerHP(playerCombatant.currentHP);
+        
+        yield return new WaitForSeconds(2f);
+
+        if (playerIsDead) 
+        {
+                ChangeBattleState(BattleState.WIN);
+                WinEvent();
+        }
+        
+        if (enemyIsDead)
+        {
+                ChangeBattleState(BattleState.LOSE);
+                LoseEvent();
+        }
+    }
+    
     public void WinEvent()
     {
         if(battleState != BattleState.WIN) return; 
