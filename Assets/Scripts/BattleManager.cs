@@ -260,7 +260,7 @@ public class BattleManager : MonoBehaviour
         }
         
         ChangeBattleState(BattleState.RESOLUTION);
-        StartResolution();
+        StartCoroutine(StartResolution());
     }
 
     public bool EnemyActionSelect(int actionID, int startingBeat)
@@ -285,27 +285,34 @@ public class BattleManager : MonoBehaviour
         }
     }
     
-    public void StartResolution()
+    IEnumerator StartResolution()
     {
-        if (battleState != BattleState.RESOLUTION) { return; }
+        if (battleState != BattleState.RESOLUTION) { yield break; }
         
         //On every beat on this round and the next
-        for (int beat = 0; beat < (roundLength); beat++)
+        for (int beat = 0; beat <= (roundLength); beat++)
         {
+            UIManager.SetBeat(beat);
+
             //Decrease whatever statuses the combatants have by 1
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
             
-            //Does most of the resolution
-            if (playerCombatant.combatantStatusRemainingDuration == 0 | enemyCombatant.combatantStatusRemainingDuration == 0)
-            {
-                ResolveCombatantStatus(beat);
-            }
-
-            //Disables the status panel if the combatant doesn't have a status effect
-            UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus == Status.NONE);
-            UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus == Status.NONE);
+            //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
+            UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
+            UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
             
+            //UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus != Status.NONE);
+            UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus.ToString());
+            UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
+            
+            //Does most of the resolution
+           
+            ResolveCombatantStatus(beat);
+            
+
+            
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -313,62 +320,73 @@ public class BattleManager : MonoBehaviour
     {
         Status playerAttemptedStatusChange = Status.NONE;
         Status enemyAttemptedStatusChange = Status.NONE;
-        
-        switch (playerCombatant.combatantStatus)
+
+        if (playerCombatant.combatantStatusRemainingDuration <= 0)
         {
-            case Status.GUARDSTARTUP:
-                playerAttemptedStatusChange = Status.GUARDING;
-                break;
-            
-            case Status.JABSTARTUP:
-                playerAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            case Status.HOOKSTARTUP:
-                playerAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            case Status.HAYMAKERSTARTUP:
-                playerAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            case Status.STUNNED:
-                playerAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            default:
-                playerAttemptedStatusChange = ResolveActionInstanceStack(beat, actionStacksManager.playerActionInstanceStack, playerCombatant);
-                break;
+            switch (playerCombatant.combatantStatus)
+            {
+                case Status.GUARDSTARTUP:
+                    playerAttemptedStatusChange = Status.GUARDING;
+                    break;
+
+                case Status.JABSTARTUP:
+                    playerAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                case Status.HOOKSTARTUP:
+                    playerAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                case Status.HAYMAKERSTARTUP:
+                    playerAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                case Status.STUNNED:
+                    playerAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                default:
+                    playerAttemptedStatusChange = ResolveActionInstanceStack(beat,
+                        actionStacksManager.playerActionInstanceStack, playerCombatant);
+                    break;
+            }
         }
-        
-        switch (enemyCombatant.combatantStatus)
+
+
+        if (enemyCombatant.combatantStatusRemainingDuration <= 0)
         {
-            case Status.GUARDSTARTUP:
-                enemyAttemptedStatusChange = Status.GUARDING;
-                break;
-            
-            case Status.JABSTARTUP:
-               enemyAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            case Status.HOOKSTARTUP:
-                enemyAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            case Status.HAYMAKERSTARTUP:
-                enemyAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            case Status.STUNNED:
-                enemyAttemptedStatusChange = Status.RECOVERY;
-                break;
-            
-            default:
-                enemyAttemptedStatusChange = ResolveActionInstanceStack(beat, actionStacksManager.enemyActionInstanceStack, enemyCombatant);
-                break;
+            switch (enemyCombatant.combatantStatus)
+            {
+                case Status.GUARDSTARTUP:
+                    enemyAttemptedStatusChange = Status.GUARDING;
+                    break;
+
+                case Status.JABSTARTUP:
+                    enemyAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                case Status.HOOKSTARTUP:
+                    enemyAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                case Status.HAYMAKERSTARTUP:
+                    enemyAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                case Status.STUNNED:
+                    enemyAttemptedStatusChange = Status.RECOVERY;
+                    break;
+
+                default:
+                    enemyAttemptedStatusChange = ResolveActionInstanceStack(beat,
+                        actionStacksManager.enemyActionInstanceStack, enemyCombatant);
+                    break;
+            }
         }
-        
-        
+
+        if (playerAttemptedStatusChange == Status.NONE) {return;}
+        if (enemyAttemptedStatusChange == Status.NONE) {return;}
+
         //The order of the following if statements dictates the priority of resolving different scenarios within a beat
 
         if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
@@ -490,6 +508,7 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
+        Debug.Log("ResolveActionInstanceStack: " + combatant + " is attempting to change status to " + statusType);
         return statusType;
     }
     

@@ -4647,6 +4647,9 @@ MonoBehaviour:
   playerStartingBeat: 0
   initialPlayerStartingBeatForAGivenRound: 0
   enemyStartingBeat: 0
+  initialEnemyStartingBeatForAGivenRound: 0
+  roundLength: 10
+  seed: 0
 --- !u!4 &883400650
 Transform:
   m_ObjectHideFlags: 0
@@ -6155,7 +6158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1145605314
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8123,7 +8126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1673628964
 RectTransform:
   m_ObjectHideFlags: 0
