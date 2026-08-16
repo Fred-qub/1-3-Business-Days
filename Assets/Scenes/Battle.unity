@@ -7047,7 +7047,7 @@ MonoBehaviour:
   - {fileID: 406227803}
   playerColour: {r: 0, g: 0.801, b: 0.5025883, a: 1}
   enemyColour: {r: 1, g: 0, b: 0.25882354, a: 1}
-  stunColour: {r: 1, g: 0, b: 0.25882354, a: 1}
+  stunColour: {r: 1, g: 0.3488756, b: 0, a: 1}
   recoveryColour: {r: 0, g: 0.3098544, b: 1, a: 1}
   guardColour: {r: 0.4, g: 0.2, b: 0.6, a: 1}
   blankColour: {r: 0.42352945, g: 0.42352945, b: 0.42352945, a: 0}

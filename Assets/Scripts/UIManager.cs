@@ -169,19 +169,19 @@ public class UIManager : MonoBehaviour
         switch (status)
         {
             case Status.NONE:
-                playerStatusText.color = blankColour;
+                enemyStatusText.color = blankColour;
                 break;
             case Status.RECOVERY:
-                playerStatusText.color = recoveryColour;
+                enemyStatusText.color = recoveryColour;
                 break;
             case Status.STUNNED:
-                playerStatusText.color = stunColour;
+                enemyStatusText.color = stunColour;
                 break;
             case Status.GUARDING:
-                playerStatusText.color = guardColour;
+                enemyStatusText.color = guardColour;
                 break;
             default:
-                playerStatusText.color = enemyColour;
+                enemyStatusText.color = enemyColour;
                 break;
         };
     }

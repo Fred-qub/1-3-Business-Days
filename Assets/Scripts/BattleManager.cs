@@ -339,6 +339,7 @@ public class BattleManager : MonoBehaviour
                 UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus + ":");
                 break;
         }
+        UIManager.SetEnemyStatusTextColor(enemyCombatant.combatantStatus);
     }
     
     IEnumerator StartResolution()
