@@ -122,6 +122,31 @@ public class UIManager : MonoBehaviour
     //Sets the value of the player's status countdown
     public void SetPlayerStatusCounter(int counter) { playerStatusCounter.text = counter.ToString(); }
     
+    //Sets the color of the player's status countdown panel text
+    public void SetPlayerStatusTextColor(Status status)
+    {
+        switch (status)
+        {
+            case Status.NONE:
+                playerStatusText.color = blankColour;
+                break;
+            case Status.RECOVERY:
+                playerStatusText.color = recoveryColour;
+                break;
+            case Status.STUNNED:
+                playerStatusText.color = stunColour;
+                break;
+            case Status.GUARDING:
+                playerStatusText.color = guardColour;
+                break;
+            default:
+                playerStatusText.color = playerColour;
+                break;
+        };
+    }
+    
+    
+    
     
     //Sets the enemy's name
     public void SetEnemyName(string eName) { enemyName.text = eName; }
