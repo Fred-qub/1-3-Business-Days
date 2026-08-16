@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
     public uint seed;
     private Unity.Mathematics.Random rng;
     
-    private WaitForSeconds BeatWaitTime = new WaitForSeconds(1f);
+    private WaitForSeconds BeatWaitTime = new WaitForSeconds(0.5f);
     private WaitForSeconds EventWaitTime = new WaitForSeconds(2f);
     private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.1f);
     
@@ -112,7 +112,7 @@ public class BattleManager : MonoBehaviour
        UIManager.SetDialogueTitle("NEW CHALLENGER:");
        UIManager.SetDialogueContent(enemyCombatant.combatantName + " squares up!");
        
-       yield return new WaitForSeconds(2f);
+       yield return EventWaitTime;
        
        //Moves onto round start
        ChangeBattleState(BattleState.ROUNDSTART);
@@ -288,6 +288,57 @@ public class BattleManager : MonoBehaviour
             return true;
         }
     }
+
+    public void UpdateCombatantStatusUI()
+    {
+        UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
+        switch (playerCombatant.combatantStatus)
+        {
+            case Status.GUARDSTARTUP:
+                UIManager.SetPlayerStatusText("STARTUP - GUARD");
+                break;
+
+            case Status.JABSTARTUP:
+                UIManager.SetPlayerStatusText("STARTUP - JAB");
+                break;
+
+            case Status.HOOKSTARTUP:
+                UIManager.SetPlayerStatusText("STARTUP - HOOK");
+                break;
+
+            case Status.HAYMAKERSTARTUP:
+                UIManager.SetPlayerStatusText("STARTUP - HAYMAKER");
+                break;
+            
+            default:
+                UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
+                break;
+        }
+        
+        UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
+        switch (enemyCombatant.combatantStatus)
+        {
+            case Status.GUARDSTARTUP:
+                UIManager.SetEnemyStatusText("STARTUP - GUARD:");
+                break;
+
+            case Status.JABSTARTUP:
+                UIManager.SetEnemyStatusText("STARTUP - JAB:");
+                break;
+
+            case Status.HOOKSTARTUP:
+                UIManager.SetEnemyStatusText("STARTUP - HOOK:");
+                break;
+
+            case Status.HAYMAKERSTARTUP:
+                UIManager.SetEnemyStatusText("STARTUP - HAYMAKER:");
+                break;
+            
+            default:
+                UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus + ":");
+                break;
+        }
+    }
     
     IEnumerator StartResolution()
     {
@@ -302,27 +353,11 @@ public class BattleManager : MonoBehaviour
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
             
-            yield return TinyWaitTime;
-            
-            //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
-            UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
-            UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
-            
-            //UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus != Status.NONE);
-            UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus.ToString());
-            UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
+           UpdateCombatantStatusUI();
             
             Debug.Log("BattleManager: Starting resolution for beat " + beat);
             //Does most of the resolution
             yield return StartCoroutine(ResolveCombatantStatus(beat));
-            
-            //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
-            UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
-            UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
-            
-            //UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus != Status.NONE);
-            UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus.ToString());
-            UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
             
             yield return BeatWaitTime;
         }
@@ -398,18 +433,32 @@ public class BattleManager : MonoBehaviour
         Debug.Log("ResolveCombatantStatus: enemy attempted status change: " + enemyAttemptedStatusChange);
         
         //The order of the following if statements dictates the priority of resolving different scenarios within a beat
+        
+        //ADD WAIT TIMES BETWEEN EVENTS SO THE GAME PAUSES TO ALLOW THE PLAYER TO TAKE IN INFO
+        //HOOK UP ANY REMAINING UI STUFF FOR CLARITY
+        //IMPLEMENT ROUND RESETTING
+        //IMPLEMENT WIN / LOSE SCREEN
+        //IMPLEMENT MAIN MENU
+        //IMPLEMENT TUTORIAL PAGE
+        //IMPLEMENT SIMPLE SFX FOR UI ELEMENTS, EVENTS AND SUCH FOR MORE FEEDBACK
+        //IMPLEMENT SPRITE SWAPPING FOR ATTACKS
 
         //If the player is attempting to start preparing to guard
         if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
         {
             playerCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
-            //yield return EventWaitTime;
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " Prepares to guard.");
+            yield return EventWaitTime;
         } 
         
         //If the player is beginning to guard
         if (playerAttemptedStatusChange == Status.GUARDING)
         {
             playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " Puts up their guard!");
+            yield return EventWaitTime;
         }
         
         //If the enemy is attempting to start preparing to guard
@@ -417,6 +466,9 @@ public class BattleManager : MonoBehaviour
         {
             //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " Prepares to guard.");
+            yield return EventWaitTime;
         } 
         
         //If the enemy is beginning to guard
@@ -424,6 +476,9 @@ public class BattleManager : MonoBehaviour
         {
             //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " Puts up their guard!");
+            yield return EventWaitTime;
         }
         
         //if player is attempting to start preparing an attack
@@ -434,12 +489,21 @@ public class BattleManager : MonoBehaviour
             {
                 case Status.JABSTARTUP:
                     playerCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
+                    UIManager.SetDialogueTitle("BATTLE EVENT:");
+                    UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a jab.");
+                    yield return EventWaitTime;
                     break;
                 case Status.HOOKSTARTUP:
                     playerCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
+                    UIManager.SetDialogueTitle("BATTLE EVENT:");
+                    UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a hook.");
+                    yield return EventWaitTime;
                     break;
                 case Status.HAYMAKERSTARTUP:
                     playerCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
+                    UIManager.SetDialogueTitle("BATTLE EVENT:");
+                    UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a haymaker.");
+                    yield return EventWaitTime;
                     break;
             }
         }
@@ -452,12 +516,21 @@ public class BattleManager : MonoBehaviour
             {
                 case Status.JABSTARTUP:
                     enemyCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
+                    UIManager.SetDialogueTitle("BATTLE EVENT:");
+                    UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a jab.");
+                    yield return EventWaitTime;
                     break;
                 case Status.HOOKSTARTUP:
                     enemyCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
+                    UIManager.SetDialogueTitle("BATTLE EVENT:");
+                    UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a hook.");
+                    yield return EventWaitTime;
                     break;
                 case Status.HAYMAKERSTARTUP:
                     enemyCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
+                    UIManager.SetDialogueTitle("BATTLE EVENT:");
+                    UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a haymaker.");
+                    yield return EventWaitTime;
                     break;
             }
         }
