@@ -298,6 +298,8 @@ public class BattleManager : MonoBehaviour
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
             
+            yield return new WaitForSeconds(0.1f);
+            
             //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
             UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
             UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
@@ -306,11 +308,17 @@ public class BattleManager : MonoBehaviour
             UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus.ToString());
             UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
             
+            Debug.Log("BattleManager: Starting resolution for beat " + beat);
             //Does most of the resolution
-           
             ResolveCombatantStatus(beat);
             
-
+            //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
+            UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
+            UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
+            
+            //UIManager.EnemyStatusPanelActive(enemyCombatant.combatantStatus != Status.NONE);
+            UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus.ToString());
+            UIManager.SetEnemyStatusCounter(enemyCombatant.combatantStatusRemainingDuration);
             
             yield return new WaitForSeconds(1f);
         }
@@ -351,7 +359,7 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
-
+        Debug.Log("ResolveCombatantStatus: player attempted status change: " + playerAttemptedStatusChange);
 
         if (enemyCombatant.combatantStatusRemainingDuration <= 0)
         {
@@ -383,52 +391,125 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
-
-        if (playerAttemptedStatusChange == Status.NONE) {return;}
-        if (enemyAttemptedStatusChange == Status.NONE) {return;}
-
+        Debug.Log("ResolveCombatantStatus: enemy attempted status change: " + enemyAttemptedStatusChange);
+        
         //The order of the following if statements dictates the priority of resolving different scenarios within a beat
 
+        //If the player is attempting to start preparing to guard
         if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
         {
-            //The player is beginning to prepare to guard, which should always be resolved before actions that can cause counters
             playerCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
         } 
         
+        //If the player is beginning to guard
         if (playerAttemptedStatusChange == Status.GUARDING)
         {
-            //The player is beginning to guard, which should always be resolved before actions that can cause counters
             playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
         }
         
+        //If the enemy is attempting to start preparing to guard
         if (enemyAttemptedStatusChange == Status.GUARDSTARTUP)
         {
             //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
         } 
         
+        //If the enemy is beginning to guard
         if (enemyAttemptedStatusChange == Status.GUARDING)
         {
             //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
         }
-
         
+        //if player is attempting to start preparing an attack
+        if (playerAttemptedStatusChange == Status.JABSTARTUP | playerAttemptedStatusChange == Status.HOOKSTARTUP |
+            playerAttemptedStatusChange == Status.HAYMAKERSTARTUP)
+        {
+            switch (playerAttemptedStatusChange)
+            {
+                case Status.JABSTARTUP:
+                    playerCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
+                    break;
+                case Status.HOOKSTARTUP:
+                    playerCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
+                    break;
+                case Status.HAYMAKERSTARTUP:
+                    playerCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
+                    break;
+            }
+        }
+        
+        //if enemy is attempting to start preparing an attack
+        if (enemyAttemptedStatusChange == Status.JABSTARTUP | enemyAttemptedStatusChange == Status.HOOKSTARTUP |
+            enemyAttemptedStatusChange == Status.HAYMAKERSTARTUP)
+        {
+            switch (enemyAttemptedStatusChange)
+            {
+                case Status.JABSTARTUP:
+                    enemyCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
+                    break;
+                case Status.HOOKSTARTUP:
+                    enemyCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
+                    break;
+                case Status.HAYMAKERSTARTUP:
+                    enemyCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
+                    break;
+            }
+        }
+
+        //If the player is recovering from being stunned
+        if (playerAttemptedStatusChange == Status.RECOVERY && playerCombatant.combatantStatus == Status.STUNNED)
+        {
+            playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+        }
+        
+        //If the enemy is recovering from being stunned
+        if (enemyAttemptedStatusChange == Status.RECOVERY && enemyCombatant.combatantStatus == Status.STUNNED)
+        {
+            enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+        }
         
         //If a combatant is attempting to change status to recovery and is not currently stunned, that means they are resolving an attack on this beat
-        
         //If both combatants are attacking each other
         if (playerAttemptedStatusChange == Status.RECOVERY && enemyAttemptedStatusChange ==  Status.RECOVERY
             && playerCombatant.combatantStatus != Status.STUNNED && enemyCombatant.combatantStatus != Status.STUNNED)
         {
-            //StartCoroutine(ClashEvent())
+            int playerActionSelect = 4;
+            int enemyActionSelect = 4;
+            
+            switch (playerCombatant.combatantStatus)
+            {
+                case Status.JABSTARTUP:
+                    playerActionSelect = 1;
+                    break;
+                case Status.HOOKSTARTUP:
+                    playerActionSelect = 2;
+                    break;
+                case Status.HAYMAKERSTARTUP:
+                    playerActionSelect = 3;
+                    break;
+            }
+            
+            switch (enemyCombatant.combatantStatus)
+            {
+                case Status.JABSTARTUP:
+                    enemyActionSelect = 1;
+                    break;
+                case Status.HOOKSTARTUP:
+                    enemyActionSelect = 2;
+                    break;
+                case Status.HAYMAKERSTARTUP:
+                    enemyActionSelect = 3;
+                    break;
+            }
+            
+            StartCoroutine(ClashEvent(actionArray[playerActionSelect],actionArray[enemyActionSelect]));
         }
 
+        //if player is attacking enemy without interruption
         if (playerAttemptedStatusChange == Status.RECOVERY && enemyAttemptedStatusChange != Status.RECOVERY 
             && playerCombatant.combatantStatus != Status.STUNNED)
         {
-            //player is attacking enemy without interruption
-
             switch (playerCombatant.combatantStatus)
             {
                 case Status.JABSTARTUP:
@@ -446,10 +527,10 @@ public class BattleManager : MonoBehaviour
             }
         }
         
+        //if enemy is attacking player without interruption
         if (playerAttemptedStatusChange != Status.RECOVERY && enemyAttemptedStatusChange == Status.RECOVERY 
                                                            && enemyCombatant.combatantStatus != Status.STUNNED)
         {
-            //enemy is attacking player without interruption
             switch (enemyCombatant.combatantStatus)
             {
                 case Status.JABSTARTUP:
@@ -466,8 +547,9 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
+
         
-        //16/08/2026: FINISH SUB-BEAT CASE-BY-CASE DICTATED PRIORITY ACTION RESOLUTION HERE
+       
         
         
     }
@@ -508,7 +590,6 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log("ResolveActionInstanceStack: " + combatant + " is attempting to change status to " + statusType);
         return statusType;
     }
     
@@ -566,6 +647,12 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator ClashEvent(Action playerAction, Action enemyAction)
     {
+        if (!playerAction.DoesActionDealDamage | !enemyAction.DoesActionDealDamage)
+        {
+            Debug.Log("BattleManger: ClashEvent: One of the two selected actions wasn't an attack somehow");
+            yield break;
+        }
+        
         int playerDamage = playerAction.ActionDamage;
         int enemyDamage = enemyAction.ActionDamage;
         
@@ -573,9 +660,6 @@ public class BattleManager : MonoBehaviour
         enemyDamage += rng.NextInt(-enemyAction.ActionDamageVariance, enemyAction.ActionDamageVariance);
 
         int finalRecoilDamage = Mathf.RoundToInt((playerDamage + enemyDamage) / 2f);
-        
-        Combatant targetCombatant;
-        Combatant attackerCombatant;
         
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
