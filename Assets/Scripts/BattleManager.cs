@@ -302,7 +302,7 @@ public class BattleManager : MonoBehaviour
             playerCombatant.DecreaseStatus();
             enemyCombatant.DecreaseStatus();
             
-            yield return BeatWaitTime;
+            yield return TinyWaitTime;
             
             //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
             UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
@@ -314,7 +314,7 @@ public class BattleManager : MonoBehaviour
             
             Debug.Log("BattleManager: Starting resolution for beat " + beat);
             //Does most of the resolution
-            StartCoroutine(ResolveCombatantStatus(beat));
+            yield return StartCoroutine(ResolveCombatantStatus(beat));
             
             //UIManager.PlayerStatusPanelActive(playerCombatant.combatantStatus != Status.NONE);
             UIManager.SetPlayerStatusText(playerCombatant.combatantStatus.ToString());
@@ -403,6 +403,7 @@ public class BattleManager : MonoBehaviour
         if (playerAttemptedStatusChange == Status.GUARDSTARTUP)
         {
             playerCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
+            //yield return EventWaitTime;
         } 
         
         //If the player is beginning to guard
@@ -507,7 +508,7 @@ public class BattleManager : MonoBehaviour
                     break;
             }
             
-            StartCoroutine(ClashEvent(actionArray[playerActionSelect],actionArray[enemyActionSelect]));
+            yield return StartCoroutine(ClashEvent(actionArray[playerActionSelect],actionArray[enemyActionSelect]));
         }
 
         //if player is attacking enemy without interruption
@@ -517,15 +518,15 @@ public class BattleManager : MonoBehaviour
             switch (playerCombatant.combatantStatus)
             {
                 case Status.JABSTARTUP:
-                    StartCoroutine(AttackEvent(true, actionArray[1]));
+                    yield return StartCoroutine(AttackEvent(true, actionArray[1]));
                     playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
                     break;
                 case Status.HOOKSTARTUP:
-                    StartCoroutine(AttackEvent(true, actionArray[2]));
+                    yield return StartCoroutine(AttackEvent(true, actionArray[2]));
                     playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
                     break;
                 case Status.HAYMAKERSTARTUP:
-                    StartCoroutine(AttackEvent(true, actionArray[3]));
+                    yield return StartCoroutine(AttackEvent(true, actionArray[3]));
                     playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
                     break;
             }
@@ -538,26 +539,25 @@ public class BattleManager : MonoBehaviour
             switch (enemyCombatant.combatantStatus)
             {
                 case Status.JABSTARTUP:
-                    StartCoroutine(AttackEvent(false, actionArray[1]));
+                    yield return StartCoroutine(AttackEvent(false, actionArray[1]));
                     enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
                     break;
                 case Status.HOOKSTARTUP:
-                    StartCoroutine(AttackEvent(false, actionArray[2]));
+                    yield return StartCoroutine(AttackEvent(false, actionArray[2]));
                     enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
                     break;
                 case Status.HAYMAKERSTARTUP:
-                    StartCoroutine(AttackEvent(false, actionArray[3]));
+                    yield return StartCoroutine(AttackEvent(false, actionArray[3]));
                     enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
                     break;
             }
         }
-
-        
-       
-        
-        yield return null;
     }
-        
+    
+    
+    
+    
+    
         
     //Goes through each combatant's action instance stack
     //If a combatant is starting an action this beat returns that status
@@ -595,6 +595,11 @@ public class BattleManager : MonoBehaviour
             }
         }
         return statusType;
+    }
+
+    public void SetupNewRound()
+    {
+        
     }
     
     IEnumerator AttackEvent(bool playerAttacking, Action action)
