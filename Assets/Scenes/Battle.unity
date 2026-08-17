@@ -259,6 +259,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eacfc4d7b02a5d84fb6226179408ee7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  audioSource: {fileID: 349217302801788972, guid: eb270cde4d48f7d4da7c7da1711faecd, type: 3}
+  hurtAudioClips:
+  - {fileID: 8300000, guid: b35eaf9ca16f6da4980b385b7ee24f50, type: 3}
+  - {fileID: 8300000, guid: 67fb277bbe7a895449242606f8aa4830, type: 3}
+  - {fileID: 8300000, guid: 68f18ccd2055eee478541b8989f0231b, type: 3}
+  attackAudioClip: {fileID: 8300000, guid: c4ef3db14419c494eb6f55f40d95ba45, type: 3}
+  startupAudioClip: {fileID: 8300000, guid: 8516dea7999478a4c836b87faf0ad3eb, type: 3}
+  guardAudioClip: {fileID: 8300000, guid: 86c660f64b758e240b0f26a6b42c6264, type: 3}
+  stunAudioClip: {fileID: 8300000, guid: 0cf3470d8094f80469ee4d9816984cfa, type: 3}
+  winAudioClip: {fileID: 8300000, guid: 5cdcb1ef153414249922d1d8b95e06d7, type: 3}
+  loseAudioClip: {fileID: 8300000, guid: 114ae87c0fcb7124fb3cfd5548d1062f, type: 3}
+  hoverAudioClip: {fileID: 8300000, guid: 8bfd750d83c74dd40af44dd162a26208, type: 3}
+  confirmAudioClip: {fileID: 8300000, guid: 98812b491349a3345a0244c5cba93c8d, type: 3}
+  seed: 0
 --- !u!4 &90580193
 Transform:
   m_ObjectHideFlags: 0
@@ -268,7 +282,7 @@ Transform:
   m_GameObject: {fileID: 90580191}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 992.8839, y: 503.87933, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1462,7 +1476,7 @@ Transform:
   m_GameObject: {fileID: 312672640}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1510.8954, y: 294.0777, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3364,7 +3378,11 @@ MonoBehaviour:
         m_SelectedSource:
           rid: -2
         m_Provider2DCache:
-          rid: -2
+          rid: 6099345440571392072
+    - rid: 6099345440571392072
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.Light2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache: []
 --- !u!4 &619394802
 Transform:
   m_ObjectHideFlags: 0
@@ -4703,7 +4721,7 @@ Transform:
   m_GameObject: {fileID: 883400648}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.06221, y: -0.08946, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
