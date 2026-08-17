@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip startupAudioClip;
     public AudioClip guardAudioClip;
     public AudioClip stunAudioClip;
+    public AudioClip clashAudioClip;
     
     public AudioClip winAudioClip;
     public AudioClip loseAudioClip;

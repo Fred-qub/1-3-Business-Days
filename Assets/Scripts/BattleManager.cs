@@ -39,6 +39,7 @@ public class BattleManager : MonoBehaviour
     
     public UIManager UIManager;
     public ActionStacksManager actionStacksManager;
+    public AudioManager audioManager;
     
     public BattleState battleState;
     
@@ -715,15 +716,19 @@ public class BattleManager : MonoBehaviour
             attackerCombatant = enemyCombatant;
         }
         
+        int targetInitialHP = targetCombatant.currentHP;
+        
         UIManager.SetDialogueTitle("BATTLE EVENT:");
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
         bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
         yield return EventWaitTime;
         
-        UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + damage + " points of damage!");
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
+        
+        int finalDamage = targetInitialHP - targetCombatant.currentHP;
+        UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + finalDamage + " points of damage!");
         
         yield return EventWaitTime;
 
@@ -765,26 +770,30 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
         
+        int playerInitialHP = playerCombatant.currentHP;
+        
         int playerDamage = playerAction.ActionDamage;
-        int enemyDamage = enemyAction.ActionDamage;
+        int enemyDamage = playerAction.ActionDamage;
         
         playerDamage += rng.NextInt(-playerAction.ActionDamageVariance, playerAction.ActionDamageVariance);
         enemyDamage += rng.NextInt(-enemyAction.ActionDamageVariance, enemyAction.ActionDamageVariance);
 
-        int finalRecoilDamage = Mathf.RoundToInt((playerDamage + enemyDamage) / 2f);
+        int recoilDamage = Mathf.RoundToInt((playerDamage + enemyDamage) / 2f);
         
         UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
         yield return EventWaitTime;
         
-        UIManager.SetDialogueContent("Both combatants take " + finalRecoilDamage + " recoil damage!");
+        bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
+        bool enemyIsDead = enemyCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
         
-        bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(finalRecoilDamage);
-        bool enemyIsDead = enemyCombatant.OnTakeDamagePlusCheckIfDie(finalRecoilDamage);
+        int finalRecoildamage = playerInitialHP - playerCombatant.currentHP;
 
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
+        
+        UIManager.SetDialogueContent("Both combatants take " + finalRecoildamage + " recoil damage!");
         
         yield return EventWaitTime;
 
