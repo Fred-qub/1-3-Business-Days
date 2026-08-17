@@ -268,6 +268,7 @@ MonoBehaviour:
   startupAudioClip: {fileID: 8300000, guid: 8516dea7999478a4c836b87faf0ad3eb, type: 3}
   guardAudioClip: {fileID: 8300000, guid: 86c660f64b758e240b0f26a6b42c6264, type: 3}
   stunAudioClip: {fileID: 8300000, guid: 0cf3470d8094f80469ee4d9816984cfa, type: 3}
+  clashAudioClip: {fileID: 8300000, guid: ee12446e50474924ba3fb9d4f57a37fb, type: 3}
   winAudioClip: {fileID: 8300000, guid: 5cdcb1ef153414249922d1d8b95e06d7, type: 3}
   loseAudioClip: {fileID: 8300000, guid: 114ae87c0fcb7124fb3cfd5548d1062f, type: 3}
   hoverAudioClip: {fileID: 8300000, guid: 8bfd750d83c74dd40af44dd162a26208, type: 3}
@@ -4702,6 +4703,7 @@ MonoBehaviour:
   enemyBattleMarker: {fileID: 1170193196}
   UIManager: {fileID: 1339604316}
   actionStacksManager: {fileID: 312672642}
+  audioManager: {fileID: 90580192}
   battleState: 0
   currentRound: 1
   currentBeat: 0
@@ -7114,6 +7116,7 @@ MonoBehaviour:
   guardColour: {r: 0.4, g: 0.2, b: 0.6, a: 1}
   blankColour: {r: 0.42352945, g: 0.42352945, b: 0.42352945, a: 0}
   errorColour: {r: 1, g: 0, b: 1, a: 1}
+  audioManager: {fileID: 90580192}
 --- !u!4 &1339604317
 Transform:
   m_ObjectHideFlags: 0

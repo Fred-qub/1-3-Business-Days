@@ -448,6 +448,7 @@ public class BattleManager : MonoBehaviour
             playerCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Prepares to guard.");
+            audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         } 
@@ -458,6 +459,7 @@ public class BattleManager : MonoBehaviour
             playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Puts up their guard!");
+            audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
@@ -469,6 +471,7 @@ public class BattleManager : MonoBehaviour
             enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Prepares to guard.");
+            audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         } 
@@ -480,6 +483,7 @@ public class BattleManager : MonoBehaviour
             enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Puts up their guard!");
+            audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
@@ -494,6 +498,7 @@ public class BattleManager : MonoBehaviour
                     playerCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a jab.");
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     break;
@@ -502,6 +507,7 @@ public class BattleManager : MonoBehaviour
                     playerCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a hook.");
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -510,6 +516,7 @@ public class BattleManager : MonoBehaviour
                     playerCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a haymaker.");
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -527,6 +534,7 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a jab.");
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -535,6 +543,7 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a hook.");
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -543,6 +552,7 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a haymaker.");
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -720,12 +730,15 @@ public class BattleManager : MonoBehaviour
         
         UIManager.SetDialogueTitle("BATTLE EVENT:");
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
+        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        
         bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
         yield return EventWaitTime;
         
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
+        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
         
         int finalDamage = targetInitialHP - targetCombatant.currentHP;
         UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + finalDamage + " points of damage!");
@@ -736,6 +749,7 @@ public class BattleManager : MonoBehaviour
         {
             UIManager.SetDialogueTitle("COUNTER!");
             UIManager.SetDialogueContent(targetCombatant.combatantName + " was interrupted and stunned!");
+            audioManager.PlaySound(audioManager.stunAudioClip, this.transform, 100f);
             yield return EventWaitTime;
         }
 
@@ -783,15 +797,21 @@ public class BattleManager : MonoBehaviour
         UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
+        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        
         yield return EventWaitTime;
         
         bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
         bool enemyIsDead = enemyCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
         
         int finalRecoildamage = playerInitialHP - playerCombatant.currentHP;
+        
+        audioManager.PlaySound(audioManager.clashAudioClip, this.transform, 100f);
 
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
+        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
+        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
         
         UIManager.SetDialogueContent("Both combatants take " + finalRecoildamage + " recoil damage!");
         

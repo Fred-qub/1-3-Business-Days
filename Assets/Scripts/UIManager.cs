@@ -64,7 +64,8 @@ public class UIManager : MonoBehaviour
     public Color blankColour;
     public Color errorColour;
  
-    //private int initiative = 0;
+    [Header("Audio Manager")]
+    public AudioManager audioManager;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -192,6 +193,7 @@ public class UIManager : MonoBehaviour
         if (beat > 10 | beat < 0) { beat = 0;}
         beatCounter.text = beat.ToString();
         timelineSlider.value = beat;
+        audioManager.PlaySound(audioManager.hoverAudioClip, this.transform, 100f);
     }
 
     //Enables / disables the player's starting position on the timeline
