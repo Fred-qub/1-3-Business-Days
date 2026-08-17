@@ -827,5 +827,6 @@ public class BattleManager : MonoBehaviour
         //IMPLEMENT TUTORIAL PAGE
         //IMPLEMENT SIMPLE SFX FOR UI ELEMENTS, EVENTS AND SUCH FOR MORE FEEDBACK
         //IMPLEMENT SPRITE SWAPPING FOR ATTACKS
+        yield break;
     }
 }
