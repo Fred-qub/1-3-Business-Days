@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,7 +72,7 @@ public class BattleManager : MonoBehaviour
     
     private WaitForSeconds BeatWaitTime = new WaitForSeconds(1f);
     private WaitForSeconds EventWaitTime = new WaitForSeconds(2f);
-    private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.1f);
+    private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.5f);
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -348,9 +349,9 @@ public class BattleManager : MonoBehaviour
         if (battleState != BattleState.RESOLUTION) { yield break; }
         
         //On every beat on this round and the next
-        for (int beat = 0; beat <= (roundLength); beat++)
+        for (currentBeat = 0; currentBeat <= (roundLength); currentBeat++)
         {
-            UIManager.SetBeat(beat);
+            UIManager.SetBeat(currentBeat);
             UIManager.SetDialogueTitle("WAITING...");
             UIManager.SetDialogueContent("You could cut the tension in the air with a knife.");
 
@@ -360,13 +361,15 @@ public class BattleManager : MonoBehaviour
             
             UpdateCombatantStatusUI();
             
-            Debug.Log("BattleManager: Starting resolution for beat " + beat);
+            Debug.Log("BattleManager: Starting resolution for beat " + currentBeat);
             //Does most of the resolution
-            yield return StartCoroutine(ResolveCombatantStatus(beat));
+            yield return StartCoroutine(ResolveCombatantStatus(currentBeat));
             
             yield return BeatWaitTime;
         }
         
+        battleState = BattleState.ROUNDSETUP;
+        SetupNewRound();
     }
 
     IEnumerator ResolveCombatantStatus(int beat)
@@ -730,15 +733,20 @@ public class BattleManager : MonoBehaviour
         
         UIManager.SetDialogueTitle("BATTLE EVENT:");
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
-        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
         
         bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
         yield return EventWaitTime;
         
+        
+        
+        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        yield return TinyWaitTime;
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
+        
+        
         
         int finalDamage = targetInitialHP - targetCombatant.currentHP;
         UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + finalDamage + " points of damage!");
@@ -747,6 +755,7 @@ public class BattleManager : MonoBehaviour
 
         if (targetCombatant.combatantStatus == Status.STUNNED)
         {
+            UpdateCombatantStatusUI();
             UIManager.SetDialogueTitle("COUNTER!");
             UIManager.SetDialogueContent(targetCombatant.combatantName + " was interrupted and stunned!");
             audioManager.PlaySound(audioManager.stunAudioClip, this.transform, 100f);
@@ -797,8 +806,6 @@ public class BattleManager : MonoBehaviour
         UIManager.SetDialogueTitle("CLASH!");
         UIManager.SetDialogueContent("Both combatants try to hit each other at the same time!");
         
-        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
-        
         yield return EventWaitTime;
         
         bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
@@ -806,6 +813,8 @@ public class BattleManager : MonoBehaviour
         
         int finalRecoildamage = playerInitialHP - playerCombatant.currentHP;
         
+        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        yield return TinyWaitTime;
         audioManager.PlaySound(audioManager.clashAudioClip, this.transform, 100f);
 
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
@@ -848,14 +857,94 @@ public class BattleManager : MonoBehaviour
         
     }
 
-    IEnumerator SetupNewRound()
+    public void SetupNewRound()
     {
         //IMPLEMENT ROUND RESETTING
         //IMPLEMENT WIN / LOSE SCREEN
         //IMPLEMENT MAIN MENU
         //IMPLEMENT TUTORIAL PAGE
-        //IMPLEMENT SIMPLE SFX FOR UI ELEMENTS, EVENTS AND SUCH FOR MORE FEEDBACK
-        //IMPLEMENT SPRITE SWAPPING FOR ATTACKS
-        yield break;
+        //IMPLEMENT SIMPLE SFX FOR UI ELEMENTS
+        //IMPLEMENT SPRITE SWAPPING FOR ATTACKS, GUARDING, STUNNED
+        //ACTION PREVIEW TIMELINE LIVE COLOUR CHANGE
+        
+        if (battleState != BattleState.ROUNDSETUP) { return; }
+
+        playerActionPreviewArray = ShiftPreviewArray(playerActionPreviewArray);
+        
+        currentRound += 1;
+        currentBeat = 0;
+
+        initialPlayerStartingBeatForAGivenRound = 0;
+        initialEnemyStartingBeatForAGivenRound = 0;
+       
+        //initialEnemyStartingBeatForAGivenRound;
+
+        switch (playerCombatant.combatantStatus)
+        {
+            case Status.GUARDING:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration;
+                break;
+            
+            case Status.RECOVERY:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration;
+                break;
+            
+            case Status.NONE:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration;
+                break;
+            
+            default:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
+                break;
+        }
+        
+        switch (enemyCombatant.combatantStatus)
+        {
+            case Status.GUARDING:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                break;
+            
+            case Status.RECOVERY:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                break;
+            
+            case Status.NONE:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                break;
+            
+            default:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
+                break;
+        }
+        
+        playerStartingBeat = initialPlayerStartingBeatForAGivenRound;
+        enemyStartingBeat = initialEnemyStartingBeatForAGivenRound;
+        
+        UIManager.PlayerBeatMarkerActive(true);
+        UIManager.EnemyBeatMarkerActive(true);
+        UIManager.SetPlayerBeatMarker(playerStartingBeat);
+        UIManager.SetEnemyBeatMarker(playerStartingBeat);
+        UIManager.SetBeat(currentBeat);
+        UIManager.SetRoundTimer(currentRound);
+        UIManager.UpdateRoundPreview(playerActionPreviewArray);
+        UIManager.SetPhaseStatus(battleState);
+        
+        battleState = BattleState.ROUNDSTART;
+           
+        StartPlayerActionPreview();
+    }
+
+    public char[] ShiftPreviewArray(char[] PAPArray)
+    {
+        char[] tempArray = new char[PAPArray.Length];
+        Array.Copy(PAPArray, 10, tempArray, 0, PAPArray.Length / 2);
+
+        for (int i = 10; i < tempArray.Length; i++)
+        {
+            tempArray[i] = 'B';
+        }
+        
+        return tempArray;
+        
     }
 }
