@@ -69,13 +69,13 @@ public class Combatant : MonoBehaviour
     {
         combatantStatus = status;
         combatantStatusRemainingDuration = statusDuration;
-        Debug.Log(combatantName + " SetStatusWithDuration: Set status to " + combatantStatus + " with duration " + combatantStatusRemainingDuration);
+        //Debug.Log(combatantName + " SetStatusWithDuration: Set status to " + combatantStatus + " with duration " + combatantStatusRemainingDuration);
     }
     
     public void ChangeStatus(Status status)
     {
         combatantStatus = status;
-        Debug.Log(combatantName + " ChangeStatus: Changed status to " + status);
+        //Debug.Log(combatantName + " ChangeStatus: Changed status to " + status);
     }
 
     public void DecreaseStatus()
@@ -84,7 +84,7 @@ public class Combatant : MonoBehaviour
         {
             combatantStatusRemainingDuration -= 1;
         }
-        Debug.Log(combatantName + " DecreaseStatus: Status " + combatantStatus + " has " + combatantStatusRemainingDuration + " beats remaining");
+        //Debug.Log(combatantName + " DecreaseStatus: Status " + combatantStatus + " has " + combatantStatusRemainingDuration + " beats remaining");
     }
     
     

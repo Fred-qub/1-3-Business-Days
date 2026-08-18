@@ -7323,8 +7323,8 @@ MonoBehaviour:
   - {fileID: 187587252}
   - {fileID: 622566783}
   - {fileID: 406227803}
-  conclusionPanel: {fileID: 0}
-  conclusionText: {fileID: 0}
+  conclusionPanel: {fileID: 792430312}
+  conclusionText: {fileID: 290757424}
   playerColour: {r: 0, g: 0.801, b: 0.5025883, a: 1}
   enemyColour: {r: 1, g: 0, b: 0.25882354, a: 1}
   stunColour: {r: 1, g: 0.3488756, b: 0, a: 1}

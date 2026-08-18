@@ -35,7 +35,7 @@ public class ActionStacksManager : MonoBehaviour
         }
         playerActionInstanceStack.Push(new ActionInstance(actionID, actionInstanceStartBeat));
         
-        DebugLogPlayerActionInstanceStack();
+       // DebugLogPlayerActionInstanceStack();
     }
     
     //Adds an action instance to the enemy's stack
@@ -48,20 +48,20 @@ public class ActionStacksManager : MonoBehaviour
         }
         enemyActionInstanceStack.Push(new ActionInstance(actionID, actionInstanceStartBeat));
 
-        DebugLogEnemyActionInstanceStack();
+        //DebugLogEnemyActionInstanceStack();
     }
 
     
     public void ClearPlayerActionInstanceStack()
     {
         playerActionInstanceStack.Clear();
-        DebugLogPlayerActionInstanceStack();
+       // DebugLogPlayerActionInstanceStack();
     }
     
     public void ClearEnemyActionInstanceStack()
     {
         enemyActionInstanceStack.Clear();
-        DebugLogEnemyActionInstanceStack();
+        //DebugLogEnemyActionInstanceStack();
     }
     
     //Used to remove the player's previously selected action from the stack
@@ -72,7 +72,7 @@ public class ActionStacksManager : MonoBehaviour
         
         ActionInstance actionInstance = playerActionInstanceStack.Pop();
 
-        DebugLogPlayerActionInstanceStack();
+        //DebugLogPlayerActionInstanceStack();
         
         return actionInstance;
     }

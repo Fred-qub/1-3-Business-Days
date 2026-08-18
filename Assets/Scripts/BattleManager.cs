@@ -361,7 +361,7 @@ public class BattleManager : MonoBehaviour
             
             UpdateCombatantStatusUI();
             
-            Debug.Log("BattleManager: Starting resolution for beat " + currentBeat);
+            //Debug.Log("BattleManager: Starting resolution for beat " + currentBeat);
             //Does most of the resolution
             yield return StartCoroutine(ResolveCombatantStatus(currentBeat));
             
@@ -410,7 +410,7 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
-        Debug.Log("ResolveCombatantStatus: player attempted status change: " + playerAttemptedStatusChange);
+        //Debug.Log("ResolveCombatantStatus: player attempted status change: " + playerAttemptedStatusChange);
 
         if (enemyCombatant.combatantStatusRemainingDuration <= 0)
         {
@@ -442,7 +442,7 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
-        Debug.Log("ResolveCombatantStatus: enemy attempted status change: " + enemyAttemptedStatusChange);
+        //Debug.Log("ResolveCombatantStatus: enemy attempted status change: " + enemyAttemptedStatusChange);
         
         //The order of the following if statements dictates the priority of resolving different scenarios within a beat
         
@@ -872,7 +872,7 @@ public class BattleManager : MonoBehaviour
         
         if (battleState != BattleState.ROUNDSETUP) { return; }
 
-        playerActionPreviewArray = ShiftPreviewArray(playerActionPreviewArray);
+        playerActionPreviewArray = ShiftPreviewArray();
         
         currentRound += 1;
         currentBeat = 0;
@@ -937,10 +937,10 @@ public class BattleManager : MonoBehaviour
         StartPlayerActionPreview();
     }
 
-    public char[] ShiftPreviewArray(char[] PAPArray)
+    public char[] ShiftPreviewArray()
     {
-        char[] tempArray = new char[PAPArray.Length];
-        Array.Copy(PAPArray, 10, tempArray, 0, PAPArray.Length / 2);
+        char[] tempArray = new char[playerActionPreviewArray.Length];
+        Array.Copy(playerActionPreviewArray, 10, tempArray, 0, playerActionPreviewArray.Length / 2);
 
         for (int i = 10; i < tempArray.Length; i++)
         {
@@ -948,6 +948,11 @@ public class BattleManager : MonoBehaviour
         }
         
         return tempArray;
+        
+    }
+
+    public void ChangePreviewArrayColours()
+    {
         
     }
 }
