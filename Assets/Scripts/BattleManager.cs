@@ -346,11 +346,10 @@ public class BattleManager : MonoBehaviour
     
     IEnumerator StartResolution()
     {
-        if (battleState != BattleState.RESOLUTION) { yield break; }
-        
         //On every beat on this round and the next
-        for (currentBeat = 0; currentBeat <= (roundLength); currentBeat++)
+        for (currentBeat = 1; currentBeat <= (roundLength); currentBeat++)
         {
+            if (battleState != BattleState.RESOLUTION) { yield break; }
             UIManager.SetBeat(currentBeat);
             UIManager.SetDialogueTitle("WAITING...");
             UIManager.SetDialogueContent("You could cut the tension in the air with a knife.");
@@ -366,6 +365,7 @@ public class BattleManager : MonoBehaviour
             yield return StartCoroutine(ResolveCombatantStatus(currentBeat));
             
             yield return BeatWaitTime;
+            if (battleState != BattleState.RESOLUTION) { yield break; }
         }
 
         if (battleState != BattleState.WIN | battleState != BattleState.LOSE)
@@ -566,25 +566,7 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        //If the player is recovering from being stunned
-        if (playerAttemptedStatusChange == Status.RECOVERY && playerCombatant.combatantStatus == Status.STUNNED)
-        {
-            playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
-            UIManager.SetDialogueTitle("BATTLE EVENT:");
-            UIManager.SetDialogueContent(playerCombatant.combatantName + " Shrugs off their stun.");
-            UpdateCombatantStatusUI();
-            yield return EventWaitTime;
-        }
         
-        //If the enemy is recovering from being stunned
-        if (enemyAttemptedStatusChange == Status.RECOVERY && enemyCombatant.combatantStatus == Status.STUNNED)
-        {
-            enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
-            UIManager.SetDialogueTitle("BATTLE EVENT:");
-            UIManager.SetDialogueContent(enemyCombatant.combatantName + " Shrugs off their stun.");
-            UpdateCombatantStatusUI();
-            yield return EventWaitTime;
-        }
         
         //If a combatant is attempting to change status to recovery and is not currently stunned, that means they are resolving an attack on this beat
         //If both combatants are attacking each other
@@ -663,6 +645,26 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
                     break;
             }
+        }
+        
+        //If the player is recovering from being stunned
+        if (playerAttemptedStatusChange == Status.RECOVERY && playerCombatant.combatantStatus == Status.STUNNED)
+        {
+            playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " Shrugs off their stun.");
+            UpdateCombatantStatusUI();
+            yield return EventWaitTime;
+        }
+        
+        //If the enemy is recovering from being stunned
+        if (enemyAttemptedStatusChange == Status.RECOVERY && enemyCombatant.combatantStatus == Status.STUNNED)
+        {
+            enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " Shrugs off their stun.");
+            UpdateCombatantStatusUI();
+            yield return EventWaitTime;
         }
     }
     
@@ -972,6 +974,9 @@ public class BattleManager : MonoBehaviour
         
         playerStartingBeat = initialPlayerStartingBeatForAGivenRound;
         enemyStartingBeat = initialEnemyStartingBeatForAGivenRound;
+        
+        actionStacksManager.ClearEnemyActionInstanceStack();
+        actionStacksManager.ClearPlayerActionInstanceStack();
         
         UIManager.PlayerBeatMarkerActive(true);
         UIManager.EnemyBeatMarkerActive(true);
