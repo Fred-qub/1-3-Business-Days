@@ -17,6 +17,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip loseAudioClip;
     public AudioClip hoverAudioClip;
     public AudioClip confirmAudioClip;
+    public AudioClip bellAudioClip;
+
+    public AudioClip music;
     
     public uint seed;
     private Unity.Mathematics.Random rng;
