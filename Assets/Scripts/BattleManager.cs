@@ -852,12 +852,14 @@ public class BattleManager : MonoBehaviour
     {
         if(battleState != BattleState.WIN) return; 
         UIManager.triggerConclusionScreen(battleState);
+        UIManager.SetPhaseStatus(battleState);
     }
 
     public void LoseEvent()
     {
         if(battleState != BattleState.LOSE) return; 
         UIManager.triggerConclusionScreen(battleState);
+        UIManager.SetPhaseStatus(battleState);
     }
 
     public void SetupNewRound()
@@ -876,28 +878,51 @@ public class BattleManager : MonoBehaviour
         
         currentRound += 1;
         currentBeat = 0;
-
+        
+        
         initialPlayerStartingBeatForAGivenRound = 0;
         initialEnemyStartingBeatForAGivenRound = 0;
-       
-        //initialEnemyStartingBeatForAGivenRound;
 
         switch (playerCombatant.combatantStatus)
         {
             case Status.GUARDING:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
             case Status.RECOVERY:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
             case Status.NONE:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
-            default:
+            case Status.GUARDSTARTUP:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                break;
+            
+            case Status.JABSTARTUP:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                break;
+            
+            case Status.HOOKSTARTUP:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                break;
+            
+            case Status.HAYMAKERSTARTUP:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                break;
+            
+            case Status.STUNNED:
+                initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
+                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
         }
         
@@ -905,20 +930,45 @@ public class BattleManager : MonoBehaviour
         {
             case Status.GUARDING:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
             
             case Status.RECOVERY:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
             
             case Status.NONE:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
             
-            default:
+            case Status.GUARDSTARTUP:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                break;
+            
+            case Status.JABSTARTUP:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                break;
+            
+            case Status.HOOKSTARTUP:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                break;
+            
+            case Status.HAYMAKERSTARTUP:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                break;
+            
+            case Status.STUNNED:
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
+                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
         }
+        
         
         playerStartingBeat = initialPlayerStartingBeatForAGivenRound;
         enemyStartingBeat = initialEnemyStartingBeatForAGivenRound;
