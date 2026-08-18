@@ -70,8 +70,8 @@ public class BattleManager : MonoBehaviour
     public uint seed;
     private Unity.Mathematics.Random rng;
     
-    private WaitForSeconds BeatWaitTime = new WaitForSeconds(1f);
-    private WaitForSeconds EventWaitTime = new WaitForSeconds(2f);
+    private WaitForSeconds BeatWaitTime = new WaitForSeconds(0.5f);
+    private WaitForSeconds EventWaitTime = new WaitForSeconds(1.5f);
     private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.5f);
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -367,9 +367,12 @@ public class BattleManager : MonoBehaviour
             
             yield return BeatWaitTime;
         }
-        
-        battleState = BattleState.ROUNDSETUP;
-        SetupNewRound();
+
+        if (battleState != BattleState.WIN | battleState != BattleState.LOSE)
+        {
+            battleState = BattleState.ROUNDSETUP;
+            SetupNewRound();
+        }
     }
 
     IEnumerator ResolveCombatantStatus(int beat)
@@ -848,13 +851,13 @@ public class BattleManager : MonoBehaviour
     public void WinEvent()
     {
         if(battleState != BattleState.WIN) return; 
-        
+        UIManager.triggerConclusionScreen(battleState);
     }
 
     public void LoseEvent()
     {
         if(battleState != BattleState.LOSE) return; 
-        
+        UIManager.triggerConclusionScreen(battleState);
     }
 
     public void SetupNewRound()

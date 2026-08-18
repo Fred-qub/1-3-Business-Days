@@ -54,6 +54,10 @@ public class UIManager : MonoBehaviour
     public GameObject[] OAPCells;
     //public float overTimeLineRecoveryPreviewBackgroundWidthIncrement = 36f;
     //public float overTimeLineRecoveryPreviewBackgroundXOffsetIncrement = 72f;
+    
+    [Header("Conclusion Screen")]
+    public GameObject conclusionPanel;
+    public TextMeshProUGUI conclusionText;
 
     [Header("Colours")] 
     public Color playerColour;
@@ -66,16 +70,20 @@ public class UIManager : MonoBehaviour
  
     [Header("Audio Manager")]
     public AudioManager audioManager;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
+    public void triggerConclusionScreen(BattleState battleState)
     {
+        conclusionPanel.SetActive(true);
+
+        if (battleState == BattleState.WIN)
+        {
+            conclusionText.text = "VICTORY!";
+            conclusionText.color = playerColour;
+        } else 
+        {
+            conclusionText.text = "DEFEAT!";  
+            conclusionText.color = enemyColour;
+        }
         
     }
 
