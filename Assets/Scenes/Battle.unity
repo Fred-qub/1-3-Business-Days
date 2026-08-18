@@ -273,6 +273,8 @@ MonoBehaviour:
   loseAudioClip: {fileID: 8300000, guid: 114ae87c0fcb7124fb3cfd5548d1062f, type: 3}
   hoverAudioClip: {fileID: 8300000, guid: 8bfd750d83c74dd40af44dd162a26208, type: 3}
   confirmAudioClip: {fileID: 8300000, guid: 98812b491349a3345a0244c5cba93c8d, type: 3}
+  bellAudioClip: {fileID: 0}
+  music: {fileID: 8300000, guid: 79b2b3bc888865841bee5bb6377a2a1c, type: 3}
   seed: 0
 --- !u!4 &90580193
 Transform:
