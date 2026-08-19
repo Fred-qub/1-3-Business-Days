@@ -475,6 +475,7 @@ public class BattleManager : MonoBehaviour
         if (playerAttemptedStatusChange == Status.GUARDING)
         {
             playerCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
+            playerCombatant.SetSprite(2);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Puts up their guard!");
             audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
@@ -499,6 +500,7 @@ public class BattleManager : MonoBehaviour
         {
             //Same as above player check, resolution order doesn't matter because no interrupt
             enemyCombatant.SetStatusWithDuration(Status.GUARDING, enemyCombatant.initiative);
+            enemyCombatant.SetSprite(2);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Puts up their guard!");
             audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
@@ -663,6 +665,7 @@ public class BattleManager : MonoBehaviour
         if (playerAttemptedStatusChange == Status.RECOVERY && playerCombatant.combatantStatus == Status.STUNNED)
         {
             playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
+            playerCombatant.SetSprite(0);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Shrugs off their stun.");
             UpdateCombatantStatusUI();
@@ -673,6 +676,7 @@ public class BattleManager : MonoBehaviour
         if (enemyAttemptedStatusChange == Status.RECOVERY && enemyCombatant.combatantStatus == Status.STUNNED)
         {
             enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
+            enemyCombatant.SetSprite(0);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Shrugs off their stun.");
             UpdateCombatantStatusUI();
@@ -747,8 +751,6 @@ public class BattleManager : MonoBehaviour
             attackerCombatant = enemyCombatant;
         }
         
-        int targetInitialHP = targetCombatant.currentHP;
-        
         
         UIManager.SetDialogueTitle("BATTLE EVENT:");
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
@@ -757,9 +759,10 @@ public class BattleManager : MonoBehaviour
         
         
         audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        attackerCombatant.SetSprite(1);
         int finalDamage = targetCombatant.OnTakeDamage(damage);
         yield return TinyWaitTime;
-        
+        attackerCombatant.SetSprite(0);
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
@@ -811,8 +814,6 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
         
-        int playerInitialHP = playerCombatant.currentHP;
-        
         int playerDamage = playerAction.ActionDamage;
         int enemyDamage = playerAction.ActionDamage;
         
@@ -835,6 +836,8 @@ public class BattleManager : MonoBehaviour
         
         
         audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        playerCombatant.SetSprite(1);
+        enemyCombatant.SetSprite(1);
         yield return TinyWaitTime;
         audioManager.PlaySound(audioManager.clashAudioClip, this.transform, 100f);
 
@@ -851,6 +854,7 @@ public class BattleManager : MonoBehaviour
         {
             UIManager.SetDialogueTitle("VICTORY!");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " has been knocked out!");
+            
             yield return EventWaitTime;
             ChangeBattleState(BattleState.WIN);
             WinEvent();
@@ -860,6 +864,7 @@ public class BattleManager : MonoBehaviour
         {
             UIManager.SetDialogueTitle("DEFEAT!");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " has been knocked out!");
+            
             yield return EventWaitTime;
             ChangeBattleState(BattleState.LOSE);
             LoseEvent();
@@ -871,6 +876,7 @@ public class BattleManager : MonoBehaviour
         if(battleState != BattleState.WIN) return; 
         UIManager.triggerConclusionScreen(battleState);
         UIManager.SetPhaseStatus(battleState);
+        enemyCombatant.SetSprite(3);
     }
 
     public void LoseEvent()
@@ -878,6 +884,7 @@ public class BattleManager : MonoBehaviour
         if(battleState != BattleState.LOSE) return; 
         UIManager.triggerConclusionScreen(battleState);
         UIManager.SetPhaseStatus(battleState);
+        playerCombatant.SetSprite(3);
     }
 
     public void SetupNewRound()

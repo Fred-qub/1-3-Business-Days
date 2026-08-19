@@ -33,6 +33,7 @@ public class Combatant : MonoBehaviour
                     
                     case Status.GUARDSTARTUP:
                         ChangeStatus(Status.STUNNED);
+                        SetSprite(3);
                         break;
                     
                     
@@ -43,16 +44,19 @@ public class Combatant : MonoBehaviour
                    
                     case Status.JABSTARTUP:
                         ChangeStatus(Status.STUNNED);
+                        SetSprite(3);
                         break;
                     
                     
                     case Status.HOOKSTARTUP:
                         ChangeStatus(Status.STUNNED);
+                        SetSprite(3);
                         break;
                     
                     
                     case Status.HAYMAKERSTARTUP:
                         ChangeStatus(Status.STUNNED);
+                        SetSprite(3);
                         break;
                     
                     
@@ -91,6 +95,15 @@ public class Combatant : MonoBehaviour
         }
         //Debug.Log(combatantName + " DecreaseStatus: Status " + combatantStatus + " has " + combatantStatusRemainingDuration + " beats remaining");
     }
-    
+
+    public void SetSprite(int spriteID)
+    {
+        if (spriteID < 0 | spriteID >= combatantSprites.Length)
+        {
+            Debug.LogError("Sprite ID " + spriteID + " is out of range.");
+        }
+        
+        combatantSpriteRenderer.sprite = combatantSprites[spriteID];
+    }
     
 }
