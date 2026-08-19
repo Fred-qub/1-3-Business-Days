@@ -201,7 +201,7 @@ public class UIManager : MonoBehaviour
         if (beat > 10 | beat < 0) { beat = 0;}
         beatCounter.text = beat.ToString();
         timelineSlider.value = beat;
-        audioManager.PlaySound(audioManager.hoverAudioClip, this.transform, 100f);
+        audioManager.PlaySound(audioManager.beatAudioClip, this.transform, 100f);
     }
 
     //Enables / disables the player's starting position on the timeline

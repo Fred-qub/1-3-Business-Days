@@ -403,7 +403,12 @@ public class BattleManager : MonoBehaviour
                 case Status.STUNNED:
                     playerAttemptedStatusChange = Status.RECOVERY;
                     break;
-
+                
+                case Status.GUARDING:
+                    playerAttemptedStatusChange = ResolveActionInstanceStack(beat,
+                        actionStacksManager.playerActionInstanceStack, playerCombatant);
+                    break;
+                
                 default:
                     playerAttemptedStatusChange = ResolveActionInstanceStack(beat,
                         actionStacksManager.playerActionInstanceStack, playerCombatant);
@@ -434,6 +439,11 @@ public class BattleManager : MonoBehaviour
 
                 case Status.STUNNED:
                     enemyAttemptedStatusChange = Status.RECOVERY;
+                    break;
+                
+                case Status.GUARDING:
+                    enemyAttemptedStatusChange = ResolveActionInstanceStack(beat,
+                        actionStacksManager.enemyActionInstanceStack, enemyCombatant);
                     break;
 
                 default:
@@ -486,7 +496,7 @@ public class BattleManager : MonoBehaviour
         if (enemyAttemptedStatusChange == Status.GUARDING)
         {
             //Same as above player check, resolution order doesn't matter because no interrupt
-            enemyCombatant.SetStatusWithDuration(Status.GUARDING, playerCombatant.initiative);
+            enemyCombatant.SetStatusWithDuration(Status.GUARDING, enemyCombatant.initiative);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Puts up their guard!");
             audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
@@ -666,6 +676,20 @@ public class BattleManager : MonoBehaviour
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
+        
+        //If the player is recovering from guarding but hasn't gotten anything from resolving the action instance stack
+        if (playerAttemptedStatusChange == Status.NONE && playerCombatant.combatantStatus == Status.GUARDING)
+        {
+            Debug.LogError("Could not find new action in player action instance stack.");
+        }
+        
+        //If the enemy is recovering from guarding but hasn't gotten anything from resolving the action instance stack
+        if (enemyAttemptedStatusChange == Status.NONE && enemyCombatant.combatantStatus == Status.GUARDING)
+        {
+            Debug.LogError("Could not find new action in enemy action instance stack.");
+        }
+        
+        
     }
     
     

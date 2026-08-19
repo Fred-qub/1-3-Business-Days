@@ -268,12 +268,14 @@ MonoBehaviour:
   startupAudioClip: {fileID: 8300000, guid: 8516dea7999478a4c836b87faf0ad3eb, type: 3}
   guardAudioClip: {fileID: 8300000, guid: 86c660f64b758e240b0f26a6b42c6264, type: 3}
   stunAudioClip: {fileID: 8300000, guid: 0cf3470d8094f80469ee4d9816984cfa, type: 3}
+  stunRecoveryAudioClip: {fileID: 8300000, guid: 5cd7bf5de14f0de49bf1fbebdf657d55, type: 3}
   clashAudioClip: {fileID: 8300000, guid: ee12446e50474924ba3fb9d4f57a37fb, type: 3}
+  beatAudioClip: {fileID: 8300000, guid: 3f82d49cd10bb434c97db901619cf1b2, type: 3}
   winAudioClip: {fileID: 8300000, guid: 5cdcb1ef153414249922d1d8b95e06d7, type: 3}
   loseAudioClip: {fileID: 8300000, guid: 114ae87c0fcb7124fb3cfd5548d1062f, type: 3}
   hoverAudioClip: {fileID: 8300000, guid: 8bfd750d83c74dd40af44dd162a26208, type: 3}
   confirmAudioClip: {fileID: 8300000, guid: 98812b491349a3345a0244c5cba93c8d, type: 3}
-  bellAudioClip: {fileID: 0}
+  bellAudioClip: {fileID: 8300000, guid: 98451186503794243a10501e4b6e7443, type: 3}
   music: {fileID: 8300000, guid: 79b2b3bc888865841bee5bb6377a2a1c, type: 3}
   seed: 0
 --- !u!4 &90580193
