@@ -679,21 +679,6 @@ public class BattleManager : MonoBehaviour
             yield return EventWaitTime;
         }
         
-       
-        if (playerAttemptedStatusChange == Status.NONE)
-        {
-            Debug.Log("No change in player status.");
-           // Debug.Break();
-        }
-        
-        
-        if (enemyAttemptedStatusChange == Status.NONE)
-        {
-            Debug.Log("No change in enemy status.");
-            //Debug.Break();
-        }
-        
-        
     }
     
     
@@ -764,25 +749,25 @@ public class BattleManager : MonoBehaviour
         
         int targetInitialHP = targetCombatant.currentHP;
         
+        
         UIManager.SetDialogueTitle("BATTLE EVENT:");
         UIManager.SetDialogueContent(attackerCombatant.combatantName + " throws a " + actionName + " at " + targetCombatant.combatantName + "!");
-        
-        bool targetIsDead = targetCombatant.OnTakeDamagePlusCheckIfDie(damage);
         
         yield return EventWaitTime;
         
         
-        
         audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        int finalDamage = targetCombatant.OnTakeDamage(damage);
         yield return TinyWaitTime;
+        
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
         
         
-        
-        int finalDamage = targetInitialHP - targetCombatant.currentHP;
         UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + finalDamage + " points of damage!");
+        
+        bool targetIsDead = targetCombatant.currentHP <=0;
         
         yield return EventWaitTime;
 
@@ -841,10 +826,13 @@ public class BattleManager : MonoBehaviour
         
         yield return EventWaitTime;
         
-        bool playerIsDead = playerCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
-        bool enemyIsDead = enemyCombatant.OnTakeDamagePlusCheckIfDie(recoilDamage);
+        int finalRecoildamage = playerCombatant.OnTakeDamage(recoilDamage);
+        int finalEnemyRecoilDamage = enemyCombatant.OnTakeDamage(recoilDamage);
         
-        int finalRecoildamage = playerInitialHP - playerCombatant.currentHP;
+        bool playerIsDead = playerCombatant.currentHP <= 0;
+        bool enemyIsDead = enemyCombatant.currentHP <= 0;
+        
+        
         
         audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
         yield return TinyWaitTime;

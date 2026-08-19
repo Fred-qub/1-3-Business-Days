@@ -10,13 +10,19 @@ public class Combatant : MonoBehaviour
     public int combatantStatusRemainingDuration = 0;
     public string combatantName;
     
+    public SpriteRenderer combatantSpriteRenderer;
+    
+    public Sprite[] combatantSprites;
+    
     public int maxHP;
     public int currentHP;
     
     public int initiative;
 
-    public bool OnTakeDamagePlusCheckIfDie(int damage)
+    public int OnTakeDamage(int damage)
     {
+        
+        int tempDamage = damage;
         
         //Changes what happens when a combatant gets hit depending on what status they currently have
         switch (combatantStatus)
@@ -31,7 +37,7 @@ public class Combatant : MonoBehaviour
                     
                     
                     case Status.GUARDING:
-                        damage /= 2;
+                        tempDamage /= 2;
                         break;
                     
                    
@@ -52,17 +58,16 @@ public class Combatant : MonoBehaviour
                     
                     case Status.STUNNED:
                         float tempDamageCalcFloat = 0f;
-                        tempDamageCalcFloat = damage * 1.25f;
-                        damage = Mathf.RoundToInt(tempDamageCalcFloat);
+                        tempDamageCalcFloat = tempDamage * 1.25f;
+                        tempDamage = Mathf.RoundToInt(tempDamageCalcFloat);
                     break;
                 }
         
         
         
-        currentHP -= damage;
+        currentHP -= tempDamage;
         
-        return (currentHP <= 0);
-
+        return tempDamage;
     }
 
     public void SetStatusWithDuration(Status status, int statusDuration)

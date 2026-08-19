@@ -137,7 +137,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fd8c3e24d1d564ba4947e006077e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combatant
+  combatantStatus: 0
+  combatantStatusRemainingDuration: 0
   combatantName: Bert
+  combatantSpriteRenderer: {fileID: 5861907794963067254}
+  combatantSprites:
+  - {fileID: -8110742569865379152, guid: 01eeb4501d2216644a26cd1b0efc03a3, type: 3}
+  - {fileID: -1203471759250457773, guid: 1b060c19680e0e14bbc978be13502dc7, type: 3}
+  - {fileID: 4277593589265030377, guid: 1331b2d73e5abb240a95957061544dc5, type: 3}
+  - {fileID: 6287830364178380632, guid: 091c1811b794ff64e9296b04eeedfa85, type: 3}
   maxHP: 100
   currentHP: 100
   initiative: 3

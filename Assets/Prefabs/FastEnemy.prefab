@@ -137,7 +137,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59fd8c3e24d1d564ba4947e006077e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combatant
+  combatantStatus: 0
+  combatantStatusRemainingDuration: 0
   combatantName: Blingo
+  combatantSpriteRenderer: {fileID: 5861907794963067254}
+  combatantSprites:
+  - {fileID: 980535023860820561, guid: b2ea92007dae4ad459c0d87a6808c828, type: 3}
+  - {fileID: -7386998917742373422, guid: 24de7aed476a0bc4980eb90821b468ae, type: 3}
+  - {fileID: 3076494273853432837, guid: d1cf514abe91b8e46aa6b877577a9972, type: 3}
+  - {fileID: -3992368727625763237, guid: 3d014f40d3476ae44a986ecba3854a7c, type: 3}
   maxHP: 100
   currentHP: 100
   initiative: 2
