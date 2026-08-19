@@ -346,6 +346,8 @@ public class BattleManager : MonoBehaviour
     
     IEnumerator StartResolution()
     {
+        audioManager.PlaySound(audioManager.bellAudioClip, audioManager.transform, 100);
+        
         //On every beat on this round and the next
         for (currentBeat = 1; currentBeat <= (roundLength); currentBeat++)
         {
@@ -637,7 +639,7 @@ public class BattleManager : MonoBehaviour
         }
         
         //if enemy is attacking player without interruption
-        if (playerAttemptedStatusChange != Status.RECOVERY && enemyAttemptedStatusChange == Status.RECOVERY 
+        if (enemyAttemptedStatusChange == Status.RECOVERY && playerAttemptedStatusChange != Status.RECOVERY 
                                                            && enemyCombatant.combatantStatus != Status.STUNNED)
         {
             switch (enemyCombatant.combatantStatus)
@@ -677,16 +679,18 @@ public class BattleManager : MonoBehaviour
             yield return EventWaitTime;
         }
         
-        //If the player is recovering from guarding but hasn't gotten anything from resolving the action instance stack
-        if (playerAttemptedStatusChange == Status.NONE && playerCombatant.combatantStatus == Status.GUARDING)
+       
+        if (playerAttemptedStatusChange == Status.NONE)
         {
-            Debug.LogError("Could not find new action in player action instance stack.");
+            Debug.Log("No change in player status.");
+           // Debug.Break();
         }
         
-        //If the enemy is recovering from guarding but hasn't gotten anything from resolving the action instance stack
-        if (enemyAttemptedStatusChange == Status.NONE && enemyCombatant.combatantStatus == Status.GUARDING)
+        
+        if (enemyAttemptedStatusChange == Status.NONE)
         {
-            Debug.LogError("Could not find new action in enemy action instance stack.");
+            Debug.Log("No change in enemy status.");
+            //Debug.Break();
         }
         
         

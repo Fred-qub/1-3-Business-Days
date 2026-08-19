@@ -66,6 +66,36 @@ public class AudioManager : MonoBehaviour
         Destroy(tempAudioSource.gameObject, clipLength);
     }
     
+    public void PlayMouseOverSound(float volume)
+    {
+        AudioSource audioSource = Instantiate(this.audioSource, this.transform.position, Quaternion.identity);
+        
+        audioSource.clip = hoverAudioClip;
+        
+        audioSource.volume = volume;
+        
+        audioSource.Play();
+        
+        float clipLength = audioSource.clip.length;
+        
+        Destroy(audioSource.gameObject, clipLength);
+    }
+    
+    public void MouseSelectSound(float volume)
+    {
+        AudioSource audioSource = Instantiate(this.audioSource, this.transform.position, Quaternion.identity);
+        
+        audioSource.clip = confirmAudioClip;
+        
+        audioSource.volume = volume;
+        
+        audioSource.Play();
+        
+        float clipLength = audioSource.clip.length;
+        
+        Destroy(audioSource.gameObject, clipLength);
+    }
+    
     
 }
 
