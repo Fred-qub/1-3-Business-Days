@@ -117,8 +117,8 @@ public class BattleManager : MonoBehaviour
        yield return EventWaitTime;
        
        //Moves onto round start
-       ChangeBattleState(BattleState.ROUNDSTART);
-       StartPlayerActionPreview();
+       ChangeBattleState(BattleState.ENEMYACT);
+       EnemyActStart();
     }
     
     //Starts the action preview
@@ -196,8 +196,8 @@ public class BattleManager : MonoBehaviour
         else
         {
             //If not, moves onto the next battle state
-            ChangeBattleState(BattleState.ENEMYACT);
-            EnemyActStart();
+            ChangeBattleState(BattleState.RESOLUTION);
+            StartCoroutine(StartResolution());
         }
     }
 
@@ -250,7 +250,7 @@ public class BattleManager : MonoBehaviour
     {
         UIManager.SetDialogueTitle("FEELING LUCKY?");
         UIManager.SetDialogueContent(enemyCombatant.combatantName + " is thinking of the best way to thrash you. If the game is working properly, you shouldn't have time to read this though.");
-
+        UIManager.SetEnemyBeatMarker(initialEnemyStartingBeatForAGivenRound);
         UIManager.PlayerBeatMarkerActive(false);
         UIManager.EnemyBeatMarkerActive(false);
 
@@ -265,8 +265,8 @@ public class BattleManager : MonoBehaviour
             enemyTurnFull = EnemyActionSelect(randomActionSelect, enemyStartingBeat);
         }
         
-        ChangeBattleState(BattleState.RESOLUTION);
-        StartCoroutine(StartResolution());
+        ChangeBattleState(BattleState.ROUNDSTART);
+        StartPlayerActionPreview();
     }
 
     public bool EnemyActionSelect(int actionID, int startingBeat)
@@ -280,7 +280,6 @@ public class BattleManager : MonoBehaviour
         {
             //if the enemy has enough time to pick another action, updates the current starting beat
             enemyStartingBeat = i;
-            UIManager.SetEnemyBeatMarker(enemyStartingBeat);
             Debug.Log("BattleManager: EnemyActionSelect: enemy has time to select another action");
             return false;
         }
@@ -1011,8 +1010,12 @@ public class BattleManager : MonoBehaviour
         UIManager.SetPhaseStatus(battleState);
         
         battleState = BattleState.ROUNDSTART;
+
+        //goes back to enemy act state
+        ChangeBattleState(BattleState.ENEMYACT);
+        EnemyActStart();
            
-        StartPlayerActionPreview();
+        
     }
 
     public char[] ShiftPreviewArray()

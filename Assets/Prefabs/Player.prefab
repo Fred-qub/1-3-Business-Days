@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Combatant
   combatantStatus: 0
   combatantStatusRemainingDuration: 0
-  combatantName: John Doe
+  combatantName: The Player
   combatantSpriteRenderer: {fileID: 22448689680769988}
   combatantSprites:
   - {fileID: 21300000, guid: 01eeb4501d2216644a26cd1b0efc03a3, type: 3}
