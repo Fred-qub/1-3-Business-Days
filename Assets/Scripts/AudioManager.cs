@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip bellAudioClip;
 
     public AudioClip music;
-    // CC0 courtesy of Centurion_of_war on OpenGameArt.Org
+    
     
     public uint seed;
     private Unity.Mathematics.Random rng;

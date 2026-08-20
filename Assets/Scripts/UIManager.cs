@@ -136,7 +136,11 @@ public class UIManager : MonoBehaviour
     public void SetPlayerName(string pName) { playerName.text = pName; }
     
     //Sets the player's HP bar
-    public void SetPlayerHP(int hp) { playerHPBarSlider.value = hp; }
+    public void SetPlayerHP(int hp)
+    {
+        playerHPBarSlider.value = hp;
+        playerHPBarText.text = hp + " / 100";
+    }
     
     //Enables / disables the player's status countdown panel
     public void PlayerStatusPanelActive(bool active) { playerstatusPanel.SetActive(active); }
@@ -177,7 +181,11 @@ public class UIManager : MonoBehaviour
     public void SetEnemyName(string eName) { enemyName.text = eName; }
     
     //Sets the enemy's HP bar
-    public void SetEnemyHP(int hp) { enemyHPBarSlider.value = hp; }
+    public void SetEnemyHP(int hp)
+    {
+        enemyHPBarSlider.value = hp;
+        enemyHPBarText.text = hp + " / 100";
+    }
     
     //Enables / disables the enemy's status countdown panel
     public void EnemyStatusPanelActive(bool active) { enemystatusPanel.SetActive(active); }

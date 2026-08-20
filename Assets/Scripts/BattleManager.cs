@@ -70,8 +70,8 @@ public class BattleManager : MonoBehaviour
     public uint seed;
     private Unity.Mathematics.Random rng;
     
-    private WaitForSeconds BeatWaitTime = new WaitForSeconds(0.5f);
-    private WaitForSeconds EventWaitTime = new WaitForSeconds(1.5f);
+    private WaitForSeconds BeatWaitTime = new WaitForSeconds(0.75f);
+    private WaitForSeconds EventWaitTime = new WaitForSeconds(1.75f);
     private WaitForSeconds TinyWaitTime = new WaitForSeconds(0.5f);
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
