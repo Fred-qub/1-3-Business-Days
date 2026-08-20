@@ -89,7 +89,7 @@ SpriteRenderer:
   m_Size: {x: 4.8, y: 3.47}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!1 &8038170959428784934
@@ -142,10 +142,10 @@ MonoBehaviour:
   combatantName: Boris
   combatantSpriteRenderer: {fileID: 5861907794963067254}
   combatantSprites:
-  - {fileID: -808651467666309646, guid: 0039c965486156d4b9e838fae78f7a79, type: 3}
-  - {fileID: 5706676264388133173, guid: a9e6bc27c457de04a9a9aa3cade3d30e, type: 3}
-  - {fileID: -485969352238497904, guid: af06d5bfad04a164089ffb106726e439, type: 3}
-  - {fileID: -6456584471975669416, guid: e7511d6ec5f85134686dfe12831b1aaa, type: 3}
+  - {fileID: 21300000, guid: 0039c965486156d4b9e838fae78f7a79, type: 3}
+  - {fileID: 21300000, guid: a9e6bc27c457de04a9a9aa3cade3d30e, type: 3}
+  - {fileID: 21300000, guid: af06d5bfad04a164089ffb106726e439, type: 3}
+  - {fileID: 21300000, guid: e7511d6ec5f85134686dfe12831b1aaa, type: 3}
   maxHP: 100
   currentHP: 100
   initiative: 5

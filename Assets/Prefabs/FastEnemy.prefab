@@ -89,7 +89,7 @@ SpriteRenderer:
   m_Size: {x: 4.8, y: 3.47}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!1 &8038170959428784934
@@ -142,10 +142,10 @@ MonoBehaviour:
   combatantName: Blingo
   combatantSpriteRenderer: {fileID: 5861907794963067254}
   combatantSprites:
-  - {fileID: 980535023860820561, guid: b2ea92007dae4ad459c0d87a6808c828, type: 3}
-  - {fileID: -7386998917742373422, guid: 24de7aed476a0bc4980eb90821b468ae, type: 3}
-  - {fileID: 3076494273853432837, guid: d1cf514abe91b8e46aa6b877577a9972, type: 3}
-  - {fileID: -3992368727625763237, guid: 3d014f40d3476ae44a986ecba3854a7c, type: 3}
+  - {fileID: 21300000, guid: b2ea92007dae4ad459c0d87a6808c828, type: 3}
+  - {fileID: 21300000, guid: 24de7aed476a0bc4980eb90821b468ae, type: 3}
+  - {fileID: 21300000, guid: d1cf514abe91b8e46aa6b877577a9972, type: 3}
+  - {fileID: 21300000, guid: 3d014f40d3476ae44a986ecba3854a7c, type: 3}
   maxHP: 100
   currentHP: 100
   initiative: 2
