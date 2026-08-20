@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     [Header("Player Battle UI")]
     public TextMeshProUGUI playerName;
     public Slider playerHPBarSlider;
+    public TextMeshProUGUI playerHPBarText;
     public GameObject playerstatusPanel;
     public TextMeshProUGUI playerStatusText;
     public TextMeshProUGUI playerStatusCounter;
@@ -24,6 +25,7 @@ public class UIManager : MonoBehaviour
     [Header("Enemy Battle UI")]
     public TextMeshProUGUI enemyName;
     public Slider enemyHPBarSlider;
+    public TextMeshProUGUI enemyHPBarText;
     public GameObject enemystatusPanel;
     public TextMeshProUGUI enemyStatusText;
     public TextMeshProUGUI enemyStatusCounter;
@@ -108,7 +110,10 @@ public class UIManager : MonoBehaviour
     }
     
     //Sets the content of the dialogue box
-    public void SetDialogueContent(string dialogue) { dialogueContent.text = dialogue; }
+    public void SetDialogueContent(string dialogue)
+    {
+        dialogueContent.text = dialogue;
+    }
     
     //Sets the title of the dialogue box
     public void SetDialogueTitle(string title) { dialogueTitle.text = title; }
