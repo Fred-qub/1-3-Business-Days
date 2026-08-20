@@ -311,6 +311,8 @@ public class BattleManager : MonoBehaviour
 
     public void UpdateCombatantStatusUI()
     {
+        UIManager.PlayerStatusPanelActive(true);
+        UIManager.EnemyStatusPanelActive(true);
         UIManager.SetPlayerStatusCounter(playerCombatant.combatantStatusRemainingDuration);
         switch (playerCombatant.combatantStatus)
         {
@@ -328,6 +330,10 @@ public class BattleManager : MonoBehaviour
 
             case Status.HAYMAKERSTARTUP:
                 UIManager.SetPlayerStatusText("STARTUP - HAYMAKER:");
+                break;
+            
+            case Status.NONE:
+                UIManager.PlayerStatusPanelActive(false);
                 break;
             
             default:
@@ -355,6 +361,10 @@ public class BattleManager : MonoBehaviour
                 UIManager.SetEnemyStatusText("STARTUP - HAYMAKER:");
                 break;
             
+            case Status.NONE:
+                UIManager.EnemyStatusPanelActive(false);
+                break;
+            
             default:
                 UIManager.SetEnemyStatusText(enemyCombatant.combatantStatus + ":");
                 break;
@@ -365,6 +375,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator StartResolution()
     {
         UIManager.ButtonsActive(false);
+        UIManager.UndoButtonActive(false);
         UIManager.PlayerBeatMarkerActive(false);
         UIManager.EnemyBeatMarkerActive(false);
         audioManager.PlaySound(audioManager.bellAudioClip, audioManager.transform, 100);
@@ -432,7 +443,12 @@ public class BattleManager : MonoBehaviour
                         actionStacksManager.playerActionInstanceStack, playerCombatant);
                     break;
                 
-                default:
+                case Status.RECOVERY:
+                    playerAttemptedStatusChange = ResolveActionInstanceStack(beat,
+                        actionStacksManager.playerActionInstanceStack, playerCombatant);
+                    break;
+                
+                case Status.NONE:
                     playerAttemptedStatusChange = ResolveActionInstanceStack(beat,
                         actionStacksManager.playerActionInstanceStack, playerCombatant);
                     break;
@@ -712,6 +728,11 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
+
+        if (battleState != BattleState.RESOLUTION)
+        {
+            yield break;
+        }
         
         //If the player is recovering from being stunned
         if (playerAttemptedStatusChange == Status.RECOVERY && playerCombatant.combatantStatus == Status.STUNNED)
@@ -979,12 +1000,7 @@ public class BattleManager : MonoBehaviour
         
         currentRound += 1;
         currentBeat = 0;
-        
-        
-        initialPlayerStartingBeatForAGivenRound = 0;
-        initialEnemyStartingBeatForAGivenRound = 0;
-        
-        
+
         switch (playerCombatant.combatantStatus)
         {
             case Status.GUARDING:
@@ -1069,6 +1085,16 @@ public class BattleManager : MonoBehaviour
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
                  Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
+        }
+
+        if (playerCombatant.combatantStatusRemainingDuration == 0)
+        {
+            initialPlayerStartingBeatForAGivenRound = 1;
+        }
+
+        if (enemyCombatant.combatantStatusRemainingDuration == 0)
+        {
+            initialEnemyStartingBeatForAGivenRound = 1;
         }
         
         
