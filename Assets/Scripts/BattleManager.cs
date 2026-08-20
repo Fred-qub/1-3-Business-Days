@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Random = Unity.Mathematics.Random;
 
 //Enumerator for game states
-public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, ROUNDSETUP, WIN, LOSE }
+public enum BattleState { INITIALIZATION, ROUNDSTART, ENEMYACT, RESOLUTION, ROUNDSETUP, WIN, LOSE, DRAW }
 //Class for what an action actually is
 public class Action
 {
@@ -50,9 +50,9 @@ public class BattleManager : MonoBehaviour
     public Action[] actionArray = 
     {
         new Action( "Guard", false, 0, 0,1),
-        new Action( "Jab", true, 10, 2,3),
-        new Action( "Hook", true, 25, 5,4),
-        new Action( "Haymaker", true, 65, 5,6),
+        new Action( "Jab", true, 10, 2,2),
+        new Action( "Hook", true, 20, 5,3),
+        new Action( "Haymaker", true, 40, 10,4),
         new Action( "Blank",false,0,0,0)
     };
 
@@ -132,6 +132,25 @@ public class BattleManager : MonoBehaviour
         UIManager.EnemyBeatMarkerActive(true);
         UIManager.SetEnemyBeatMarker(initialEnemyStartingBeatForAGivenRound);
         UIManager.ButtonsActive(true);
+        UIManager.UpdateRoundPreview(playerActionPreviewArray);
+    }
+
+    public void ChangePlayerActionPreviewMidResolution()
+    {
+        Status playerStatus = playerCombatant.combatantStatus;
+        int playerStatusRemainingDuration = playerCombatant.combatantStatusRemainingDuration;
+
+        for (int i = currentBeat; i < currentBeat + playerStatusRemainingDuration; i++)
+        {
+            if (playerStatus == Status.GUARDING)
+            {
+                playerActionPreviewArray[i] = 'G';
+            } else if (playerStatus == Status.STUNNED)
+            {
+                playerActionPreviewArray[i] = 'S';
+            }
+        }
+
         UIManager.UpdateRoundPreview(playerActionPreviewArray);
     }
 
@@ -280,12 +299,12 @@ public class BattleManager : MonoBehaviour
         {
             //if the enemy has enough time to pick another action, updates the current starting beat
             enemyStartingBeat = i;
-            Debug.Log("BattleManager: EnemyActionSelect: enemy has time to select another action");
+            //Debug.Log("BattleManager: EnemyActionSelect: enemy has time to select another action");
             return false;
         }
         else
         {
-            Debug.Log("BattleManager: EnemyActionSelect: enemy turn full");
+            //Debug.Log("BattleManager: EnemyActionSelect: enemy turn full");
             return true;
         }
     }
@@ -345,7 +364,9 @@ public class BattleManager : MonoBehaviour
     
     IEnumerator StartResolution()
     {
-        UIManager.ButtonsActive(true);
+        UIManager.ButtonsActive(false);
+        UIManager.PlayerBeatMarkerActive(false);
+        UIManager.EnemyBeatMarkerActive(false);
         audioManager.PlaySound(audioManager.bellAudioClip, audioManager.transform, 100);
         
         //On every beat on this round and the next
@@ -417,7 +438,7 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
-        //Debug.Log("ResolveCombatantStatus: player attempted status change: " + playerAttemptedStatusChange);
+        Debug.Log("ResolveCombatantStatus: player attempted status change: " + playerAttemptedStatusChange);
 
         if (enemyCombatant.combatantStatusRemainingDuration <= 0)
         {
@@ -454,9 +475,19 @@ public class BattleManager : MonoBehaviour
                     break;
             }
         }
-        //Debug.Log("ResolveCombatantStatus: enemy attempted status change: " + enemyAttemptedStatusChange);
+        Debug.Log("ResolveCombatantStatus: enemy attempted status change: " + enemyAttemptedStatusChange);
         
         //The order of the following if statements dictates the priority of resolving different scenarios within a beat
+        
+        //If it's beat 10 and a combatant is either guarding or in recovery with 0 duration, set their status to NONE
+        if (playerCombatant.combatantStatusRemainingDuration <= 0 
+            && playerAttemptedStatusChange == Status.NONE 
+            && beat == roundLength 
+            && (playerCombatant.combatantStatus == Status.GUARDING | playerCombatant.combatantStatus == Status.RECOVERY))
+        {
+            playerCombatant.SetStatusWithDuration(Status.NONE, 0);
+            UpdateCombatantStatusUI();
+        }
         
         
 
@@ -480,6 +511,7 @@ public class BattleManager : MonoBehaviour
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Puts up their guard!");
             audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 1);
             UpdateCombatantStatusUI();
+            ChangePlayerActionPreviewMidResolution();
             yield return EventWaitTime;
         }
         
@@ -719,18 +751,22 @@ public class BattleManager : MonoBehaviour
                 {
                     case 0:
                         statusType = Status.GUARDSTARTUP;
+                        Debug.Log("found action instance, type: " + statusType + " on beat: " + beat);
                         break;
                         
                     case 1:
                         statusType = Status.JABSTARTUP;
+                        Debug.Log("found action instance, type: " + statusType + " on beat: " + beat);
                         break;
                         
                     case 2:
                         statusType = Status.HOOKSTARTUP;
+                        Debug.Log("found action instance, type: " + statusType + " on beat: " + beat);
                         break;
                         
                     case 3:
                         statusType = Status.HAYMAKERSTARTUP;
+                        Debug.Log("found action instance, type: " + statusType + " on beat: " + beat);
                         break;
                         
                     default:
@@ -739,7 +775,12 @@ public class BattleManager : MonoBehaviour
                         break;
                 }
             }
+            else
+            {
+                Debug.Log("no action instance found on beat " + beat);
+            }
         }
+        Debug.Log(statusType);
         return statusType;
     }
     
@@ -799,6 +840,7 @@ public class BattleManager : MonoBehaviour
             UIManager.SetDialogueTitle("COUNTER!");
             UIManager.SetDialogueContent(targetCombatant.combatantName + " was interrupted and stunned!");
             audioManager.PlaySound(audioManager.stunAudioClip, this.transform, 1);
+            ChangePlayerActionPreviewMidResolution();
             yield return EventWaitTime;
         }
 
@@ -865,11 +907,12 @@ public class BattleManager : MonoBehaviour
         UIManager.SetPlayerHP(playerCombatant.currentHP);
         audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 1);
         
-        UIManager.SetDialogueContent("Both combatants take " + finalRecoildamage + " recoil damage!");
+        UIManager.SetDialogueContent( playerCombatant.combatantName + " takes " + finalRecoildamage + " recoil damage! " +
+                                      enemyCombatant.combatantName + " takes " + finalEnemyRecoilDamage  + " recoil damage!");
         
         yield return EventWaitTime;
 
-        if (playerIsDead) 
+        if (enemyIsDead && !playerIsDead) 
         {
             UIManager.SetDialogueTitle("VICTORY!");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " has been knocked out!");
@@ -879,7 +922,7 @@ public class BattleManager : MonoBehaviour
             WinEvent();
         }
         
-        if (enemyIsDead)
+        if (playerIsDead && !enemyIsDead)
         {
             UIManager.SetDialogueTitle("DEFEAT!");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " has been knocked out!");
@@ -887,6 +930,11 @@ public class BattleManager : MonoBehaviour
             yield return EventWaitTime;
             ChangeBattleState(BattleState.LOSE);
             LoseEvent();
+        }
+
+        if (playerIsDead && enemyIsDead)
+        {
+            
         }
     }
     
@@ -904,6 +952,15 @@ public class BattleManager : MonoBehaviour
         UIManager.triggerConclusionScreen(battleState);
         UIManager.SetPhaseStatus(battleState);
         playerCombatant.SetSprite(3);
+    }
+    
+    public void DrawEvent()
+    {
+        if(battleState != BattleState.DRAW) return; 
+        UIManager.triggerConclusionScreen(battleState);
+        UIManager.SetPhaseStatus(battleState);
+        playerCombatant.SetSprite(3);
+        enemyCombatant.SetSprite(3);
     }
 
     public void SetupNewRound()
@@ -926,7 +983,8 @@ public class BattleManager : MonoBehaviour
         
         initialPlayerStartingBeatForAGivenRound = 0;
         initialEnemyStartingBeatForAGivenRound = 0;
-
+        
+        
         switch (playerCombatant.combatantStatus)
         {
             case Status.GUARDING:
@@ -946,22 +1004,22 @@ public class BattleManager : MonoBehaviour
             
             case Status.GUARDSTARTUP:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
-                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                 Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
             case Status.JABSTARTUP:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
-                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                 Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
             case Status.HOOKSTARTUP:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
-                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                  Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
             case Status.HAYMAKERSTARTUP:
                 initialPlayerStartingBeatForAGivenRound = playerCombatant.combatantStatusRemainingDuration + playerCombatant.initiative;
-                Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
+                 Debug.Log(playerCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR PLAYER");
                 break;
             
             case Status.STUNNED:
@@ -983,7 +1041,7 @@ public class BattleManager : MonoBehaviour
                 break;
             
             case Status.NONE:
-                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration;
+                initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration; 
                 Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
             
@@ -999,17 +1057,17 @@ public class BattleManager : MonoBehaviour
             
             case Status.HOOKSTARTUP:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
-                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                 Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
             
             case Status.HAYMAKERSTARTUP:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
-                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                 Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
             
             case Status.STUNNED:
                 initialEnemyStartingBeatForAGivenRound = enemyCombatant.combatantStatusRemainingDuration + enemyCombatant.initiative;
-                Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
+                 Debug.Log(enemyCombatant.combatantStatus + " USED TO DETERMINE NEXT ROUND FOR ENEMY");
                 break;
         }
         
@@ -1049,11 +1107,6 @@ public class BattleManager : MonoBehaviour
         }
         
         return tempArray;
-        
-    }
-
-    public void ChangePreviewArrayColours()
-    {
         
     }
 }

@@ -75,16 +75,27 @@ public class UIManager : MonoBehaviour
     {
         conclusionPanel.SetActive(true);
 
-        if (battleState == BattleState.WIN)
+        switch (battleState)
         {
-            conclusionText.text = "VICTORY!";
-            conclusionText.color = playerColour;
-        } else 
-        {
-            conclusionText.text = "DEFEAT!";  
-            conclusionText.color = enemyColour;
+            case BattleState.DRAW:
+                conclusionText.text = "DOUBLE K.O. !";  
+                conclusionText.color = stunColour;
+                break;
+            
+            case BattleState.LOSE:
+                conclusionText.text = "DEFEAT !";  
+                conclusionText.color = enemyColour;
+                break;
+            
+            case BattleState.WIN:
+                conclusionText.text = "VICTORY !";
+                conclusionText.color = playerColour;
+                break;
+            
+            default:
+                Debug.LogError("INVALID CONCLUSION");
+                break;
         }
-        
     }
 
     //Sets the round timer
