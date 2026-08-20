@@ -130,7 +130,7 @@ public class BattleManager : MonoBehaviour
         UIManager.SetPlayerBeatMarker(playerStartingBeat);
         UIManager.PlayerBeatMarkerActive(true);
         UIManager.EnemyBeatMarkerActive(true);
-        UIManager.SetEnemyBeatMarker(enemyStartingBeat);
+        UIManager.SetEnemyBeatMarker(initialEnemyStartingBeatForAGivenRound);
         UIManager.ButtonsActive(true);
         UIManager.UpdateRoundPreview(playerActionPreviewArray);
     }
@@ -345,6 +345,7 @@ public class BattleManager : MonoBehaviour
     
     IEnumerator StartResolution()
     {
+        UIManager.ButtonsActive(true);
         audioManager.PlaySound(audioManager.bellAudioClip, audioManager.transform, 100);
         
         //On every beat on this round and the next
@@ -503,6 +504,26 @@ public class BattleManager : MonoBehaviour
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Puts up their guard!");
             audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 1);
+            UpdateCombatantStatusUI();
+            yield return EventWaitTime;
+        }
+        
+        //if player is ending guard
+        if (playerAttemptedStatusChange != Status.NONE && playerCombatant.combatantStatus == Status.GUARDING && playerCombatant.combatantStatusRemainingDuration <= 0)
+        {
+            playerCombatant.SetSprite(0);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " puts down their guard.");
+            UpdateCombatantStatusUI();
+            yield return EventWaitTime;
+        }
+        
+        //if enemy is ending guard
+        if (enemyAttemptedStatusChange != Status.NONE && enemyCombatant.combatantStatus == Status.GUARDING && enemyCombatant.combatantStatusRemainingDuration <= 0)
+        {
+            enemyCombatant.SetSprite(0);
+            UIManager.SetDialogueTitle("BATTLE EVENT:");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " puts down their guard.");
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
@@ -666,7 +687,7 @@ public class BattleManager : MonoBehaviour
             playerCombatant.SetStatusWithDuration(Status.RECOVERY, playerCombatant.initiative);
             playerCombatant.SetSprite(0);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
-            UIManager.SetDialogueContent(playerCombatant.combatantName + " Shrugs off their stun.");
+            UIManager.SetDialogueContent(playerCombatant.combatantName + " shrugs off their stun.");
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
@@ -677,11 +698,10 @@ public class BattleManager : MonoBehaviour
             enemyCombatant.SetStatusWithDuration(Status.RECOVERY, enemyCombatant.initiative);
             enemyCombatant.SetSprite(0);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
-            UIManager.SetDialogueContent(enemyCombatant.combatantName + " Shrugs off their stun.");
+            UIManager.SetDialogueContent(enemyCombatant.combatantName + " shrugs off their stun.");
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
-        
     }
     
     
