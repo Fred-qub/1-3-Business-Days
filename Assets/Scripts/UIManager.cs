@@ -210,7 +210,16 @@ public class UIManager : MonoBehaviour
     public void SetBeat(int beat)
     {
         if (beat > 10 | beat < 0) { beat = 0;}
-        beatCounter.text = beat.ToString();
+
+        if (beat > 0)
+        {
+            beatCounter.text = beat.ToString();
+        }
+        else
+        {
+            beatCounter.text = "ROUND START";
+        }
+
         timelineSlider.value = beat;
         audioManager.PlaySound(audioManager.beatAudioClip, this.transform, 100f);
     }
