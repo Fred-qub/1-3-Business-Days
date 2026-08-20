@@ -2808,7 +2808,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 'Startup: 3 beats.                         Deals low
+            m_StringArgument: 'Startup: 2 beats.                         Deals low
               damage, but comes out fast. Good for countering. '
             m_BoolArgument: 0
           m_CallState: 2
@@ -4661,7 +4661,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 'Startup: 6 beats.                        Comes out
+            m_StringArgument: 'Startup: 4 beats.                        Comes out
               slow, but deals a lot of damage. Risky but rewarding. '
             m_BoolArgument: 0
           m_CallState: 2
@@ -6467,7 +6467,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 'Startup: 4 beats.                         Medium damage,
+            m_StringArgument: 'Startup: 3 beats.                         Medium damage,
               medium delay. Perfectly average.'
             m_BoolArgument: 0
           m_CallState: 2
