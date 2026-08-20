@@ -23,6 +23,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip bellAudioClip;
 
     public AudioClip music;
+    // CC0 courtesy of Centurion_of_war on OpenGameArt.Org
     
     public uint seed;
     private Unity.Mathematics.Random rng;
@@ -32,7 +33,7 @@ public class AudioManager : MonoBehaviour
         seed = (uint)System.DateTime.Now.Ticks;
         rng = new Unity.Mathematics.Random(seed);
         
-        //PlayRandomSound(hurtAudioClips, this.transform, 100f);
+        PlayLoopSound(music, this.transform, 0.4f);
     }
 
     public void PlaySound(AudioClip audioClip, Transform spawnTransform, float volume)
@@ -96,6 +97,17 @@ public class AudioManager : MonoBehaviour
         Destroy(audioSource.gameObject, clipLength);
     }
     
+    public void PlayLoopSound(AudioClip audioClip, Transform spawnTransform, float volume)
+    {
+        AudioSource audioSource = Instantiate(this.audioSource, spawnTransform.position, Quaternion.identity);
+        
+        audioSource.clip = audioClip;
+        
+        audioSource.volume = volume;
+        audioSource.loop = true;
+        
+        audioSource.Play();
+    }
     
 }
 

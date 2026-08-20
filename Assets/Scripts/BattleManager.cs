@@ -478,7 +478,7 @@ public class BattleManager : MonoBehaviour
             playerCombatant.SetSprite(2);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(playerCombatant.combatantName + " Puts up their guard!");
-            audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
+            audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 1);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
@@ -490,7 +490,7 @@ public class BattleManager : MonoBehaviour
             enemyCombatant.SetStatusWithDuration(Status.GUARDSTARTUP, actionArray[0].ActionStartupDuration);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Prepares to guard.");
-            audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+            audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         } 
@@ -503,7 +503,7 @@ public class BattleManager : MonoBehaviour
             enemyCombatant.SetSprite(2);
             UIManager.SetDialogueTitle("BATTLE EVENT:");
             UIManager.SetDialogueContent(enemyCombatant.combatantName + " Puts up their guard!");
-            audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 100f);
+            audioManager.PlaySound(audioManager.guardAudioClip, this.transform, 1);
             UpdateCombatantStatusUI();
             yield return EventWaitTime;
         }
@@ -518,7 +518,7 @@ public class BattleManager : MonoBehaviour
                     playerCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a jab.");
-                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     break;
@@ -527,7 +527,7 @@ public class BattleManager : MonoBehaviour
                     playerCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a hook.");
-                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -536,7 +536,7 @@ public class BattleManager : MonoBehaviour
                     playerCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(playerCombatant.combatantName + " Starts winding up a haymaker.");
-                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -554,7 +554,7 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.JABSTARTUP, actionArray[1].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a jab.");
-                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -563,7 +563,7 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.HOOKSTARTUP, actionArray[2].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a hook.");
-                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -572,7 +572,7 @@ public class BattleManager : MonoBehaviour
                     enemyCombatant.SetStatusWithDuration(Status.HAYMAKERSTARTUP, actionArray[3].ActionStartupDuration);
                     UIManager.SetDialogueTitle("BATTLE EVENT:");
                     UIManager.SetDialogueContent(enemyCombatant.combatantName + " starts winding up a haymaker.");
-                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 100f);
+                    audioManager.PlaySound(audioManager.startupAudioClip, this.transform, 1);
                     UpdateCombatantStatusUI();
                     yield return EventWaitTime;
                     
@@ -758,14 +758,14 @@ public class BattleManager : MonoBehaviour
         yield return EventWaitTime;
         
         
-        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 1);
         attackerCombatant.SetSprite(1);
         int finalDamage = targetCombatant.OnTakeDamage(damage);
         yield return TinyWaitTime;
         attackerCombatant.SetSprite(0);
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
-        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
+        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 1);
         
         
         UIManager.SetDialogueContent(targetCombatant.combatantName + " takes " + finalDamage + " points of damage!");
@@ -779,7 +779,7 @@ public class BattleManager : MonoBehaviour
             UpdateCombatantStatusUI();
             UIManager.SetDialogueTitle("COUNTER!");
             UIManager.SetDialogueContent(targetCombatant.combatantName + " was interrupted and stunned!");
-            audioManager.PlaySound(audioManager.stunAudioClip, this.transform, 100f);
+            audioManager.PlaySound(audioManager.stunAudioClip, this.transform, 1);
             yield return EventWaitTime;
         }
 
@@ -835,16 +835,16 @@ public class BattleManager : MonoBehaviour
         
         
         
-        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 100f);
+        audioManager.PlaySound(audioManager.attackAudioClip, this.transform, 1);
         playerCombatant.SetSprite(1);
         enemyCombatant.SetSprite(1);
         yield return TinyWaitTime;
-        audioManager.PlaySound(audioManager.clashAudioClip, this.transform, 100f);
+        audioManager.PlaySound(audioManager.clashAudioClip, this.transform, 1);
 
         UIManager.SetEnemyHP(enemyCombatant.currentHP);
-        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
+        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 1);
         UIManager.SetPlayerHP(playerCombatant.currentHP);
-        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 100f);
+        audioManager.PlayRandomSound(audioManager.hurtAudioClips, this.transform, 1);
         
         UIManager.SetDialogueContent("Both combatants take " + finalRecoildamage + " recoil damage!");
         
