@@ -955,7 +955,7 @@ public class BattleManager : MonoBehaviour
 
         if (playerIsDead && enemyIsDead)
         {
-            
+            DrawEvent();
         }
     }
     
@@ -965,6 +965,7 @@ public class BattleManager : MonoBehaviour
         UIManager.triggerConclusionScreen(battleState);
         UIManager.SetPhaseStatus(battleState);
         enemyCombatant.SetSprite(3);
+        enemyCombatant.squashCombatant();
     }
 
     public void LoseEvent()
@@ -973,6 +974,7 @@ public class BattleManager : MonoBehaviour
         UIManager.triggerConclusionScreen(battleState);
         UIManager.SetPhaseStatus(battleState);
         playerCombatant.SetSprite(3);
+        playerCombatant.squashCombatant();
     }
     
     public void DrawEvent()
@@ -982,6 +984,8 @@ public class BattleManager : MonoBehaviour
         UIManager.SetPhaseStatus(battleState);
         playerCombatant.SetSprite(3);
         enemyCombatant.SetSprite(3);
+        playerCombatant.squashCombatant();
+        enemyCombatant.squashCombatant();
     }
 
     public void SetupNewRound()

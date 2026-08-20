@@ -105,5 +105,10 @@ public class Combatant : MonoBehaviour
         
         combatantSpriteRenderer.sprite = combatantSprites[spriteID];
     }
+
+    public void squashCombatant()
+    {
+        this.transform.localScale = new Vector3(1f, 0.5f, 1f);
+    }
     
 }
