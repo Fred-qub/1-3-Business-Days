@@ -108,7 +108,7 @@ public class Combatant : MonoBehaviour
 
     public void squashCombatant()
     {
-        this.transform.localScale = new Vector3(1f, 0.5f, 1f);
+        this.transform.localScale = new Vector3(1.2f, 0.5f, 1f);
     }
     
 }
